@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KCD2 Quest Tracker</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0b0d10;--bg2:#111418;--bg3:#181c24;--bg4:#1e2330;--bg5:#252b3a;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);
+  --text:#ddd8c8;--text2:#9a9282;--text3:#5a5448;--text4:#3a3428;
+  --amber:#c8861a;--amber2:#e8a83c;--amber3:#f8d080;
+  --green:#3a8a58;--green2:#52b872;
+  --red:#a83830;--red2:#d05848;
+  --blue:#3060a0;--blue2:#5888cc;
+  --purple:#6040a0;--purple2:#8868cc;
+  --orange:#a85820;--orange2:#d07838;
+  --radius:6px;--radius2:10px;
+}
+html,body{height:100%;overflow:hidden}
+body{font-family:'Crimson Text',Georgia,serif;background:var(--bg);color:var(--text);display:flex;flex-direction:column}
+.hdr{background:var(--bg2);border-bottom:1px solid rgba(255,255,255,0.12);padding:13px 20px;display:flex;align-items:center;gap:14px;flex-shrink:0}
+.hdr-icon{font-size:26px;width:42px;height:42px;display:flex;align-items:center;justify-content:center;background:var(--bg4);border:1px solid var(--amber);border-radius:50%;flex-shrink:0}
+.hdr-title{font-family:'Cinzel',serif;font-size:16px;color:var(--amber2);letter-spacing:1px}
+.hdr-sub{font-size:11px;color:var(--text3);margin-top:1px;font-family:monospace}
+.hdr-stats{margin-left:auto;display:flex;gap:16px}
+.stat{text-align:center}
+.stat-v{font-size:19px;font-weight:700;font-family:'Cinzel',serif;color:var(--amber2)}
+.stat-l{font-size:10px;color:var(--text3);letter-spacing:0.8px;text-transform:uppercase;font-family:monospace}
+.progress{height:2px;background:var(--bg3);flex-shrink:0}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--amber),var(--amber2));transition:width .6s}
+.tabs{display:flex;background:var(--bg2);border-bottom:1px solid var(--border);padding:0 14px;flex-shrink:0}
+.tab{padding:9px 15px;font-size:12px;font-family:monospace;color:var(--text3);border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .2s,border-color .2s;white-space:nowrap}
+.tab:hover{color:var(--text2)}.tab.on{color:var(--amber2);border-bottom-color:var(--amber2)}
+.main{display:flex;flex:1;overflow:hidden}
+.sidebar{width:295px;min-width:255px;background:var(--bg2);border-right:1px solid var(--border);overflow-y:auto;flex-shrink:0;display:flex;flex-direction:column}
+.panel{flex:1;overflow-y:auto}
+.filters{padding:9px 11px;border-bottom:1px solid var(--border);display:flex;gap:5px;flex-wrap:wrap;background:var(--bg2);position:sticky;top:0;z-index:20}
+.fsearch{background:var(--bg3);border:1px solid rgba(255,255,255,0.12);color:var(--text2);font-size:11px;padding:4px 7px;border-radius:5px;font-family:monospace;width:100%;margin-bottom:3px}
+.fsearch:focus{outline:none;border-color:var(--amber)}.fsearch::placeholder{color:var(--text3)}
+.fsel{background:var(--bg3);border:1px solid rgba(255,255,255,0.12);color:var(--text2);font-size:11px;padding:4px 6px;border-radius:5px;font-family:monospace;cursor:pointer;flex:1;min-width:70px}
+.fsel:focus{outline:none;border-color:var(--amber)}
+.rhead{padding:7px 11px 4px;display:flex;align-items:center;gap:5px;position:sticky;top:70px;background:var(--bg2);z-index:19;border-bottom:1px solid var(--border)}
+.rname{font-size:10px;font-family:monospace;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--text3)}
+.rcnt{font-size:10px;color:var(--text4);font-family:monospace;margin-left:auto}
+.rdlc{font-size:9px;font-family:monospace;padding:1px 4px;border-radius:3px;background:var(--bg4);color:var(--purple2);border:1px solid rgba(96,64,160,0.3)}
+.qrow{display:flex;align-items:center;gap:7px;padding:5px 11px 5px 9px;cursor:pointer;border-left:3px solid transparent;transition:background .12s;border-bottom:1px solid var(--border)}
+.qrow:hover{background:var(--bg3)}.qrow.sel{background:rgba(200,134,26,0.07);border-left-color:var(--amber)}
+.qico{font-size:12px;width:15px;text-align:center;flex-shrink:0}
+.qname{font-size:12px;color:var(--text);flex:1;line-height:1.3}
+.qname.done{color:var(--text3);text-decoration:line-through}
+.qbadges{display:flex;gap:3px;flex-wrap:wrap;margin-top:2px}
+.bdg{font-size:9px;font-family:monospace;padding:1px 4px;border-radius:2px;font-weight:700;text-transform:uppercase;letter-spacing:0.3px;white-space:nowrap}
+.b-main{background:rgba(200,134,26,0.18);color:var(--amber2);border:1px solid rgba(200,134,26,0.3)}
+.b-side{background:rgba(48,96,160,0.2);color:var(--blue2);border:1px solid rgba(48,96,160,0.3)}
+.b-task{background:rgba(96,64,160,0.18);color:var(--purple2);border:1px solid rgba(96,64,160,0.25)}
+.b-miss{background:rgba(168,56,48,0.2);color:var(--red2);border:1px solid rgba(168,56,48,0.3)}
+.b-hmiss{background:rgba(168,56,48,0.35);color:#f09090;border:1px solid rgba(168,56,48,0.5)}
+.b-time{background:rgba(168,88,32,0.2);color:var(--orange2);border:1px solid rgba(168,88,32,0.3)}
+.b-branch{background:rgba(82,184,114,0.12);color:var(--green2);border:1px solid rgba(82,184,114,0.2)}
+.b-lock{background:rgba(168,56,48,0.25);color:#e88080;border:1px solid rgba(168,56,48,0.4)}
+.qstatus{font-size:9px;padding:2px 4px;border-radius:3px;border:none;font-family:monospace;cursor:pointer;flex-shrink:0}
+.s0{background:rgba(255,255,255,0.05);color:var(--text3)}.s1{background:rgba(232,168,60,0.18);color:var(--amber2)}
+.s2{background:rgba(82,184,114,0.2);color:var(--green2)}.s3{background:rgba(208,88,72,0.2);color:var(--red2)}
+.s4{background:rgba(100,100,90,0.15);color:var(--text3)}
+.detail{padding:20px 22px;max-width:760px;animation:fadeUp .2s ease}
+.detail-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:var(--text3);gap:10px}
+.d-type{font-size:11px;font-family:monospace;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px}
+.d-title{font-family:'Cinzel',serif;font-size:20px;color:var(--amber2);margin-bottom:3px;line-height:1.2}
+.d-region{font-size:11px;color:var(--text3);font-family:monospace;margin-bottom:12px}
+.warn-box{background:rgba(168,56,48,0.1);border:1px solid rgba(168,56,48,0.3);border-radius:var(--radius);padding:8px 12px;font-size:12px;color:var(--red2);font-family:monospace;display:flex;gap:6px;align-items:flex-start;line-height:1.5}
+.info-box{background:rgba(48,96,160,0.08);border:1px solid rgba(48,96,160,0.25);border-radius:var(--radius);padding:8px 12px;font-size:12px;color:var(--blue2);font-family:monospace;display:flex;gap:6px;align-items:flex-start;line-height:1.5}
+.tip-box{background:rgba(200,134,26,0.08);border:1px solid rgba(200,134,26,0.2);border-radius:var(--radius);padding:8px 12px;font-size:12px;color:var(--amber2);font-family:monospace;display:flex;gap:6px;align-items:flex-start;line-height:1.5}
+.d-desc{font-size:13px;color:var(--text2);line-height:1.75;margin-bottom:16px;border-left:2px solid rgba(255,255,255,0.07);padding-left:12px;font-style:italic}
+.dsec{margin-bottom:16px}
+.dsec-title{font-size:10px;font-family:monospace;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--text3);margin-bottom:7px}
+.status-btns{display:flex;gap:4px;flex-wrap:wrap}
+.sbtn{padding:5px 10px;border-radius:5px;border:1px solid rgba(255,255,255,0.12);font-size:11px;font-family:monospace;cursor:pointer;transition:all .15s;background:var(--bg3);color:var(--text2)}
+.sbtn:hover{border-color:var(--amber);color:var(--amber2)}.sbtn.on{background:rgba(200,134,26,0.15);border-color:var(--amber);color:var(--amber2);font-weight:700}
+.notes-ta{width:100%;background:var(--bg3);border:1px solid rgba(255,255,255,0.12);color:var(--text);font-size:12px;padding:8px 10px;border-radius:var(--radius);font-family:'Crimson Text',serif;resize:vertical;min-height:60px;transition:border-color .2s;line-height:1.5}
+.notes-ta:focus{outline:none;border-color:var(--amber)}
+.bdiag{background:var(--bg3);border:1px solid rgba(255,255,255,0.12);border-radius:var(--radius2);overflow:hidden;margin-top:6px}
+.bdiag-title{padding:7px 12px;border-bottom:1px solid var(--border);font-size:10px;font-family:monospace;color:var(--text3);text-transform:uppercase;letter-spacing:1px}
+.dec-page,.end-page{padding:18px;max-width:740px;margin:0 auto}
+.dec-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius2);padding:14px;margin-bottom:12px}
+.dec-qname{font-size:10px;font-family:monospace;color:var(--amber);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px}
+.dec-q{font-family:'Cinzel',serif;font-size:13px;color:var(--text);margin-bottom:8px}
+.dec-choices{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:8px}
+.chbtn{padding:8px 11px;border-radius:var(--radius);border:1px solid rgba(255,255,255,0.12);background:var(--bg3);cursor:pointer;text-align:left;transition:all .15s}
+.chbtn:hover{background:var(--bg4)}.chbtn.g{border-color:var(--green);background:rgba(58,138,88,0.1)}.chbtn.b{border-color:var(--red);background:rgba(168,56,48,0.1)}
+.ch-type{font-size:9px;font-family:monospace;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:2px}
+.ch-type.good{color:var(--green2)}.ch-type.bad{color:var(--red2)}.ch-type.neutral{color:var(--amber2)}
+.ch-label{font-size:12px;color:var(--text);line-height:1.4}
+.ch-cons{font-size:11px;color:var(--text3);margin-top:3px;line-height:1.4;font-family:monospace}
+.end-card{border-radius:var(--radius2);padding:16px;margin-bottom:12px}
+.end-good{background:var(--bg2);border:1px solid rgba(58,138,88,0.4)}.end-mid{background:var(--bg2);border:1px solid rgba(200,134,26,0.35)}.end-bad{background:var(--bg2);border:1px solid rgba(168,56,48,0.35)}
+.end-hdr{display:flex;align-items:center;gap:9px;margin-bottom:8px}
+.end-ico{font-size:24px}
+.end-title{font-family:'Cinzel',serif;font-size:16px;color:var(--text)}
+.end-sub{font-size:11px;font-family:monospace;margin-top:2px}
+.end-desc{font-size:12px;color:var(--text2);line-height:1.65;font-family:monospace;margin-bottom:10px}
+.chk-list{display:grid;gap:5px}
+.chk-item{display:flex;align-items:flex-start;gap:8px;padding:6px 10px;background:var(--bg3);border-radius:var(--radius);border:1px solid var(--border)}
+.chk-ico{font-size:12px;flex-shrink:0;margin-top:1px}
+.chk-txt{font-size:11px;font-family:monospace;color:var(--text2);line-height:1.5}
+.chk-txt.done{color:var(--green2)}.chk-q{font-size:10px;color:var(--text3);margin-top:1px}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg2)}::-webkit-scrollbar-thumb{background:var(--bg5);border-radius:3px}
+@keyframes fadeUp{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <div class="hdr-icon">⚔️</div>
+  <div><div class="hdr-title">Kingdom Come: Deliverance II</div><div class="hdr-sub">Quest Tracker · Branch Log · Endings Guide</div></div>
+  <div class="hdr-stats">
+    <div class="stat"><div class="stat-v" id="s-done">0</div><div class="stat-l">Done</div></div>
+    <div class="stat"><div class="stat-v" id="s-total">0</div><div class="stat-l">Total</div></div>
+    <div class="stat"><div class="stat-v" id="s-pct" style="color:var(--amber2)">0%</div><div class="stat-l">Completed</div></div>
+    <div class="stat"><div class="stat-v" id="s-main" style="color:var(--amber)">0/0</div><div class="stat-l">Main Story</div></div>
+  </div>
+</div>
+<div class="progress"><div class="progress-fill" id="prog" style="width:0%"></div></div>
+<div class="tabs">
+  <button class="tab on" id="tb-tracker" onclick="setTab('tracker')">📜 Quest Tracker</button>
+  <button class="tab" id="tb-decisions" onclick="setTab('decisions')">🔀 Key Decisions</button>
+  <button class="tab" id="tb-endings" onclick="setTab('endings')">🏆 Endings Guide</button>
+</div>
+<div class="main" id="app-main">
+  <div id="page-tracker" style="display:flex;flex:1;overflow:hidden">
+    <div class="sidebar">
+      <div class="filters">
+        <input class="fsearch" id="search-inp" placeholder="🔍  Search quests…" oninput="renderList()">
+        <select class="fsel" id="f-type" onchange="renderList()">
+          <option value="">All Types</option><option value="Main Quest">Main Quests</option>
+          <option value="Side Quest">Side Quests</option><option value="Task">Tasks</option>
+        </select>
+        <select class="fsel" id="f-status" onchange="renderList()">
+          <option value="">All Statuses</option><option value="0">Not Started</option>
+          <option value="1">In Progress</option><option value="2">Completed</option>
+          <option value="3">Failed</option><option value="4">Skipped</option>
+        </select>
+        <select class="fsel" id="f-region" onchange="renderList()">
+          <option value="">All Regions</option>
+          <option value="Trosky">Trosky</option><option value="Kuttenberg">Kuttenberg</option>
+          <option value="DLC1">DLC - Brushes with Death</option>
+          <option value="DLC2">DLC - Legacy of the Forge</option>
+          <option value="DLC3">DLC - Mysteria Ecclesiae</option>
+          <option value="DLC4">DLC - Horse Races</option>
+        </select>
+      </div>
+      <div id="quest-list"></div>
+    </div>
+    <div class="panel" id="detail-panel">
+      <div class="detail-empty" style="height:100%">
+        <div style="font-size:48px;opacity:0.15">📜</div>
+        <div style="font-size:13px;font-family:monospace;color:var(--text3)">Select a quest to view details</div>
+        <div style="font-size:11px;font-family:monospace;color:var(--text4);margin-top:4px">126 quests · 32 main · 40 side · 54 tasks</div>
+      </div>
+    </div>
+  </div>
+  <div id="page-decisions" style="display:none;flex:1;overflow-y:auto"><div class="dec-page" id="dec-content"></div></div>
+  <div id="page-endings" style="display:none;flex:1;overflow-y:auto"><div class="end-page" id="end-content"></div></div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════
+// REGIONS
+// ═══════════════════════════════════════════════════
+const REGIONS=[
+  {id:"Trosky",label:"Trosky",icon:"🏰",dlc:false},
+  {id:"Kuttenberg",label:"Kuttenberg",icon:"⛏️",dlc:false},
+  {id:"DLC1",label:"DLC — Brushes with Death",icon:"🎨",dlc:true},
+  {id:"DLC2",label:"DLC — Legacy of the Forge",icon:"🔨",dlc:true},
+  {id:"DLC3",label:"DLC — Mysteria Ecclesiae",icon:"✝️",dlc:true},
+  {id:"DLC4",label:"DLC — Horse Races",icon:"🐴",dlc:true},
+];
+
+// ═══════════════════════════════════════════════════
+// QUESTS — 126 total (real names from game)
+// status: 0=Not Started 1=In Progress 2=Completed 3=Failed 4=Skipped
+// m=missable hm=highly_missable t=time_sensitive b=has_branches l=locks_content
+// ═══════════════════════════════════════════════════
+const Q=[
+// ── TROSKY MAIN QUESTS (12) ──────────────────────
+{id:"mq01",r:"Trosky",tp:"Main Quest",o:1,name:"Last Rites",m:false,hm:false,t:false,b:false,l:false,
+ desc:"The prologue. Henry and his companions defend the castle in a desperate last stand before fleeing into the wilds of Bohemia.",
+ tip:"Tutorial quest. Take your time learning the combat system — it's unforgiving throughout the game.",status:0,notes:""},
+{id:"mq02",r:"Trosky",tp:"Main Quest",o:2,name:"Easy Riders",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Henry and his party make camp and attempt to regroup after the chaos of the prologue.",
+ tip:"Explore the camp area carefully — a collectible is hidden near the wagon.",status:0,notes:""},
+{id:"mq03",r:"Trosky",tp:"Main Quest",o:3,name:"Fortuna",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Henry and Hans struggle to survive, searching for safety and supplies in hostile territory.",
+ tip:"Looting enemies thoroughly here sets you up well for the early game.",status:0,notes:""},
+{id:"mq04",r:"Trosky",tp:"Main Quest",o:4,name:"Laboratores",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Henry and Hans arrive in Troskowitz and begin planning their next move with local allies.",
+ tip:"Talk to every named NPC in Troskowitz — several side quests become available here.",status:0,notes:""},
+{id:"mq05",r:"Trosky",tp:"Main Quest",o:5,name:"Wedding Crashers",m:false,hm:false,t:false,b:false,l:false,
+ desc:"The open world fully opens as Henry tries to make contact with the local lord. The Trosky region is now freely explorable — complete all side content before advancing further.",
+ tip:"⚠️ POINT OF NO RETURN approaches at MQ8 (Necessary Evil). Complete ALL Trosky side quests before then.",status:0,notes:""},
+{id:"mq06",r:"Trosky",tp:"Main Quest",o:6,name:"For Whom the Bell Tolls",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Henry works urgently to rescue Hans from a dangerous situation. Time-critical story beats.",
+ tip:"Complete the Blacksmith questline before this quest if possible.",status:0,notes:""},
+{id:"mq07",r:"Trosky",tp:"Main Quest",o:7,name:"Back in the Saddle",m:false,hm:false,t:false,b:true,l:true,
+ desc:"Henry and Hans travel to reach Lord Nebak. A key early decision about the Semine family will either protect them or put them at risk — affecting Old Wounds and the eventual ending.",
+ tip:"⚠️ Do NOT betray the Semine secret to Otto. This affects the ending path.",status:0,notes:""},
+{id:"mq08",r:"Trosky",tp:"Main Quest",o:8,name:"Necessary Evil",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Henry must extract critical information from a prisoner. Morally uncomfortable but unavoidable.",
+ tip:"⚠️ TROSKY POINT OF NO RETURN. Complete ALL Trosky side quests before starting this.",status:0,notes:""},
+{id:"mq09",r:"Trosky",tp:"Main Quest",o:9,name:"For Victory!",m:false,hm:false,t:false,b:false,l:false,
+ desc:"The Trosky forces muster for a decisive engagement. Henry's role is crucial to the outcome.",
+ tip:"Stock up on healing supplies and repair your gear before this quest.",status:0,notes:""},
+{id:"mq10",r:"Trosky",tp:"Main Quest",o:10,name:"Divine Messenger",m:false,hm:false,t:false,b:false,l:false,
+ desc:"A mission that requires subtlety and disguise. Henry acts as an unlikely emissary.",
+ tip:"Speech skill above 10 opens several extra dialogue paths.",status:0,notes:""},
+{id:"mq11",r:"Trosky",tp:"Main Quest",o:11,name:"The Finger of God",m:false,hm:false,t:false,b:false,l:false,
+ desc:"A dramatic confrontation with heavy consequences for Trosky's political landscape.",
+ tip:"Preparation pays off here — complete combat training side quests first.",status:0,notes:""},
+{id:"mq12",r:"Trosky",tp:"Main Quest",o:12,name:"Storm",m:false,hm:false,t:false,b:false,l:false,
+ desc:"The Trosky storyline reaches its climax. After this quest Henry travels to Kuttenberg and a new chapter begins.",
+ tip:"After this you can still fast-travel back to Trosky via the red carriage icon on the map.",status:0,notes:""},
+
+// ── KUTTENBERG MAIN QUESTS (20) ──────────────────
+{id:"mq13",r:"Kuttenberg",tp:"Main Quest",o:1,name:"The Sword and the Quill",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Henry arrives in the silver city of Kuttenberg — wealthier, more dangerous, and more politically complex than Trosky.",
+ tip:"Talk to the bathhouse owner Adam early — he's a major quest hub for Kuttenberg.",status:0,notes:""},
+{id:"mq14",r:"Kuttenberg",tp:"Main Quest",o:2,name:"Speak of the Devil",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Henry begins navigating the dangerous web of factions operating in and around Kuttenberg.",
+ tip:"",status:0,notes:""},
+{id:"mq15",r:"Kuttenberg",tp:"Main Quest",o:3,name:"Into the Underworld",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Henry goes deeper into Kuttenberg's criminal underworld to find the information he needs.",
+ tip:"Master Schindel's Toys task and Rosa's Book task unlock during this quest — don't miss them.",status:0,notes:""},
+{id:"mq16",r:"Kuttenberg",tp:"Main Quest",o:4,name:"Via Argentum",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Henry follows the trail of silver — and corruption — deeper into the mines and the city's power structures.",
+ tip:"The Fifth Commandment and Post Scriptum side quests unlock after this.",status:0,notes:""},
+{id:"mq17",r:"Kuttenberg",tp:"Main Quest",o:5,name:"The Word and the Flesh",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Religious and political tensions boil over as Henry gets closer to the truth.",
+ tip:"",status:0,notes:""},
+{id:"mq18",r:"Kuttenberg",tp:"Main Quest",o:6,name:"Prey",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Henry becomes the hunted. Stealth and awareness are critical.",
+ tip:"Keep Mutt with you — his alert behaviour can save your life in this quest.",status:0,notes:""},
+{id:"mq19",r:"Kuttenberg",tp:"Main Quest",o:7,name:"A Dark Corner",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Henry uncovers a disturbing secret hidden in the darkest corner of Kuttenberg.",
+ tip:"",status:0,notes:""},
+{id:"mq20",r:"Kuttenberg",tp:"Main Quest",o:8,name:"Sins of the Father",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Henry grapples with truths about his own past that surface alongside the main conspiracy.",
+ tip:"",status:0,notes:""},
+{id:"mq21",r:"Kuttenberg",tp:"Main Quest",o:9,name:"Family Silver",m:false,hm:false,t:false,b:false,l:false,
+ desc:"The silver conspiracy comes into clearer focus. Powerful men are exposed.",
+ tip:"",status:0,notes:""},
+{id:"mq22",r:"Kuttenberg",tp:"Main Quest",o:10,name:"The Hussite Wedding",m:false,hm:false,t:false,b:false,l:false,
+ desc:"A tense social event that serves as cover for a dangerous intelligence operation.",
+ tip:"Dress appropriately — wearing the right clothes gives bonuses in conversation.",status:0,notes:""},
+{id:"mq23",r:"Kuttenberg",tp:"Main Quest",o:11,name:"A Needle in a Haystack",m:false,hm:false,t:false,b:true,l:false,
+ desc:"Henry must infiltrate a monastery to root out a conspirator hidden among the clergy. The method chosen — stealth, persuasion, or force — changes the outcome significantly.",
+ tip:"Full stealth is the cleanest approach. Force makes the subsequent quest harder.",status:0,notes:""},
+{id:"mq24",r:"Kuttenberg",tp:"Main Quest",o:12,name:"Oratores",m:false,hm:false,t:false,b:false,l:false,
+ desc:"A critical story advancement. Henry's actions here set the stage for the final act.",
+ tip:"⚠️ KUTTENBERG POINT OF NO RETURN. Complete ALL Kuttenberg side quests before this.",status:0,notes:""},
+{id:"mq25",r:"Kuttenberg",tp:"Main Quest",o:13,name:"The Prodigal Son",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Henry confronts aspects of his identity and history that he can no longer avoid.",
+ tip:"",status:0,notes:""},
+{id:"mq26",r:"Kuttenberg",tp:"Main Quest",o:14,name:"All that Glitters",m:false,hm:false,t:false,b:false,l:false,
+ desc:"The silver conspiracy fully unravels. Henry is at the centre of a dangerous unravelling of power.",
+ tip:"",status:0,notes:""},
+{id:"mq27",r:"Kuttenberg",tp:"Main Quest",o:15,name:"Thou shalt not kill",m:false,hm:false,t:false,b:true,l:true,
+ desc:"Henry faces the Dancing with the Devil decision — Dry Devil demands an act of atrocity. This is the most important moral choice in the game with permanent ending consequences.",
+ tip:"⚠️ REFUSE to burn Maleshov. Agreement permanently blocks the good ending. No redemption exists.",status:0,notes:""},
+{id:"mq28",r:"Kuttenberg",tp:"Main Quest",o:16,name:"Come What May",m:false,hm:false,t:false,b:false,l:false,
+ desc:"The situation in Kuttenberg reaches crisis point. Henry must be ready for anything.",
+ tip:"",status:0,notes:""},
+{id:"mq29",r:"Kuttenberg",tp:"Main Quest",o:17,name:"For the Greater Good",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Henry is asked to make a significant sacrifice for the greater good. Whether he does so willingly shapes how others remember him.",
+ tip:"",status:0,notes:""},
+{id:"mq30",r:"Kuttenberg",tp:"Main Quest",o:18,name:"Reckoning",m:false,hm:false,t:false,b:true,l:true,
+ desc:"Three pivotal choices in quick succession: spare or kill Brabant after the duel, let Markvart von Aulitz die naturally or kill him yourself, and whether to save Samuel. These three choices together determine the ending.",
+ tip:"⚠️ Spare Brabant. Let Markvart die naturally. Save Samuel. All three = good ending path.",status:0,notes:""},
+{id:"mq31",r:"Kuttenberg",tp:"Main Quest",o:19,name:"To Dust you Shan't Return",m:false,hm:false,t:false,b:false,l:false,
+ desc:"The penultimate chapter. The consequences of Henry's entire journey crystallise.",
+ tip:"",status:0,notes:""},
+{id:"mq32",r:"Kuttenberg",tp:"Main Quest",o:20,name:"Last Rites",m:false,hm:false,t:false,b:true,l:false,
+ desc:"The final quest. Henry faces judgment — but the ending is already sealed by every choice made before this moment.",
+ tip:"There is no last-minute choice that changes your ending. It is determined by prior decisions.",status:0,notes:""},
+
+// ── TROSKY SIDE QUESTS (17) ──────────────────────
+{id:"sq01",r:"Trosky",tp:"Side Quest",o:1,name:"The Blacksmith's Son",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Help the blacksmith in Tachov deal with a family crisis. Start of the Blacksmith's questline.",
+ tip:"Start this as soon as you arrive in Tachov. Required to unlock The Jaunt.",status:0,notes:""},
+{id:"sq02",r:"Trosky",tp:"Side Quest",o:2,name:"The Jaunt",m:true,hm:false,t:false,b:false,l:false,
+ desc:"The blacksmith's questline continues with a more adventurous errand. Introduces the rogue character Gules.",
+ tip:"Must finish before the Semine wedding. Talk to Blacksmith Radovan in Tachov after The Blacksmith's Son.",status:0,notes:""},
+{id:"sq03",r:"Trosky",tp:"Side Quest",o:3,name:"The Hermit",m:false,hm:false,t:false,b:false,l:false,
+ desc:"A reclusive hermit holds answers about a local mystery. Complete ALL optional objectives to unlock A Sinful Soul.",
+ tip:"Do every optional step — skipping any locks out the 'A Sinful Soul' task permanently.",status:0,notes:""},
+{id:"sq04",r:"Trosky",tp:"Side Quest",o:4,name:"Materia Prima",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Begin the Miller's questline at Lower Semine Mill. The miller has an unusual and philosophical hobby.",
+ tip:"Part 1 of 3 in the Miller questline. Do them in order.",status:0,notes:""},
+{id:"sq05",r:"Trosky",tp:"Side Quest",o:5,name:"Forbidden Fruit",m:false,hm:false,t:false,b:false,l:false,
+ desc:"The miller's alchemical experiments take a risky turn. Part 2 of the Miller questline.",
+ tip:"",status:0,notes:""},
+{id:"sq06",r:"Trosky",tp:"Side Quest",o:6,name:"Opus Magnum",m:false,hm:false,t:false,b:false,l:false,
+ desc:"The conclusion of the Miller's questline. The results of his experiments are finally revealed.",
+ tip:"Best rewards in this questline come from following all optional steps in parts 1 and 2.",status:0,notes:""},
+{id:"sq07",r:"Trosky",tp:"Side Quest",o:7,name:"Frogs",m:false,hm:false,t:false,b:true,l:false,
+ desc:"A bitter feud between two villages — Tachov and Zhelejov — comes to a head. Choose a side or try to broker peace. Mutually exclusive with Mice.",
+ tip:"You can only do Frogs OR Mice, not both. To do Mice instead: rat out Prochek. Related to the Truce trophy.",status:0,notes:""},
+{id:"sq08",r:"Trosky",tp:"Side Quest",o:8,name:"Mice",m:false,hm:false,t:false,b:true,l:false,
+ desc:"The other side of the Tachov/Zhelejov feud. Mutually exclusive with Frogs.",
+ tip:"Speak to Innkeeper Procheck in Tachov to start. You can't do both Frogs and Mice.",status:0,notes:""},
+{id:"sq09",r:"Trosky",tp:"Side Quest",o:9,name:"Battle of the Frogs and Mice",m:false,hm:false,t:false,b:false,l:false,
+ desc:"The conclusion of the Tachov/Zhelejov conflict. Both Frogs and Mice must be done to unlock this.",
+ tip:"Completing all three (Frogs, Mice, this) earns the Truce trophy/achievement.",status:0,notes:""},
+{id:"sq10",r:"Trosky",tp:"Side Quest",o:10,name:"Troubadours",m:false,hm:false,t:false,b:false,l:false,
+ desc:"A pair of travelling musicians at the Zhelejov Wagoners' Inn need Henry's help with a surprisingly complicated problem.",
+ tip:"",status:0,notes:""},
+{id:"sq11",r:"Trosky",tp:"Side Quest",o:11,name:"Mutt",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Find and rescue your loyal dog. Mutt becomes a permanent companion who alerts Henry to enemies and hidden items.",
+ tip:"Get Mutt as early as possible — he's invaluable throughout the game and earns the Man's Best Friend trophy.",status:0,notes:""},
+{id:"sq12",r:"Trosky",tp:"Side Quest",o:12,name:"Lackey",m:false,hm:false,t:false,b:false,l:false,
+ desc:"The start of Vostatek's questline. An unusual man with an unusual request.",
+ tip:"",status:0,notes:""},
+{id:"sq13",r:"Trosky",tp:"Side Quest",o:13,name:"Combat Training 1",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Train with the fighters at the Nomad's Camp. Significantly improves Henry's combat skills.",
+ tip:"Do both Combat Training quests before any major combat — the skill bonuses are substantial.",status:0,notes:""},
+{id:"sq14",r:"Trosky",tp:"Side Quest",o:14,name:"Combat Training 2",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Advanced combat training at the Nomad's Camp.",
+ tip:"",status:0,notes:""},
+{id:"sq15",r:"Trosky",tp:"Side Quest",o:15,name:"Miri Fajta",m:false,hm:false,t:false,b:false,l:false,
+ desc:"A quest within the Nomad's Camp involving a personal conflict and Roma customs.",
+ tip:"Required to unlock The Voivode's Curse task.",status:0,notes:""},
+{id:"sq16",r:"Trosky",tp:"Side Quest",o:16,name:"Bad Blood",m:false,hm:false,t:false,b:false,l:false,
+ desc:"A visit to Bozhena's hut reveals a feud with deep roots. Henry must navigate old wounds and older grudges.",
+ tip:"",status:0,notes:""},
+{id:"sq17",r:"Trosky",tp:"Side Quest",o:17,name:"Invaders",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Troskowitz is threatened by an outside force. Henry is called to help defend the settlement.",
+ tip:"",status:0,notes:""},
+
+// ── TROSKY TASKS (19) ────────────────────────────
+{id:"t01",r:"Trosky",tp:"Task",o:1,name:"A Sinful Soul",m:true,hm:true,t:false,b:false,l:false,
+ desc:"A task unlocked only by completing all optional objectives in 'The Hermit'. A deeply personal story of guilt and redemption.",
+ tip:"🔴 HIGHLY MISSABLE: Only available if you complete every optional step in The Hermit. Speak to Margaret in the graveyard afterwards.",status:0,notes:""},
+{id:"t02",r:"Trosky",tp:"Task",o:2,name:"Canker",m:true,hm:false,t:false,b:false,l:false,
+ desc:"First task in the Gules questline (Semine). Gules needs Henry's help with a local problem.",
+ tip:"Complete before Necessary Evil or it locks out.",status:0,notes:""},
+{id:"t03",r:"Trosky",tp:"Task",o:3,name:"Handsome Charlie",m:true,hm:false,t:false,b:false,l:false,
+ desc:"Second task in the Gules questline.",
+ tip:"Must complete before Necessary Evil.",status:0,notes:""},
+{id:"t04",r:"Trosky",tp:"Task",o:4,name:"Johnny the Gob",m:true,hm:false,t:false,b:false,l:false,
+ desc:"Third task in the Gules questline.",
+ tip:"Must complete before Necessary Evil.",status:0,notes:""},
+{id:"t05",r:"Trosky",tp:"Task",o:5,name:"Casper",m:true,hm:false,t:false,b:false,l:false,
+ desc:"Fourth and final task in the Gules questline.",
+ tip:"Must complete before Necessary Evil.",status:0,notes:""},
+{id:"t06",r:"Trosky",tp:"Task",o:6,name:"Melee at the Mill",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Brawler questline begins at Lower Semine Mill. Fight in underground bare-knuckle bouts.",
+ tip:"Win all four brawler questline tasks for the Henry the Bruiser trophy.",status:0,notes:""},
+{id:"t07",r:"Trosky",tp:"Task",o:7,name:"More Melee at the Mill",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Repeatable brawler fights at the mill. Doesn't count toward the 'Been There Done That' total.",
+ tip:"Only the first completion of each unique fight counts toward trophies.",status:0,notes:""},
+{id:"t08",r:"Trosky",tp:"Task",o:8,name:"Wine, Women and Blood",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Brawler questline moves to the Zhelejov Wagoners' Inn.",
+ tip:"",status:0,notes:""},
+{id:"t09",r:"Trosky",tp:"Task",o:9,name:"The Best for Last",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Final brawler questline task. The toughest fight of the questline.",
+ tip:"Having Combat Training 1 and 2 done makes this significantly easier.",status:0,notes:""},
+{id:"t10",r:"Trosky",tp:"Task",o:10,name:"The Voivode's Curse",m:false,hm:false,t:false,b:false,l:false,
+ desc:"A task at the Nomad's Camp. Talk to Aranka after completing Miri Fajta.",
+ tip:"",status:0,notes:""},
+{id:"t11",r:"Trosky",tp:"Task",o:11,name:"The Axe from the Lake",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Recover a significant weapon from a lake near Tachov.",
+ tip:"",status:0,notes:""},
+{id:"t12",r:"Trosky",tp:"Task",o:12,name:"Bird of Prey",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Part of Vostatek's questline. A hunting challenge with an unusual target.",
+ tip:"",status:0,notes:""},
+{id:"t13",r:"Trosky",tp:"Task",o:13,name:"Sheep among Wolves",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Help Siegfried north of Tachov with a wolf problem. Part of the Shepherd questline.",
+ tip:"Return to Siegfried after completing the Mutt side quest.",status:0,notes:""},
+{id:"t14",r:"Trosky",tp:"Task",o:14,name:"The Lost Sheep",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Shepherd questline continues. Find Shepherd Smoliek's missing flock east-northeast of the Zhelejov Wagoners' Inn.",
+ tip:"",status:0,notes:""},
+{id:"t15",r:"Trosky",tp:"Task",o:15,name:"Carrot on a Stick",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Shepherd questline. Speak to Shepherd Stanislav south of Apollonia.",
+ tip:"",status:0,notes:""},
+{id:"t16",r:"Trosky",tp:"Task",o:16,name:"Hunting the Werewolf",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Final task in the Shepherd questline. Help Herdsboy Natan north of Semine investigate a 'werewolf'.",
+ tip:"After completing the three prior shepherd quests, the conclusion is surprisingly substantial.",status:0,notes:""},
+{id:"t17",r:"Trosky",tp:"Task",o:17,name:"Demons of Trosky",m:true,hm:true,t:false,b:false,l:false,
+ desc:"Speak to Chamberlain Ulrich in Trosky Castle after starting 'Back in the Saddle'.",
+ tip:"🔴 HIGHLY MISSABLE: Must complete before the end of Necessary Evil.",status:0,notes:""},
+{id:"t18",r:"Trosky",tp:"Task",o:18,name:"Pilgrimage",m:false,hm:false,t:false,b:false,l:false,
+ desc:"If Henry has broken the law, he can atone by speaking to Father Nicodemus and undertaking a pilgrimage.",
+ tip:"Repeatable. Does NOT count toward 'Been There Done That' trophy.",status:0,notes:""},
+{id:"t19",r:"Trosky",tp:"Task",o:19,name:"The Lion's Crest",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Pre-order DLC task in the Trosky region. A unique item hunt.",
+ tip:"Pre-order / DLC content.",status:0,notes:""},
+
+// ── KUTTENBERG SIDE QUESTS (23) ──────────────────
+{id:"sq18",r:"Kuttenberg",tp:"Side Quest",o:1,name:"Yackers 'n' Fash",m:false,hm:false,t:false,b:false,l:false,
+ desc:"An introduction to Kuttenberg's criminal underworld through a pair of colourful local criminals.",
+ tip:"Earns the 'Under a Brown Flag' trophy. Leads into Striped Tonies.",status:0,notes:""},
+{id:"sq19",r:"Kuttenberg",tp:"Side Quest",o:2,name:"Striped Tonies",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Continuation of the criminal underworld questline begun in Yackers 'n' Fash.",
+ tip:"Both Yackers 'n' Fash and Striped Tonies needed for the Under a Brown Flag trophy.",status:0,notes:""},
+{id:"sq20",r:"Kuttenberg",tp:"Side Quest",o:3,name:"A Good Scrub",m:false,hm:false,t:false,b:false,l:false,
+ desc:"The Kuttenberg bathhouse offers more than washing. A social questline involving bathhouse politics.",
+ tip:"The bathhouse owner Adam is one of the most important NPCs in Kuttenberg.",status:0,notes:""},
+{id:"sq21",r:"Kuttenberg",tp:"Side Quest",o:4,name:"Ill Repute",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Henry's reputation in Kuttenberg is under attack. Track down the source of damaging rumours.",
+ tip:"",status:0,notes:""},
+{id:"sq22",r:"Kuttenberg",tp:"Side Quest",o:5,name:"Feast for the Poor",m:false,hm:false,t:false,b:false,l:false,
+ desc:"An opportunity to do some genuine good in Kuttenberg's poorer quarters by organising a feast for those going hungry.",
+ tip:"",status:0,notes:""},
+{id:"sq23",r:"Kuttenberg",tp:"Side Quest",o:6,name:"The Spark",m:false,hm:false,t:false,b:false,l:false,
+ desc:"A tense political quest involving pamphlets and the dangerous balance between Hussite and Catholic factions in the city.",
+ tip:"Earns the 'Remember, Remember...' trophy. Handle the situation carefully.",status:0,notes:""},
+{id:"sq24",r:"Kuttenberg",tp:"Side Quest",o:7,name:"In Vino Veritas",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Wine, secrets, and a social gathering where what is said in confidence rarely stays that way.",
+ tip:"",status:0,notes:""},
+{id:"sq25",r:"Kuttenberg",tp:"Side Quest",o:8,name:"Ars Dimicatoria",m:false,hm:false,t:false,b:false,l:false,
+ desc:"A formal combat questline involving the art of swordsmanship and a challenging instructor.",
+ tip:"Leads into the Kuttenberg Tournament. Complete this first.",status:0,notes:""},
+{id:"sq26",r:"Kuttenberg",tp:"Side Quest",o:9,name:"Kuttenberg Tournament",m:false,hm:false,t:false,b:false,l:false,
+ desc:"A full tournament held in Kuttenberg. Multiple combat disciplines. Strong rewards and prestige.",
+ tip:"Requires completing Ars Dimicatoria first. Keep your weapon in top repair.",status:0,notes:""},
+{id:"sq27",r:"Kuttenberg",tp:"Side Quest",o:10,name:"Lost Honour",m:true,hm:false,t:false,b:false,l:false,
+ desc:"Triggered by a random encounter between Horschan and Miskowitz while fast-travelling during the day. Introduce to Jezhek of Holohlavy.",
+ tip:"Must complete before end of Oratores. Pass the skill check or beat him and then offer to help.",status:0,notes:""},
+{id:"sq28",r:"Kuttenberg",tp:"Side Quest",o:11,name:"The Mouth of Hell",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Speak to Father Marian in Old Kutna. A dark and atmospheric quest involving religious superstition and real danger.",
+ tip:"You may need to complete a Pilgrimage task first.",status:0,notes:""},
+{id:"sq29",r:"Kuttenberg",tp:"Side Quest",o:12,name:"Thou art but dust…",m:false,hm:false,t:false,b:false,l:false,
+ desc:"A philosophical and harrowing questline at the Sedletz Monastery involving death, faith, and the nature of mortality.",
+ tip:"One of the game's most memorable side quests. Don't rush it.",status:0,notes:""},
+{id:"sq30",r:"Kuttenberg",tp:"Side Quest",o:13,name:"Spoils of War",m:false,hm:false,t:false,b:false,l:false,
+ desc:"A quest originating at Sigismund's Camp involving looted property and competing claims.",
+ tip:"",status:0,notes:""},
+{id:"sq31",r:"Kuttenberg",tp:"Side Quest",o:14,name:"Hush, My Darling…",m:false,hm:false,t:false,b:false,l:false,
+ desc:"A romantic and somewhat melancholy questline in Miskowitz. Earns the Henry the Matchmaker trophy.",
+ tip:"",status:0,notes:""},
+{id:"sq32",r:"Kuttenberg",tp:"Side Quest",o:15,name:"All's fair…",m:false,hm:false,t:false,b:false,l:false,
+ desc:"A questline in Wysoka with themes of betrayal and loyalty.",
+ tip:"",status:0,notes:""},
+{id:"sq33",r:"Kuttenberg",tp:"Side Quest",o:16,name:"Bellatores",m:false,hm:false,t:false,b:false,l:false,
+ desc:"A military-themed quest in Bylany involving warriors and a test of honour.",
+ tip:"Leads into Dragon's Lair.",status:0,notes:""},
+{id:"sq34",r:"Kuttenberg",tp:"Side Quest",o:17,name:"Dragon's Lair",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Continuation of the Bylany questline. More dramatic and combat-focused than Bellatores.",
+ tip:"Complete Bellatores first.",status:0,notes:""},
+{id:"sq35",r:"Kuttenberg",tp:"Side Quest",o:18,name:"The Thunderstone",m:false,hm:false,t:false,b:false,l:false,
+ desc:"A quest in Grund involving a mysterious object and local superstition.",
+ tip:"",status:0,notes:""},
+{id:"sq36",r:"Kuttenberg",tp:"Side Quest",o:19,name:"The Magic Arrow",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Archery-focused quest at the Devil's Den area. Tests marksmanship skills.",
+ tip:"",status:0,notes:""},
+{id:"sq37",r:"Kuttenberg",tp:"Side Quest",o:20,name:"The Heirloom",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Retrieve a stolen family heirloom. The owner's story is more complicated than it first appears.",
+ tip:"",status:0,notes:""},
+{id:"sq38",r:"Kuttenberg",tp:"Side Quest",o:21,name:"Ransom",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Someone important has been taken for ransom near Dänemark. Negotiations and combat options available.",
+ tip:"",status:0,notes:""},
+{id:"sq39",r:"Kuttenberg",tp:"Side Quest",o:22,name:"Post Scriptum",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Unlocks after Via Argentum. An intimate and personal side quest with strong writing.",
+ tip:"See Katherine after finishing Into the Underworld.",status:0,notes:""},
+{id:"sq40",r:"Kuttenberg",tp:"Side Quest",o:23,name:"The Fifth Commandment",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Unlocks after Via Argentum. A morally complex quest about guilt and consequences.",
+ tip:"",status:0,notes:""},
+
+// ── KUTTENBERG TASKS (36) ────────────────────────
+{id:"t20",r:"Kuttenberg",tp:"Task",o:1,name:"Arrow-head",m:true,hm:true,t:true,b:false,l:false,
+ desc:"A highly missable task in the wilderness near Kuttenberg. Time-sensitive once encountered.",
+ tip:"🔴 HIGHLY MISSABLE: If you pass the trigger point without starting it, it's gone forever.",status:0,notes:""},
+{id:"t21",r:"Kuttenberg",tp:"Task",o:2,name:"Popinjay Shoot",m:false,hm:false,t:false,b:false,l:false,
+ desc:"A traditional archery competition held in Kuttenberg City.",
+ tip:"",status:0,notes:""},
+{id:"t22",r:"Kuttenberg",tp:"Task",o:3,name:"The Thieves' Code",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Learn the thieves' code used by Kuttenberg's criminal underworld.",
+ tip:"",status:0,notes:""},
+{id:"t23",r:"Kuttenberg",tp:"Task",o:4,name:"Beyond the Grave",m:false,hm:false,t:false,b:false,l:false,
+ desc:"A mysterious task involving messages from beyond the grave — or so it seems.",
+ tip:"",status:0,notes:""},
+{id:"t24",r:"Kuttenberg",tp:"Task",o:5,name:"The German's Treasure",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Track down a German merchant's hidden treasure using clues from his journal.",
+ tip:"",status:0,notes:""},
+{id:"t25",r:"Kuttenberg",tp:"Task",o:6,name:"Teeth in the Bag",m:false,hm:false,t:false,b:false,l:false,
+ desc:"A task for a Kuttenberg dentist with more teeth than patience.",
+ tip:"Leads into More Teeth in a Bag.",status:0,notes:""},
+{id:"t26",r:"Kuttenberg",tp:"Task",o:7,name:"More Teeth in a Bag",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Continuation of the dentist's tasks.",
+ tip:"",status:0,notes:""},
+{id:"t27",r:"Kuttenberg",tp:"Task",o:8,name:"High Toll",m:false,hm:false,t:false,b:false,l:false,
+ desc:"A corrupt toll collector is extorting travellers on the road near Kuttenberg.",
+ tip:"",status:0,notes:""},
+{id:"t28",r:"Kuttenberg",tp:"Task",o:9,name:"Warding Off Evil",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Help a superstitious local ward off perceived evil spirits.",
+ tip:"",status:0,notes:""},
+{id:"t29",r:"Kuttenberg",tp:"Task",o:10,name:"Under the Straw Hat",m:true,hm:true,t:false,b:false,l:false,
+ desc:"A highly missable task. Must be triggered at the right moment during the main story.",
+ tip:"🔴 HIGHLY MISSABLE: Start during the main quest 'Into the Underworld'.",status:0,notes:""},
+{id:"t30",r:"Kuttenberg",tp:"Task",o:11,name:"Mark of the Brotherhood",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Prove yourself to a secretive brotherhood operating in Kuttenberg.",
+ tip:"",status:0,notes:""},
+{id:"t31",r:"Kuttenberg",tp:"Task",o:12,name:"Last Will",m:false,hm:false,t:false,b:false,l:false,
+ desc:"A dying man's last wish requires Henry to make a morally difficult delivery.",
+ tip:"",status:0,notes:""},
+{id:"t32",r:"Kuttenberg",tp:"Task",o:13,name:"Master Schindel's Toys",m:true,hm:true,t:false,b:false,l:false,
+ desc:"A task triggered by speaking to bathhouse owner Adam during 'Into the Underworld'. Recover stolen scholar's items.",
+ tip:"🔴 HIGHLY MISSABLE: Only available during 'Into the Underworld'. Don't advance until you've started this.",status:0,notes:""},
+{id:"t33",r:"Kuttenberg",tp:"Task",o:14,name:"Rosa's Book",m:true,hm:true,t:false,b:false,l:false,
+ desc:"Another highly missable task tied to the Into the Underworld main quest window.",
+ tip:"🔴 HIGHLY MISSABLE: Same window as Master Schindel's Toys. Do both immediately.",status:0,notes:""},
+{id:"t34",r:"Kuttenberg",tp:"Task",o:15,name:"The Collector",m:true,hm:false,t:false,b:false,l:false,
+ desc:"Help a collector in Miskowitz acquire a specific rare item.",
+ tip:"Must complete before the end of Oratores.",status:0,notes:""},
+{id:"t35",r:"Kuttenberg",tp:"Task",o:16,name:"Enough!",m:false,hm:false,t:false,b:false,l:false,
+ desc:"A Miskowitz local has had enough. Help them resolve a long-running dispute.",
+ tip:"",status:0,notes:""},
+{id:"t36",r:"Kuttenberg",tp:"Task",o:17,name:"Fight Dirty",m:false,hm:false,t:false,b:false,l:false,
+ desc:"An underground fighting task in Hroschan. Less rule-bound than the Brawler questline.",
+ tip:"",status:0,notes:""},
+{id:"t37",r:"Kuttenberg",tp:"Task",o:18,name:"A Moment of Fame",m:false,hm:false,t:false,b:false,l:false,
+ desc:"A fame-seeking local wants Henry's help making a name for himself in Hroschan.",
+ tip:"",status:0,notes:""},
+{id:"t38",r:"Kuttenberg",tp:"Task",o:19,name:"X Marks the Spot",m:false,hm:false,t:false,b:false,l:false,
+ desc:"A treasure hunt in Pschitoky based on a mysterious map.",
+ tip:"",status:0,notes:""},
+{id:"t39",r:"Kuttenberg",tp:"Task",o:20,name:"Tragedy in Danemark",m:true,hm:true,t:false,b:false,l:false,
+ desc:"A tragic task in Dänemark. Highly missable — must be triggered at exactly the right time.",
+ tip:"🔴 HIGHLY MISSABLE: Check Dänemark early in your Kuttenberg exploration.",status:0,notes:""},
+{id:"t40",r:"Kuttenberg",tp:"Task",o:21,name:"Hammer and Tongs",m:false,hm:false,t:false,b:false,l:false,
+ desc:"A smithing-related task in Grund.",
+ tip:"",status:0,notes:""},
+{id:"t41",r:"Kuttenberg",tp:"Task",o:22,name:"The White Roebuck",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Track a legendary white roebuck near Suchdol.",
+ tip:"",status:0,notes:""},
+{id:"t42",r:"Kuttenberg",tp:"Task",o:23,name:"Primum Nil Nocere",m:false,hm:false,t:false,b:false,l:false,
+ desc:"A medical task in Suchdol. 'First, do no harm' — but sometimes harm is unavoidable.",
+ tip:"",status:0,notes:""},
+{id:"t43",r:"Kuttenberg",tp:"Task",o:24,name:"The Reliquary",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Recover a stolen religious reliquary from bandits in the wilderness.",
+ tip:"",status:0,notes:""},
+{id:"t44",r:"Kuttenberg",tp:"Task",o:25,name:"The Stalker",m:true,hm:true,t:false,b:false,l:false,
+ desc:"Someone is following Henry. Found at Sigismund's Camp.",
+ tip:"🔴 HIGHLY MISSABLE: Available only during a specific window at Sigismund's Camp.",status:0,notes:""},
+{id:"t45",r:"Kuttenberg",tp:"Task",o:26,name:"Absolver",m:false,hm:false,t:false,b:false,l:false,
+ desc:"A task at Sigismund's Camp involving absolution and past crimes.",
+ tip:"",status:0,notes:""},
+{id:"t46",r:"Kuttenberg",tp:"Task",o:27,name:"Nail in the Coffin",m:false,hm:false,t:false,b:false,l:false,
+ desc:"A task in the Kuttenberg region involving a coffin-maker with a problem.",
+ tip:"",status:0,notes:""},
+{id:"t47",r:"Kuttenberg",tp:"Task",o:28,name:"Skeleton in the Closet",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Investigate the ruins of Zimburg. Someone has a secret literally buried here.",
+ tip:"",status:0,notes:""},
+{id:"t48",r:"Kuttenberg",tp:"Task",o:29,name:"Like Old Times",m:true,hm:true,t:false,b:false,l:false,
+ desc:"A nostalgic task at the Devil's Den involving an old acquaintance.",
+ tip:"🔴 HIGHLY MISSABLE: Available only during a narrow window.",status:0,notes:""},
+{id:"t49",r:"Kuttenberg",tp:"Task",o:30,name:"Civic Duty",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Help the city of Kuttenberg with a civic matter that benefits the population.",
+ tip:"",status:0,notes:""},
+{id:"t50",r:"Kuttenberg",tp:"Task",o:31,name:"Damsel in Distress",m:false,hm:false,t:false,b:false,l:false,
+ desc:"A wilderness encounter triggered while fast-travelling. A woman needs urgent help.",
+ tip:"Activated from the Tipster in Bylany after Via Argentum.",status:0,notes:""},
+{id:"t51",r:"Kuttenberg",tp:"Task",o:32,name:"The Peasants' Revolt",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Peasants are revolting — and for good reason. Help mediate or take sides.",
+ tip:"",status:0,notes:""},
+{id:"t52",r:"Kuttenberg",tp:"Task",o:33,name:"Something rotten…",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Something is very wrong in Grund. Track down the source of the problem.",
+ tip:"",status:0,notes:""},
+{id:"t53",r:"Kuttenberg",tp:"Task",o:34,name:"Seeking Justice",m:true,hm:true,t:false,b:false,l:false,
+ desc:"A highly missable justice-seeking task in Suchdol.",
+ tip:"🔴 HIGHLY MISSABLE: Check Suchdol early and thoroughly.",status:0,notes:""},
+{id:"t54",r:"Kuttenberg",tp:"Task",o:35,name:"Attila",m:true,hm:false,t:false,b:false,l:false,
+ desc:"A task in Maleshov. Missable depending on story choices.",
+ tip:"Only available if Maleshov was NOT burned in the main quest.",status:0,notes:""},
+{id:"t55",r:"Kuttenberg",tp:"Task",o:36,name:"Victimised",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Help a victim of crime in Pschitoky get justice.",
+ tip:"",status:0,notes:""},
+
+// ── DLC1 — BRUSHES WITH DEATH (10) ───────────────
+{id:"dlc1_1",r:"DLC1",tp:"Main Quest",o:1,name:"A Sketchy Situation",m:false,hm:false,t:false,b:false,l:false,
+ desc:"The Brushes with Death DLC begins. Henry meets a mysterious artist whose work seems to get people killed.",
+ tip:"Start via the DLC quest giver after installing.",status:0,notes:""},
+{id:"dlc1_2",r:"DLC1",tp:"Main Quest",o:2,name:"Source of Inspiration",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Henry helps the artist find subjects for his paintings. Each sitting reveals something unsettling.",
+ tip:"Earns the Poet's Gut trophy.",status:0,notes:""},
+{id:"dlc1_3",r:"DLC1",tp:"Main Quest",o:3,name:"Chiaroscuro",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Light and shadow — the DLC's central metaphor becomes literal as Henry investigates the artist's true purpose.",
+ tip:"",status:0,notes:""},
+{id:"dlc1_4",r:"DLC1",tp:"Main Quest",o:4,name:"Portrait in Red",m:false,hm:false,t:false,b:false,l:false,
+ desc:"A portrait painted in red signals the DLC's darkest turn. Henry races to prevent more deaths.",
+ tip:"Earns the Vengeance Solves Nothing trophy.",status:0,notes:""},
+{id:"dlc1_5",r:"DLC1",tp:"Main Quest",o:5,name:"The Night-Mare",m:false,hm:false,t:false,b:false,l:false,
+ desc:"The investigation takes a nightmarish turn as reality and vision blur.",
+ tip:"",status:0,notes:""},
+{id:"dlc1_6",r:"DLC1",tp:"Main Quest",o:6,name:"Man Proposes",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Henry uncovers the full scope of the conspiracy behind the killings.",
+ tip:"Earns the Curiosity Killed the Cat trophy.",status:0,notes:""},
+{id:"dlc1_7",r:"DLC1",tp:"Main Quest",o:7,name:"God Disposes",m:false,hm:false,t:false,b:true,l:false,
+ desc:"The DLC's climactic quest. Choices made here determine the DLC's conclusion.",
+ tip:"Earns the Confessor silver trophy. Take your time with the final confrontation.",status:0,notes:""},
+{id:"dlc1_8",r:"DLC1",tp:"Main Quest",o:8,name:"Stained Honour",m:false,hm:false,t:false,b:false,l:false,
+ desc:"The aftermath of the main confrontation. Honour has been stained — but whose?",
+ tip:"Earns the Painted trophy.",status:0,notes:""},
+{id:"dlc1_9",r:"DLC1",tp:"Main Quest",o:9,name:"Root of Evil",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Dig down to the root of what has been happening. The truth is uglier than the art.",
+ tip:"Earns the Nothing But the Best trophy.",status:0,notes:""},
+{id:"dlc1_10",r:"DLC1",tp:"Main Quest",o:10,name:"Unveiling",m:false,hm:false,t:false,b:false,l:false,
+ desc:"The grand unveiling. Everything is revealed and Henry's role in it all becomes clear.",
+ tip:"Earns All Fun and Games, Masterpiece, and Rest in One Piece trophies.",status:0,notes:""},
+
+// ── DLC2 — LEGACY OF THE FORGE (7) ───────────────
+{id:"dlc2_1",r:"DLC2",tp:"Main Quest",o:1,name:"Adept",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Henry joins the blacksmith's guild and begins an apprenticeship in Legacy of the Forge.",
+ tip:"Earns Home Sweet Home! and Master of the Blacksmiths' Guild trophies.",status:0,notes:""},
+{id:"dlc2_2",r:"DLC2",tp:"Main Quest",o:2,name:"Magdalena's Axe",m:false,hm:false,t:false,b:false,l:false,
+ desc:"A legendary axe belonging to someone named Magdalena becomes central to the DLC's story.",
+ tip:"",status:0,notes:""},
+{id:"dlc2_3",r:"DLC2",tp:"Main Quest",o:3,name:"The Master's Game",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Henry must prove mastery over the forge craft in a test set by the guild master.",
+ tip:"",status:0,notes:""},
+{id:"dlc2_4",r:"DLC2",tp:"Main Quest",o:4,name:"Klaus' Introduction",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Meet Klaus, an important character in the DLC's central conflict.",
+ tip:"",status:0,notes:""},
+{id:"dlc2_5",r:"DLC2",tp:"Main Quest",o:5,name:"Martin's Dream",m:false,hm:false,t:false,b:false,l:false,
+ desc:"A dreamlike quest that blurs the line between memory and ambition.",
+ tip:"Earns the Racing the Leech trophy.",status:0,notes:""},
+{id:"dlc2_6",r:"DLC2",tp:"Main Quest",o:6,name:"Old Plans",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Old plans resurface that threaten the guild and everyone connected to it.",
+ tip:"",status:0,notes:""},
+{id:"dlc2_7",r:"DLC2",tp:"Main Quest",o:7,name:"The Last Step",m:false,hm:false,t:false,b:false,l:false,
+ desc:"The final quest of Legacy of the Forge. The guild's future is decided.",
+ tip:"Earns the Martin's Legacy silver trophy.",status:0,notes:""},
+
+// ── DLC3 — MYSTERIA ECCLESIAE (leave space — DLC not fully released at cutoff) ──
+{id:"dlc3_1",r:"DLC3",tp:"Main Quest",o:1,name:"Mysteria Ecclesiae",m:false,hm:false,t:false,b:false,l:false,
+ desc:"The Mysteria Ecclesiae DLC. Details pending full release.",
+ tip:"Check for DLC updates — this content may have expanded since this tracker was built.",status:0,notes:""},
+
+// ── DLC4 — HORSE RACES (3) ────────────────────────
+{id:"dlc4_1",r:"DLC4",tp:"Main Quest",o:1,name:"Horses for Courses",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Horse Races DLC main quest. Enter the racing circuit with your horse.",
+ tip:"Earns the Flagellum Dei trophy.",status:0,notes:""},
+{id:"dlc4_2",r:"DLC4",tp:"Main Quest",o:2,name:"The Executioner's Pride",m:false,hm:false,t:false,b:false,l:false,
+ desc:"A rival racer with a grim nickname. Win against the Executioner to earn respect.",
+ tip:"Earns the Boneworks trophy.",status:0,notes:""},
+{id:"dlc4_3",r:"DLC4",tp:"Main Quest",o:3,name:"Magic Horseshoes",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Legendary horseshoes are said to give any horse extraordinary speed. Track them down.",
+ tip:"",status:0,notes:""},
+];
+
+// ═══════════════════════════════════════════════════
+// BRANCH DIAGRAMS (key story decisions)
+// ═══════════════════════════════════════════════════
+const BRANCHES={
+"mq07":{title:"Back in the Saddle — Semine Decision",w:500,h:255,
+ nodes:[
+  {id:"d",x:170,y:15,w:160,h:44,type:"decision",label:"Reveal Semine secret\nto Otto?"},
+  {id:"g",x:30,y:105,w:160,h:44,type:"good",label:"Keep it secret"},
+  {id:"b",x:310,y:105,w:160,h:44,type:"bad",label:"Tell Otto"},
+  {id:"og",x:10,y:195,w:200,h:44,type:"out-good",label:"Semine protected\nGood ending path open"},
+  {id:"ob",x:280,y:195,w:210,h:44,type:"out-bad",label:"Otto hostile · Old Wounds\nlocked forever"},
+ ],edges:[["d","g"],["d","b"],["g","og"],["b","ob"]]},
+"mq27":{title:"Thou shalt not kill — Maleshov Village",w:500,h:255,
+ nodes:[
+  {id:"d",x:170,y:15,w:160,h:44,type:"decision",label:"Dry Devil: burn\nMaleshov village?"},
+  {id:"g",x:30,y:105,w:160,h:44,type:"good",label:"Refuse — fight him"},
+  {id:"b",x:310,y:105,w:160,h:44,type:"bad",label:"Agree to burn it"},
+  {id:"og",x:10,y:195,w:200,h:44,type:"out-good",label:"Villagers live\nGood ending path open"},
+  {id:"ob",x:280,y:195,w:220,h:44,type:"out-bad",label:"Village destroyed\nBeloved Son ending\nBLOCKED permanently"},
+ ],edges:[["d","g"],["d","b"],["g","og"],["b","ob"]]},
+"mq23":{title:"A Needle in a Haystack — Infiltration Method",w:560,h:255,
+ nodes:[
+  {id:"d",x:200,y:15,w:160,h:44,type:"decision",label:"Infiltrate the\nmonastery"},
+  {id:"s",x:20,y:105,w:150,h:44,type:"good",label:"Full stealth"},
+  {id:"p",x:205,y:105,w:150,h:44,type:"neutral",label:"Persuasion"},
+  {id:"f",x:390,y:105,w:150,h:44,type:"bad",label:"Force"},
+  {id:"os",x:5,y:195,w:180,h:44,type:"out-good",label:"Clean · No enemies"},
+  {id:"op",x:195,y:195,w:170,h:44,type:"out-neutral",label:"Partial success\nsome suspicion"},
+  {id:"of",x:375,y:195,w:180,h:44,type:"out-bad",label:"Chaos · Story beat\ncompromised"},
+ ],edges:[["d","s"],["d","p"],["d","f"],["s","os"],["p","op"],["f","of"]]},
+"mq30":{title:"Reckoning — Three Pivotal Choices",w:520,h:530,
+ nodes:[
+  {id:"d1",x:180,y:5,w:160,h:44,type:"decision",label:"Duel: Brabant's fate"},
+  {id:"g1",x:40,y:85,w:150,h:44,type:"good",label:"Spare Brabant"},
+  {id:"b1",x:330,y:85,w:150,h:44,type:"bad",label:"Kill Brabant"},
+  {id:"ob1",x:310,y:165,w:200,h:44,type:"out-bad",label:"Ally lost · bad\nending influence"},
+  {id:"d2",x:20,y:165,w:170,h:44,type:"decision",label:"Markvart von Aulitz"},
+  {id:"g2",x:0,y:245,w:175,h:44,type:"good",label:"Let him die naturally"},
+  {id:"b2",x:205,y:245,w:165,h:44,type:"bad",label:"Kill him yourself"},
+  {id:"ob2",x:185,y:325,w:195,h:44,type:"out-bad",label:"Counts as bad\nchoice for ending"},
+  {id:"d3",x:0,y:325,w:175,h:44,type:"decision",label:"Save Samuel?"},
+  {id:"g3",x:0,y:405,w:175,h:44,type:"good",label:"Find & save Samuel"},
+  {id:"b3",x:195,y:405,w:165,h:44,type:"bad",label:"Leave without him"},
+  {id:"og3",x:0,y:475,w:175,h:36,type:"out-good",label:"Best ending unlocked"},
+  {id:"ob3",x:185,y:475,w:195,h:36,type:"out-bad",label:"Partial / bad ending"},
+ ],edges:[["d1","g1"],["d1","b1"],["b1","ob1"],["g1","d2"],["d2","g2"],["d2","b2"],["b2","ob2"],["g2","d3"],["d3","g3"],["d3","b3"],["g3","og3"],["b3","ob3"]]},
+"mq32":{title:"Last Rites (Judgment Day) — Ending Outcomes",w:540,h:255,
+ nodes:[
+  {id:"d",x:190,y:15,w:160,h:44,type:"decision",label:"All choices tallied\nat Judgment Day"},
+  {id:"g",x:20,y:105,w:155,h:44,type:"good",label:"5 good choices"},
+  {id:"n",x:193,y:105,w:155,h:44,type:"neutral",label:"3–4 good choices"},
+  {id:"b",x:365,y:105,w:155,h:44,type:"bad",label:"0–2 good choices"},
+  {id:"og",x:5,y:195,w:175,h:44,type:"out-good",label:"Beloved Son\nFull peace epilogue"},
+  {id:"on",x:187,y:195,w:165,h:44,type:"out-neutral",label:"Honourable Son\nBittersweet end"},
+  {id:"ob",x:358,y:195,w:175,h:44,type:"out-bad",label:"Disgraced Son\nDark epilogue"},
+ ],edges:[["d","g"],["d","n"],["d","b"],["g","og"],["n","on"],["b","ob"]]},
+};
+
+// ═══════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════
+const STATUSES=["Not Started","In Progress","Completed","Failed","Skipped"];
+const SCLS=["s0","s1","s2","s3","s4"];
+const SICO=["○","◐","✓","✗","—"];
+let selected=null;
+let currentTab="tracker";
+try{const sv=JSON.parse(localStorage.getItem("kcd2_v3")||"{}");Q.forEach(q=>{if(sv[q.id]){q.status=sv[q.id].s||0;q.notes=sv[q.id].n||"";}});}catch(e){}
+function save(){const d={};Q.forEach(q=>d[q.id]={s:q.status,n:q.notes});try{localStorage.setItem("kcd2_v3",JSON.stringify(d));}catch(e){}}
+
+function setTab(t){
+  currentTab=t;
+  ["tracker","decisions","endings"].forEach(id=>{
+    document.getElementById("page-"+id).style.display=id===t?(id==="tracker"?"flex":"block"):"none";
+    document.getElementById("tb-"+id).className="tab"+(t===id?" on":"");
+  });
+  if(t==="decisions")renderDecisions();
+  if(t==="endings")renderEndings();
+}
+
+function updateStats(){
+  const done=Q.filter(q=>q.status===2).length,total=Q.length;
+  const mqs=Q.filter(q=>q.tp==="Main Quest"),mdone=mqs.filter(q=>q.status===2).length;
+  document.getElementById("s-done").textContent=done;
+  document.getElementById("s-total").textContent=total;
+  document.getElementById("s-pct").textContent=Math.round(done/total*100)+"%";
+  document.getElementById("s-main").textContent=mdone+"/"+mqs.length;
+  document.getElementById("prog").style.width=(done/total*100)+"%";
+}
+
+function renderList(){
+  const srch=(document.getElementById("search-inp").value||"").toLowerCase();
+  const ftype=document.getElementById("f-type").value;
+  const fstat=document.getElementById("f-status").value;
+  const freg=document.getElementById("f-region").value;
+  let html="";
+  REGIONS.forEach(reg=>{
+    const qs=Q.filter(q=>{
+      if(q.r!==reg.id)return false;
+      if(ftype&&q.tp!==ftype)return false;
+      if(fstat!==""&&q.status!==parseInt(fstat))return false;
+      if(freg&&q.r!==freg)return false;
+      if(srch&&!q.name.toLowerCase().includes(srch))return false;
+      return true;
+    });
+    if(!qs.length)return;
+    const done=qs.filter(q=>q.status===2).length;
+    html+=`<div class="rhead"><span style="font-size:13px">${reg.icon}</span><span class="rname">${reg.label}</span>${reg.dlc?`<span class="rdlc">DLC</span>`:""}<span class="rcnt">${done}/${qs.length}</span></div>`;
+    qs.forEach(q=>{
+      const b=[
+        `<span class="bdg ${q.tp==="Main Quest"?"b-main":q.tp==="Side Quest"?"b-side":"b-task"}">${q.tp==="Main Quest"?"Main":q.tp==="Side Quest"?"Side":"Task"}</span>`,
+        q.hm?`<span class="bdg b-hmiss">⚠ v.missable</span>`:(q.m?`<span class="bdg b-miss">missable</span>`:""),
+        q.t?`<span class="bdg b-time">timed</span>`:"",
+        q.b?`<span class="bdg b-branch">branching</span>`:"",
+        q.l?`<span class="bdg b-lock">locks content</span>`:"",
+      ].filter(Boolean).join("");
+      html+=`<div class="qrow${selected===q.id?" sel":""}" onclick="selectQuest('${q.id}')">
+        <span class="qico" style="color:${q.status===2?"var(--green2)":q.status===1?"var(--amber2)":q.status===3?"var(--red2)":"var(--text3)"}">${SICO[q.status]}</span>
+        <div style="flex:1;min-width:0"><div class="qname${q.status===2?" done":""}">${q.name}</div><div class="qbadges">${b}</div></div>
+        <select class="qstatus ${SCLS[q.status]}" onclick="event.stopPropagation()" onchange="setStatus('${q.id}',parseInt(this.value))">
+          ${STATUSES.map((s,i)=>`<option value="${i}"${q.status===i?" selected":""}>${s}</option>`).join("")}
+        </select>
+      </div>`;
+    });
+  });
+  document.getElementById("quest-list").innerHTML=html||`<div style="padding:20px;text-align:center;color:var(--text3);font-family:monospace;font-size:12px">No quests match</div>`;
+  updateStats();
+}
+
+function selectQuest(id){selected=id;renderList();renderDetail();}
+function setStatus(id,val){const q=Q.find(x=>x.id===id);if(q){q.status=val;save();renderList();if(selected===id)renderDetail();if(currentTab==="endings")renderEndings();}}
+function saveNotes(id,val){const q=Q.find(x=>x.id===id);if(q){q.notes=val;save();}}
+
+function renderDetail(){
+  const el=document.getElementById("detail-panel");
+  const q=Q.find(x=>x.id===selected);
+  if(!q){el.innerHTML=`<div class="detail-empty" style="height:100%"><div style="font-size:44px;opacity:0.15">📜</div><div style="font-size:13px;font-family:monospace;color:var(--text3)">Select a quest</div></div>`;return;}
+  const tc=q.tp==="Main Quest"?"var(--amber)":q.tp==="Side Quest"?"var(--blue2)":"var(--purple2)";
+  const rl=REGIONS.find(r=>r.id===q.r)?.label||q.r;
+  const br=BRANCHES[q.id];
+  let w="";
+  if(q.hm)w+=`<div class="warn-box">🔴 <span><b>HIGHLY MISSABLE:</b> Very easy to permanently miss. ${q.tip||"Start immediately when available."}</span></div>`;
+  else if(q.m)w+=`<div class="warn-box">⚠️ <span><b>Missable:</b> Can be permanently missed. Complete promptly.</span></div>`;
+  if(q.t)w+=`<div class="warn-box">⏱️ <span><b>Time Sensitive:</b> Has an in-game timer. Delaying causes auto-fail.</span></div>`;
+  if(q.l)w+=`<div class="warn-box">🔒 <span><b>Locks Content:</b> Your choice here permanently locks out other quests or the good ending.</span></div>`;
+  if(q.tip&&!q.hm)w+=`<div class="tip-box">💡 <span>${q.tip}</span></div>`;
+  el.innerHTML=`<div class="detail">
+    <div class="d-type" style="color:${tc}">${q.tp}</div>
+    <div class="d-title">${q.name}</div>
+    <div class="d-region">📍 ${rl}</div>
+    <div style="display:grid;gap:7px;margin-bottom:14px">${w}</div>
+    <div class="d-desc">${q.desc}</div>
+    <div class="dsec"><div class="dsec-title">Status</div>
+      <div class="status-btns">${STATUSES.map((s,i)=>`<button class="sbtn${q.status===i?" on":""}" onclick="setStatus('${q.id}',${i})">${SICO[i]} ${s}</button>`).join("")}</div>
+    </div>
+    ${br?`<div class="dsec"><div class="dsec-title">Branch Flowchart</div>${buildBranch(br)}</div>`:""}
+    <div class="dsec"><div class="dsec-title">Notes & Choice Recorded</div>
+      <textarea class="notes-ta" placeholder="Record your choice or notes…" onblur="saveNotes('${q.id}',this.value)">${q.notes||""}</textarea>
+    </div>
+  </div>`;
+}
+
+function nodeStyle(t){
+  return({decision:{fill:"#141e38",stroke:"#3060a0",text:"#88aade"},good:{fill:"#0f2a1a",stroke:"#3a8a58",text:"#52b872"},bad:{fill:"#2a0f0f",stroke:"#a83830",text:"#d05848"},neutral:{fill:"#221a08",stroke:"#c8861a",text:"#e8a83c"},"out-good":{fill:"#081a10",stroke:"#3a8a58",text:"#3a8a58"},"out-bad":{fill:"#1a0808",stroke:"#a83830",text:"#a83830"},"out-neutral":{fill:"#1a1408",stroke:"#c8861a",text:"#c8861a"}})[t]||{fill:"#141e38",stroke:"#3060a0",text:"#88aade"};
+}
+function buildBranch(bd){
+  const{nodes,edges,title,w,h}=bd;
+  let s=`<defs><marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" stroke-linecap="round"/></marker></defs>`;
+  edges.forEach(([f,t])=>{
+    const fn=nodes.find(n=>n.id===f),tn=nodes.find(n=>n.id===t);
+    if(!fn||!tn)return;
+    const x1=fn.x+fn.w/2,y1=fn.y+fn.h,x2=tn.x+tn.w/2,y2=tn.y,mid=(y1+y2)/2;
+    s+=`<path d="M${x1},${y1} C${x1},${mid} ${x2},${mid} ${x2},${y2}" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" marker-end="url(#arr)"/>`;
+  });
+  nodes.forEach(n=>{
+    const c=nodeStyle(n.type),lines=n.label.split("\n"),cx=n.x+n.w/2;
+    s+=`<rect x="${n.x}" y="${n.y}" width="${n.w}" height="${n.h}" rx="5" fill="${c.fill}" stroke="${c.stroke}" stroke-width="1"/>`;
+    const lh=15,sh=lines.length*lh,sy=n.y+(n.h-sh)/2+lh*0.82;
+    lines.forEach((l,i)=>s+=`<text x="${cx}" y="${sy+i*lh}" text-anchor="middle" fill="${c.text}" font-size="11" font-family="monospace" font-weight="${n.type==="decision"?"600":"400"}">${l}</text>`);
+  });
+  return `<div class="bdiag"><div class="bdiag-title">${title}</div><svg viewBox="0 0 ${w} ${h}" style="width:100%;max-height:${h}px">${s}</svg></div>`;
+}
+
+const DECISIONS=[
+  {qid:"mq07",q:"Do you reveal the Semine secret to Otto?",lockout:"Telling Otto locks 'Old Wounds' side quest and affects the ending.",choices:[{t:"good",l:"Keep it secret",c:"Semine protected. Old Wounds unlocked."},{t:"bad",l:"Tell Otto",c:"Otto hostile. Old Wounds permanently locked."}]},
+  {qid:"mq27",q:"Do you agree to burn Maleshov village for Dry Devil?",lockout:"Agreeing permanently blocks the Beloved Son (good) ending. No redemption exists.",choices:[{t:"good",l:"Refuse — duel Dry Devil",c:"Hard fight but villagers live. Best ending path stays open."},{t:"bad",l:"Agree to burn it",c:"Village is destroyed. Beloved Son ending permanently unavailable."}]},
+  {qid:"mq23",q:"How do you infiltrate the monastery in A Needle in a Haystack?",lockout:"Using force creates lasting complications in the following quest.",choices:[{t:"good",l:"Full stealth",c:"Cleanest outcome. No enemies made."},{t:"neutral",l:"Persuasion",c:"Works but leaves some suspicion."},{t:"bad",l:"Force",c:"Monks become hostile. Story complications follow."}]},
+  {qid:"mq30",q:"Do you spare Brabant after the duel in Reckoning?",lockout:"Killing Brabant removes a future ally and counts against the good ending.",choices:[{t:"good",l:"Spare Brabant",c:"Brabant may assist you at Judgment Day."},{t:"bad",l:"Kill Brabant",c:"Permanent loss. Bad ending influence."}]},
+  {qid:"mq30",q:"What do you do about Markvart von Aulitz in Reckoning?",lockout:"Killing him yourself counts as a bad choice for the final tally.",choices:[{t:"good",l:"Let him die naturally",c:"Good choice for Judgment Day."},{t:"bad",l:"Kill him yourself",c:"Counts against the good ending."}]},
+  {qid:"mq30",q:"Do you save Samuel in Reckoning?",lockout:"Failing to save Samuel impacts the available endings significantly.",choices:[{t:"good",l:"Find and save Samuel",c:"Full points toward Beloved Son ending."},{t:"bad",l:"Leave without him",c:"Partial or bad ending becomes likely."}]},
+];
+function renderDecisions(){
+  let h=`<p style="font-size:12px;color:var(--text3);margin-bottom:14px;font-family:monospace;line-height:1.6">Every branching decision that affects the story, locks out content, or changes the ending. Record your choices below.</p>`;
+  DECISIONS.forEach(d=>{
+    const q=Q.find(x=>x.id===d.qid),br=BRANCHES[d.qid];
+    h+=`<div class="dec-card">
+      <div class="dec-qname">${q?.name||d.qid}</div>
+      <div class="dec-q">🤔 ${d.q}</div>
+      ${d.lockout?`<div class="warn-box" style="margin-bottom:9px">🔒 ${d.lockout}</div>`:""}
+      ${br?buildBranch(br):""}
+      <div class="dec-choices">${d.choices.map(c=>`<div class="chbtn"><div class="ch-type ${c.t}">${c.t==="good"?"✅ Good":c.t==="bad"?"❌ Bad":"⚖️ Neutral"}</div><div class="ch-label">${c.l}</div><div class="ch-cons">${c.c}</div></div>`).join("")}</div>
+      <div style="margin-top:9px"><div class="dsec-title" style="margin-bottom:5px">Your Choice</div>
+        <textarea class="notes-ta" style="min-height:40px" placeholder="What did you choose?" onblur="saveNotes('${d.qid}',this.value)">${q?.notes||""}</textarea>
+      </div></div>`;
+  });
+  document.getElementById("dec-content").innerHTML=h;
+}
+
+const CHECKLIST=[
+  {label:"Keep Semine secret (don't tell Otto)",qid:"mq07"},
+  {label:"Refuse to burn Maleshov — duel Dry Devil",qid:"mq27"},
+  {label:"Spare Brabant after the duel",qid:"mq30"},
+  {label:"Let Markvart von Aulitz die naturally",qid:"mq30"},
+  {label:"Find and save Samuel",qid:"mq30"},
+];
+function renderEndings(){
+  const done_ids=new Set(Q.filter(q=>q.status===2).map(q=>q.id));
+  const gd=CHECKLIST.filter(c=>done_ids.has(c.qid)).length;
+  const ending=gd>=5?"Beloved Son":gd>=3?"Honourable Son":"Disgraced Son";
+  const chk=CHECKLIST.map(c=>`<div class="chk-item"><span class="chk-ico">${done_ids.has(c.qid)?"✅":"○"}</span><div><div class="chk-txt${done_ids.has(c.qid)?" done":""}">${c.label}</div><div class="chk-q">${Q.find(q=>q.id===c.qid)?.name||""}</div></div></div>`).join("");
+  document.getElementById("end-content").innerHTML=`
+    <p style="font-size:12px;color:var(--text3);margin-bottom:14px;font-family:monospace;line-height:1.6">Three endings determined by 5 key choices. Current projection: <b style="color:var(--amber2)">${ending}</b> (${gd}/5 complete).</p>
+    <div class="end-card end-good"><div class="end-hdr"><div class="end-ico">🏆</div><div><div class="end-title">Beloved Son</div><div class="end-sub" style="color:var(--green2)">Best ending — all 5 key choices correct</div></div></div>
+    <div class="end-desc">Henry's parents are proud. Full peace epilogue. All surviving characters get resolution. Requires all 5 checklist items.</div>
+    <div class="dsec-title" style="margin-bottom:7px">Checklist (${gd}/5)</div><div class="chk-list">${chk}</div></div>
+    <div class="end-card end-mid" style="margin-top:12px"><div class="end-hdr"><div class="end-ico">⚖️</div><div><div class="end-title">Honourable Son</div><div class="end-sub" style="color:var(--amber2)">Middle ending — 3–4 good choices</div></div></div>
+    <div class="end-desc">Bittersweet resolution. Parents acknowledge Henry tried his best. Some saved, some lost. Most players get this on a first playthrough.</div></div>
+    <div class="end-card end-bad" style="margin-top:12px"><div class="end-hdr"><div class="end-ico">💀</div><div><div class="end-title">Disgraced Son</div><div class="end-sub" style="color:var(--red2)">Bad ending — 2 or fewer good choices</div></div></div>
+    <div class="end-desc">Dark epilogue. His parents mourn the man Henry became. Village burned if Maleshov was agreed to. Brabant dead. Samuel abandoned. Hard to reach accidentally.</div></div>
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius2);padding:16px;margin-top:12px">
+      <div style="font-size:12px;font-family:monospace;color:var(--amber2);font-weight:600;margin-bottom:10px">📋 Ending Decision Map</div>
+      ${buildBranch(BRANCHES["mq32"])}
+      <div style="margin-top:8px;font-size:11px;font-family:monospace;color:var(--text3);line-height:1.6">The ending is set by 5 pivotal decisions scattered across the full game. Judgment Day reads the tally — there is no last-minute override.</div>
+    </div>`;
+}
+
+renderList();renderDetail();updateStats();
+</script>
+</body>
+</html>
