@@ -205,7 +205,7 @@ const Q=[
 {id:"mq07",r:"Trosky",tp:"Main Quest",o:7,name:"Back in the Saddle",m:false,hm:false,t:false,b:true,l:true,
  desc:"Henry and Hans travel to reach Lord Nebak. A key early decision about the Semine family will either protect them or put them at risk — affecting Old Wounds and the eventual ending.",
  tip:"⚠️ Do NOT betray the Semine secret to Otto. This affects the ending path.",status:0,notes:""},
-{id:"mq08",r:"Trosky",tp:"Main Quest",o:8,name:"Necessary Evil",m:false,hm:false,t:false,b:false,l:false,
+{id:"mq08",r:"Trosky",tp:"Main Quest",o:8,name:"Necessary Evil",m:false,hm:false,t:false,b:true,l:true,
  desc:"Henry must extract critical information from a prisoner. Morally uncomfortable but unavoidable.",
  tip:"⚠️ TROSKY POINT OF NO RETURN. Complete ALL Trosky side quests before starting this.",status:0,notes:""},
 {id:"mq09",r:"Trosky",tp:"Main Quest",o:9,name:"For Victory!",m:false,hm:false,t:false,b:false,l:false,
@@ -267,7 +267,7 @@ const Q=[
 {id:"mq27",r:"Kuttenberg",tp:"Main Quest",o:15,name:"Thou shalt not kill",m:false,hm:false,t:false,b:true,l:true,
  desc:"Henry faces the Dancing with the Devil decision — Dry Devil demands an act of atrocity. This is the most important moral choice in the game with permanent ending consequences.",
  tip:"⚠️ REFUSE to burn Maleshov. Agreement permanently blocks the good ending. No redemption exists.",status:0,notes:""},
-{id:"mq28",r:"Kuttenberg",tp:"Main Quest",o:16,name:"Come What May",m:false,hm:false,t:false,b:false,l:false,
+{id:"mq28",r:"Kuttenberg",tp:"Main Quest",o:16,name:"Come What May",m:false,hm:false,t:false,b:true,l:true,
  desc:"The situation in Kuttenberg reaches crisis point. Henry must be ready for anything.",
  tip:"",status:0,notes:""},
 {id:"mq29",r:"Kuttenberg",tp:"Main Quest",o:17,name:"For the Greater Good",m:false,hm:false,t:false,b:false,l:false,
@@ -604,7 +604,7 @@ const Q=[
 {id:"dlc1_9",r:"DLC1",tp:"Main Quest",o:9,name:"Root of Evil",m:false,hm:false,t:false,b:false,l:false,
  desc:"Dig down to the root of what has been happening. The truth is uglier than the art.",
  tip:"Earns the Nothing But the Best trophy.",status:0,notes:""},
-{id:"dlc1_10",r:"DLC1",tp:"Main Quest",o:10,name:"Unveiling",m:false,hm:false,t:false,b:false,l:false,
+{id:"dlc1_10",r:"DLC1",tp:"Main Quest",o:10,name:"Unveiling",m:false,hm:false,t:false,b:true,l:false,
  desc:"The grand unveiling. Everything is revealed and Henry's role in it all becomes clear.",
  tip:"Earns All Fun and Games, Masterpiece, and Rest in One Piece trophies.",status:0,notes:""},
 
@@ -652,59 +652,104 @@ const Q=[
 // BRANCH DIAGRAMS (key story decisions)
 // ═══════════════════════════════════════════════════
 const BRANCHES={
-"mq07":{title:"Back in the Saddle — Semine Decision",w:500,h:255,
+
+// ── BACK IN THE SADDLE ──────────────────────────────────────────
+"mq07":{title:"Back in the Saddle — Semine Wedding Secret",w:520,h:310,
  nodes:[
-  {id:"d",x:170,y:15,w:160,h:44,type:"decision",label:"Reveal Semine secret\nto Otto?"},
-  {id:"g",x:30,y:105,w:160,h:44,type:"good",label:"Keep it secret"},
-  {id:"b",x:310,y:105,w:160,h:44,type:"bad",label:"Tell Otto"},
-  {id:"og",x:10,y:195,w:200,h:44,type:"out-good",label:"Semine protected\nGood ending path open"},
-  {id:"ob",x:280,y:195,w:210,h:44,type:"out-bad",label:"Otto hostile · Old Wounds\nlocked forever"},
+  {id:"d",x:180,y:10,w:160,h:44,type:"decision",label:"Mention the Semine\nwedding to Otto?"},
+  {id:"g",x:30,y:100,w:190,h:44,type:"good",label:"Don't mention it (Good Path)"},
+  {id:"b",x:300,y:100,w:190,h:44,type:"bad",label:"Betray Semine (Bad Path)"},
+  {id:"og",x:10,y:195,w:210,h:52,type:"out-good",label:"Semine family protected\nNecessary Evil plays out well\nParents approve at the end"},
+  {id:"ob",x:280,y:195,w:220,h:52,type:"out-bad",label:"Otto sends you & Hashek\nto Semine estate\nFamily endangered\nParents disapprove at end"},
  ],edges:[["d","g"],["d","b"],["g","og"],["b","ob"]]},
-"mq27":{title:"Thou shalt not kill — Maleshov Village",w:500,h:255,
+
+// ── NECESSARY EVIL ──────────────────────────────────────────────
+"mq08":{title:"Necessary Evil — Side with Hashek or Semine?",w:560,h:430,
  nodes:[
-  {id:"d",x:170,y:15,w:160,h:44,type:"decision",label:"Dry Devil: burn\nMaleshov village?"},
-  {id:"g",x:30,y:105,w:160,h:44,type:"good",label:"Refuse — fight him"},
-  {id:"b",x:310,y:105,w:160,h:44,type:"bad",label:"Agree to burn it"},
-  {id:"og",x:10,y:195,w:200,h:44,type:"out-good",label:"Villagers live\nGood ending path open"},
-  {id:"ob",x:280,y:195,w:220,h:44,type:"out-bad",label:"Village destroyed\nBeloved Son ending\nBLOCKED permanently"},
+  {id:"d",x:200,y:10,w:160,h:44,type:"decision",label:"Hashek wants to\nmassacre Semine estate"},
+  {id:"g",x:20,y:100,w:190,h:44,type:"good",label:"Side with Olda Semine"},
+  {id:"b",x:350,y:100,w:170,h:44,type:"bad",label:"Side with Hashek"},
+  {id:"g2",x:0,y:190,w:210,h:44,type:"good",label:"Defeat Hashek in duel\nSemine family flee, burn estate"},
+  {id:"b2",x:330,y:190,w:200,h:44,type:"bad",label:"Massacre of Semine estate\nOlda executed"},
+  {id:"g3",x:0,y:280,w:210,h:44,type:"neutral",label:"Lie to von Bergow\nwith Hans's cover story"},
+  {id:"secret",x:220,y:280,w:200,h:44,type:"bad",label:"SECRET: Admit you\nkilled Hashek → Hanged\n(Game Over)"},
+  {id:"og",x:0,y:370,w:210,h:44,type:"out-good",label:"Good ending path open\nParents approve"},
+  {id:"ob",x:330,y:370,w:200,h:44,type:"out-bad",label:"Negative ending score\nSemine wiped out"},
+ ],edges:[["d","g"],["d","b"],["g","g2"],["b","b2"],["g2","g3"],["g3","secret"],["g3","og"],["b2","ob"]]},
+
+// ── THOU SHALT NOT KILL (MALESHOV) ──────────────────────────────
+"mq27":{title:"Thou shalt not kill — Maleshov Village",w:520,h:310,
+ nodes:[
+  {id:"d",x:180,y:10,w:160,h:44,type:"decision",label:"Dry Devil demands\nyou burn Maleshov"},
+  {id:"g",x:30,y:100,w:185,h:44,type:"good",label:"Refuse — fight Dry Devil"},
+  {id:"b",x:305,y:100,w:185,h:44,type:"bad",label:"Agree to burn it"},
+  {id:"og",x:10,y:195,w:205,h:52,type:"out-good",label:"Villagers live\nGood ending path open\nParents approve"},
+  {id:"ob",x:285,y:195,w:220,h:52,type:"out-bad",label:"Village burned to ash\nBeloved Son ending BLOCKED\nNo redemption path exists\nParents disapprove"},
  ],edges:[["d","g"],["d","b"],["g","og"],["b","ob"]]},
-"mq23":{title:"A Needle in a Haystack — Infiltration Method",w:560,h:255,
+
+// ── ISTVAN TOTH DUEL ────────────────────────────────────────────
+"mq28":{title:"Istvan Toth — How does he die?",w:500,h:255,
  nodes:[
-  {id:"d",x:200,y:15,w:160,h:44,type:"decision",label:"Infiltrate the\nmonastery"},
-  {id:"s",x:20,y:105,w:150,h:44,type:"good",label:"Full stealth"},
-  {id:"p",x:205,y:105,w:150,h:44,type:"neutral",label:"Persuasion"},
-  {id:"f",x:390,y:105,w:150,h:44,type:"bad",label:"Force"},
-  {id:"os",x:5,y:195,w:180,h:44,type:"out-good",label:"Clean · No enemies"},
-  {id:"op",x:195,y:195,w:170,h:44,type:"out-neutral",label:"Partial success\nsome suspicion"},
-  {id:"of",x:375,y:195,w:180,h:44,type:"out-bad",label:"Chaos · Story beat\ncompromised"},
- ],edges:[["d","s"],["d","p"],["d","f"],["s","os"],["p","op"],["f","of"]]},
-"mq30":{title:"Reckoning — Three Pivotal Choices",w:520,h:530,
+  {id:"d",x:170,y:10,w:160,h:44,type:"decision",label:"Confront Istvan Toth\n(he must die either way)"},
+  {id:"g",x:20,y:100,w:185,h:44,type:"good",label:"Honour him with a fair duel"},
+  {id:"b",x:295,y:100,w:185,h:44,type:"bad",label:"Kill him without a duel"},
+  {id:"og",x:5,y:195,w:200,h:44,type:"out-good",label:"Honourable kill\nParents approve at ending"},
+  {id:"ob",x:280,y:195,w:205,h:44,type:"out-bad",label:"Dishonourable kill\nNegative ending score"},
+ ],edges:[["d","g"],["d","b"],["g","og"],["b","ob"]]},
+
+// ── RECKONING — THREE CHOICES ───────────────────────────────────
+"mq30":{title:"Reckoning — Three Pivotal Choices",w:530,h:580,
  nodes:[
-  {id:"d1",x:180,y:5,w:160,h:44,type:"decision",label:"Duel: Brabant's fate"},
-  {id:"g1",x:40,y:85,w:150,h:44,type:"good",label:"Spare Brabant"},
-  {id:"b1",x:330,y:85,w:150,h:44,type:"bad",label:"Kill Brabant"},
-  {id:"ob1",x:310,y:165,w:200,h:44,type:"out-bad",label:"Ally lost · bad\nending influence"},
-  {id:"d2",x:20,y:165,w:170,h:44,type:"decision",label:"Markvart von Aulitz"},
-  {id:"g2",x:0,y:245,w:175,h:44,type:"good",label:"Let him die naturally"},
-  {id:"b2",x:205,y:245,w:165,h:44,type:"bad",label:"Kill him yourself"},
-  {id:"ob2",x:185,y:325,w:195,h:44,type:"out-bad",label:"Counts as bad\nchoice for ending"},
-  {id:"d3",x:0,y:325,w:175,h:44,type:"decision",label:"Save Samuel?"},
-  {id:"g3",x:0,y:405,w:175,h:44,type:"good",label:"Find & save Samuel"},
-  {id:"b3",x:195,y:405,w:165,h:44,type:"bad",label:"Leave without him"},
-  {id:"og3",x:0,y:475,w:175,h:36,type:"out-good",label:"Best ending unlocked"},
-  {id:"ob3",x:185,y:475,w:195,h:36,type:"out-bad",label:"Partial / bad ending"},
+  {id:"d1",x:185,y:5,w:160,h:44,type:"decision",label:"After the duel:\nBrabant's fate"},
+  {id:"g1",x:30,y:90,w:165,h:44,type:"good",label:"Spare Brabant"},
+  {id:"b1",x:335,y:90,w:165,h:44,type:"bad",label:"Kill Brabant"},
+  {id:"ob1",x:315,y:175,w:205,h:44,type:"out-bad",label:"Ally permanently lost\nNegative ending score"},
+  {id:"d2",x:10,y:175,w:185,h:44,type:"decision",label:"Markvart von Aulitz\nis defeated & dying"},
+  {id:"g2",x:0,y:265,w:185,h:44,type:"good",label:"Let him die naturally"},
+  {id:"b2",x:210,y:265,w:175,h:44,type:"bad",label:"Kill him yourself"},
+  {id:"ob2",x:195,y:350,w:195,h:44,type:"out-bad",label:"Counts as needless kill\nNegative ending score"},
+  {id:"d3",x:0,y:350,w:185,h:44,type:"decision",label:"Find the horses —\nSamuel is there"},
+  {id:"g3",x:0,y:440,w:185,h:44,type:"good",label:"Bring Samuel with you"},
+  {id:"b3",x:205,y:440,w:175,h:44,type:"bad",label:"Leave without him"},
+  {id:"og3",x:0,y:525,w:185,h:40,type:"out-good",label:"Samuel lives · appears in\nepilogue thanking Henry"},
+  {id:"ob3",x:195,y:525,w:200,h:40,type:"out-bad",label:"Samuel executed\nPraguers steal silver faster"},
  ],edges:[["d1","g1"],["d1","b1"],["b1","ob1"],["g1","d2"],["d2","g2"],["d2","b2"],["b2","ob2"],["g2","d3"],["d3","g3"],["d3","b3"],["g3","og3"],["b3","ob3"]]},
-"mq32":{title:"Last Rites (Judgment Day) — Ending Outcomes",w:540,h:255,
+
+// ── LAST RITES (ENDING) ─────────────────────────────────────────
+"mq32":{title:"Last Rites — Final Judgment (Parents' Dream)",w:555,h:310,
  nodes:[
-  {id:"d",x:190,y:15,w:160,h:44,type:"decision",label:"All choices tallied\nat Judgment Day"},
-  {id:"g",x:20,y:105,w:155,h:44,type:"good",label:"5 good choices"},
-  {id:"n",x:193,y:105,w:155,h:44,type:"neutral",label:"3–4 good choices"},
-  {id:"b",x:365,y:105,w:155,h:44,type:"bad",label:"0–2 good choices"},
-  {id:"og",x:5,y:195,w:175,h:44,type:"out-good",label:"Beloved Son\nFull peace epilogue"},
-  {id:"on",x:187,y:195,w:165,h:44,type:"out-neutral",label:"Honourable Son\nBittersweet end"},
-  {id:"ob",x:358,y:195,w:175,h:44,type:"out-bad",label:"Disgraced Son\nDark epilogue"},
+  {id:"d",x:195,y:10,w:165,h:44,type:"decision",label:"Henry's dream:\nparents judge his life"},
+  {id:"g",x:10,y:100,w:160,h:44,type:"good",label:"Mostly good choices\n+ show remorse"},
+  {id:"n",x:197,y:100,w:160,h:44,type:"neutral",label:"Mixed choices"},
+  {id:"b",x:385,y:100,w:160,h:44,type:"bad",label:"Mostly bad choices\nor no remorse"},
+  {id:"og",x:0,y:200,w:180,h:52,type:"out-good",label:"Beloved Son\nParents proud · full peace\nSamuel appears in epilogue"},
+  {id:"on",x:187,y:200,w:180,h:52,type:"out-neutral",label:"Honourable Son\nBittersweet farewell\nHenry rides into uncertainty"},
+  {id:"ob",x:375,y:200,w:175,h:52,type:"out-bad",label:"Disgraced Son\nParents mourn · dark epilogue\nVillage ash · allies dead"},
  ],edges:[["d","g"],["d","n"],["d","b"],["g","og"],["n","on"],["b","ob"]]},
+
+// ── BRUSHES WITH DEATH — GOD DISPOSES ──────────────────────────
+"dlc1_7":{title:"God Disposes — Voyta's Secrets",w:510,h:255,
+ nodes:[
+  {id:"d",x:175,y:10,w:160,h:44,type:"decision",label:"Exhaust ALL dialogue\nwith Voyta about his past"},
+  {id:"g",x:20,y:100,w:195,h:44,type:"good",label:"Show empathy & trust\nexhaust all options"},
+  {id:"b",x:295,y:100,w:195,h:44,type:"bad",label:"Skip dialogue or\nignore his past"},
+  {id:"og",x:5,y:195,w:210,h:44,type:"out-good",label:"Voyta confesses everything\nConfesor trophy unlocked"},
+  {id:"ob",x:285,y:195,w:215,h:44,type:"out-bad",label:"Voyta stays guarded\nConfesor trophy locked out\n(missable forever)"},
+ ],edges:[["d","g"],["d","b"],["g","og"],["b","ob"]]},
+
+// ── BRUSHES WITH DEATH — UNVEILING (DLC ENDING) ─────────────────
+"dlc1_10":{title:"Unveiling — DLC Ending Choice",w:560,h:370,
+ nodes:[
+  {id:"d",x:200,y:10,w:160,h:44,type:"decision",label:"Talk to Voyta after\nreturning the statuette"},
+  {id:"g",x:20,y:100,w:210,h:44,type:"good",label:"\"The devil isn't leading you,\ndon't be afraid\" / Let him finish"},
+  {id:"b",x:330,y:100,w:200,h:44,type:"bad",label:"\"Then don't finish it.\nDestroy it.\" (+ pass Persuasion)"},
+  {id:"og1",x:0,y:190,w:225,h:44,type:"out-good",label:"Voyta finishes his masterpiece\nChurch takes painting\nVoyta is at peace"},
+  {id:"og2",x:0,y:275,w:225,h:44,type:"out-good",label:"You receive Painter's Skull\n→ return to Voyta's grave\ndig it up to complete the burial\n(Rest in One Piece trophy)"},
+  {id:"ob",x:305,y:190,w:240,h:88,type:"out-bad",label:"Voyta burns his unfinished\nmasterpiece — destroyed\nNo skull reward\nNo Rest in One Piece trophy\nVoyta gets a different closure"},
+ ],edges:[["d","g"],["d","b"],["g","og1"],["og1","og2"],["b","ob"]]},
+
 };
+
 
 // ═══════════════════════════════════════════════════
 // STATE
@@ -831,12 +876,70 @@ function buildBranch(bd){
 }
 
 const DECISIONS=[
-  {qid:"mq07",q:"Do you reveal the Semine secret to Otto?",lockout:"Telling Otto locks 'Old Wounds' side quest and affects the ending.",choices:[{t:"good",l:"Keep it secret",c:"Semine protected. Old Wounds unlocked."},{t:"bad",l:"Tell Otto",c:"Otto hostile. Old Wounds permanently locked."}]},
-  {qid:"mq27",q:"Do you agree to burn Maleshov village for Dry Devil?",lockout:"Agreeing permanently blocks the Beloved Son (good) ending. No redemption exists.",choices:[{t:"good",l:"Refuse — duel Dry Devil",c:"Hard fight but villagers live. Best ending path stays open."},{t:"bad",l:"Agree to burn it",c:"Village is destroyed. Beloved Son ending permanently unavailable."}]},
-  {qid:"mq23",q:"How do you infiltrate the monastery in A Needle in a Haystack?",lockout:"Using force creates lasting complications in the following quest.",choices:[{t:"good",l:"Full stealth",c:"Cleanest outcome. No enemies made."},{t:"neutral",l:"Persuasion",c:"Works but leaves some suspicion."},{t:"bad",l:"Force",c:"Monks become hostile. Story complications follow."}]},
-  {qid:"mq30",q:"Do you spare Brabant after the duel in Reckoning?",lockout:"Killing Brabant removes a future ally and counts against the good ending.",choices:[{t:"good",l:"Spare Brabant",c:"Brabant may assist you at Judgment Day."},{t:"bad",l:"Kill Brabant",c:"Permanent loss. Bad ending influence."}]},
-  {qid:"mq30",q:"What do you do about Markvart von Aulitz in Reckoning?",lockout:"Killing him yourself counts as a bad choice for the final tally.",choices:[{t:"good",l:"Let him die naturally",c:"Good choice for Judgment Day."},{t:"bad",l:"Kill him yourself",c:"Counts against the good ending."}]},
-  {qid:"mq30",q:"Do you save Samuel in Reckoning?",lockout:"Failing to save Samuel impacts the available endings significantly.",choices:[{t:"good",l:"Find and save Samuel",c:"Full points toward Beloved Son ending."},{t:"bad",l:"Leave without him",c:"Partial or bad ending becomes likely."}]},
+  // ── BACK IN THE SADDLE ──────────────────────────────────────
+  {qid:"mq07",q:"Do you mention the Semine wedding to Otto von Bergow?",
+   lockout:"Telling Otto directly triggers the bad path — he sends you and Hashek to the Semine estate. 'Old Wounds' side quest also locked forever.",
+   choices:[
+    {t:"good",l:"Don't mention it",c:"Semine family protected. Necessary Evil plays out well. Parents approve at the ending."},
+    {t:"bad",l:"Betray Semine (mention it)",c:"Otto sends you & Hashek to the estate. Family endangered. Parents disapprove at the ending."},
+   ]},
+  // ── NECESSARY EVIL ──────────────────────────────────────────
+  {qid:"mq08",q:"At Semine estate — do you side with Hashek or protect the Semines?",
+   lockout:"Siding with Hashek causes a full massacre. There is also a secret 'Game Over' path if you admit to killing Hashek.",
+   choices:[
+    {t:"good",l:"Side with Olda Semine — duel Hashek",c:"Kill Hashek. Semine family burn their own estate and flee. Lie to von Bergow with Hans's cover story. Good ending path. Parents approve."},
+    {t:"bad",l:"Side with Hashek — massacre",c:"Semine estate destroyed. Olda executed. Von Bergow is pleased but morally it's a stain. Negative ending score."},
+    {t:"bad",l:"SECRET: Admit killing Hashek to von Bergow",c:"Henry is immediately hanged. Game Over. Load your last save."},
+   ]},
+  // ── ISTVAN TOTH ─────────────────────────────────────────────
+  {qid:"mq28",q:"When you confront Istvan Toth — how does he die?",
+   lockout:"Istvan Toth must die no matter what. The method is what affects your ending score.",
+   choices:[
+    {t:"good",l:"Honour him with a fair duel",c:"Honourable kill. Positive mark for the parents' judgment at the ending."},
+    {t:"bad",l:"Kill him without giving him a duel",c:"Dishonourable kill. Negative mark for the ending. Faster but costs you."},
+   ]},
+  // ── MALESHOV ────────────────────────────────────────────────
+  {qid:"mq27",q:"Dry Devil demands you burn Maleshov village — do you comply?",
+   lockout:"Agreeing permanently and irrevocably blocks the Beloved Son (good) ending. There is no redemption path.",
+   choices:[
+    {t:"good",l:"Refuse — fight Dry Devil",c:"Hard fight but villagers live. Good ending path remains open. Parents approve."},
+    {t:"bad",l:"Agree to burn it",c:"Village burns to ash. Beloved Son ending BLOCKED forever. Parents deeply disapprove."},
+   ]},
+  // ── RECKONING: BRABANT ──────────────────────────────────────
+  {qid:"mq30",q:"After defeating Brabant in the duel — do you spare him?",
+   lockout:"Killing Brabant removes him permanently and counts as a negative choice for the final ending tally.",
+   choices:[
+    {t:"good",l:"Spare Brabant",c:"He survives. Brabant may appear as an ally later. Positive ending score."},
+    {t:"bad",l:"Kill Brabant",c:"Permanently gone. Negative ending score. No future assistance from him."},
+   ]},
+  // ── RECKONING: MARKVART ─────────────────────────────────────
+  {qid:"mq30",q:"Markvart von Aulitz is defeated and dying — do you let him go or kill him yourself?",
+   lockout:"Killing him yourself counts as an unnecessary death — negative ending score.",
+   choices:[
+    {t:"good",l:"Let him die naturally from his wounds",c:"Counts as a good/neutral choice. Positive ending score."},
+    {t:"bad",l:"Kill him yourself",c:"Unnecessary killing. Negative ending score."},
+   ]},
+  // ── RECKONING: SAMUEL ───────────────────────────────────────
+  {qid:"mq30",q:"When you find the horses — Samuel is nearby. Do you take him with you?",
+   lockout:"Samuel's fate does not directly affect Henry's honour score but changes the epilogue significantly.",
+   choices:[
+    {t:"good",l:"Bring Samuel with you",c:"Samuel survives. You are delayed — Praguers steal Sigismund's silver. Samuel appears in the epilogue thanking Henry. Radzig is proud."},
+    {t:"bad",l:"Leave without Samuel",c:"Samuel is executed by hanging. Henry gets there faster, preventing the silver theft. Samuel does not appear in the epilogue."},
+   ]},
+  // ── DLC: GOD DISPOSES ───────────────────────────────────────
+  {qid:"dlc1_7",q:"[DLC] During God Disposes — do you exhaust all dialogue with Voyta about his past?",
+   lockout:"Skipping or rushing Voyta's dialogue permanently locks out the Confessor trophy and his full confession.",
+   choices:[
+    {t:"good",l:"Show empathy, exhaust every dialogue option",c:"Voyta opens up completely and tells you everything about his past. Confessor trophy unlocked."},
+    {t:"bad",l:"Skip or rush through dialogue",c:"Voyta stays guarded. His full story is never revealed. Confessor trophy permanently missed."},
+   ]},
+  // ── DLC: UNVEILING ──────────────────────────────────────────
+  {qid:"dlc1_10",q:"[DLC] In Unveiling — do you let Voyta finish his masterpiece painting, or convince him to destroy it?",
+   lockout:"Destroying the painting locks you out of the Painter's Skull item and the 'Rest in One Piece' trophy.",
+   choices:[
+    {t:"good",l:"\"The devil isn't leading you, don't be afraid\" — let him finish",c:"Voyta finishes his masterpiece. Church officials take it. Voyta is at peace. You receive the Painter's Skull — return it to Vojtech's grave for the 'Rest in One Piece' trophy."},
+    {t:"bad",l:"\"Then don't finish it. Destroy it.\" (must pass Persuasion check)",c:"Voyta burns his unfinished masterpiece. A different, melancholy closure. No skull item. Rest in One Piece trophy permanently unavailable."},
+   ]},
 ];
 function renderDecisions(){
   let h=`<p style="font-size:12px;color:var(--text3);margin-bottom:14px;font-family:monospace;line-height:1.6">Every branching decision that affects the story, locks out content, or changes the ending. Record your choices below.</p>`;
