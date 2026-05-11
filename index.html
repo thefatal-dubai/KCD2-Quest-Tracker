@@ -119,6 +119,8 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--bg);color:var(--t
     <div class="stat"><div class="stat-v" id="s-total">0</div><div class="stat-l">Total</div></div>
     <div class="stat"><div class="stat-v" id="s-pct" style="color:var(--amber2)">0%</div><div class="stat-l">Completed</div></div>
     <div class="stat"><div class="stat-v" id="s-main" style="color:var(--amber)">0/0</div><div class="stat-l">Main Story</div></div>
+    <div class="stat"><div class="stat-v" id="s-side" style="color:var(--blue2)">0/0</div><div class="stat-l">Side Quests</div></div>
+    <div class="stat"><div class="stat-v" id="s-miss" style="color:var(--red2)">0</div><div class="stat-l">Missable Left</div></div>
   </div>
 </div>
 <div class="progress"><div class="progress-fill" id="prog" style="width:0%"></div></div>
@@ -129,6 +131,7 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--bg);color:var(--t
   <button class="tab" id="tb-riddler" onclick="setTab('riddler')">🎭 Riddler Barley</button>
   <button class="tab" id="tb-npcs" onclick="setTab('npcs')">👥 Key NPCs</button>
   <button class="tab" id="tb-forge" onclick="setTab('forge')">🔨 Legacy of the Forge</button>
+  <button class="tab" id="tb-missable" onclick="setTab('missable')">⚠️ Missable Quests</button>
 </div>
 <div class="main" id="app-main">
   <div id="page-tracker" style="display:flex;flex:1;overflow:hidden">
@@ -168,6 +171,7 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--bg);color:var(--t
   <div id="page-riddler" style="display:none;flex:1;overflow-y:auto"><div style="padding:20px;max-width:740px;margin:0 auto" id="riddler-content"></div></div>
   <div id="page-npcs" style="display:none;flex:1;overflow-y:auto"><div style="padding:20px;max-width:740px;margin:0 auto" id="npcs-content"></div></div>
   <div id="page-forge" style="display:none;flex:1;overflow-y:auto"><div style="padding:20px;max-width:740px;margin:0 auto" id="forge-content"></div></div>
+  <div id="page-missable" style="display:none;flex:1;overflow-y:auto"><div style="padding:20px;max-width:740px;margin:0 auto" id="missable-content"></div></div>
 </div>
 
 <script>
@@ -830,7 +834,7 @@ function save(){const d={};Q.forEach(q=>d[q.id]={s:q.status,n:q.notes});try{loca
 
 function setTab(t){
   currentTab=t;
-  ["tracker","decisions","endings","riddler","npcs","forge"].forEach(id=>{
+  ["tracker","decisions","endings","riddler","npcs","forge","missable"].forEach(id=>{
     document.getElementById("page-"+id).style.display=id===t?(id==="tracker"?"flex":"block"):"none";
     document.getElementById("tb-"+id).className="tab"+(t===id?" on":"");
   });
@@ -839,6 +843,7 @@ function setTab(t){
   if(t==="riddler")renderRiddler();
   if(t==="npcs")renderNPCs();
   if(t==="forge")renderForge();
+  if(t==="missable")renderMissable();
 }
 
 // ═══════════════════════════════════════════════════
@@ -1086,10 +1091,14 @@ function renderForge(){
 function updateStats(){
   const done=Q.filter(q=>q.status===2).length,total=Q.length;
   const mqs=Q.filter(q=>q.tp==="Main Quest"),mdone=mqs.filter(q=>q.status===2).length;
+  const sqs=Q.filter(q=>q.tp==="Side Quest"),sdone=sqs.filter(q=>q.status===2).length;
+  const missableLeft=Q.filter(q=>(q.m||q.hm)&&q.status===0).length;
   document.getElementById("s-done").textContent=done;
   document.getElementById("s-total").textContent=total;
   document.getElementById("s-pct").textContent=Math.round(done/total*100)+"%";
   document.getElementById("s-main").textContent=mdone+"/"+mqs.length;
+  document.getElementById("s-side").textContent=sdone+"/"+sqs.length;
+  document.getElementById("s-miss").textContent=missableLeft;
   document.getElementById("prog").style.width=(done/total*100)+"%";
 }
 
@@ -1311,6 +1320,103 @@ function renderEndings(){
       ${buildBranch(BRANCHES["mq32"])}
       <div style="margin-top:8px;font-size:11px;font-family:monospace;color:var(--text3);line-height:1.6">The ending is set by 5 pivotal decisions scattered across the full game. Judgment Day reads the tally — there is no last-minute override.</div>
     </div>`;
+}
+
+// ═══════════════════════════════════════════════════
+// MISSABLE QUESTS TAB
+// ═══════════════════════════════════════════════════
+function renderMissable(){
+  // Group missable quests by region and sort by highly missable first
+  const missable=Q.filter(q=>q.m||q.hm).sort((a,b)=>{
+    if(a.r!==b.r)return REGIONS.findIndex(r=>r.id===a.r)-REGIONS.findIndex(r=>r.id===b.r);
+    if(b.hm!==a.hm)return b.hm?1:-1;
+    return a.o-b.o;
+  });
+  const total=missable.length;
+  const done=missable.filter(q=>q.status===2||q.status===4).length;
+  const remaining=missable.filter(q=>q.status===0||q.status===1).length;
+  const failed=missable.filter(q=>q.status===3).length;
+
+  // Group by region
+  const byRegion={};
+  REGIONS.forEach(r=>{byRegion[r.id]=[];});
+  missable.forEach(q=>byRegion[q.r].push(q));
+
+  let h=`
+    <p style="font-size:12px;color:var(--text3);font-family:monospace;line-height:1.6;margin-bottom:14px">
+      Every missable and highly missable quest in one place. <b style="color:var(--red2)">⚠ Highly Missable</b> quests are extremely easy to permanently lose — act on them immediately. Mark as Skipped if you've passed them intentionally.
+    </p>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px">
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:10px;text-align:center">
+        <div style="font-size:20px;font-family:'Cinzel',serif;color:var(--text)">${total}</div>
+        <div style="font-size:10px;font-family:monospace;color:var(--text3);text-transform:uppercase;margin-top:2px">Total Missable</div>
+      </div>
+      <div style="background:var(--bg2);border:1px solid rgba(82,184,114,0.3);border-radius:var(--radius);padding:10px;text-align:center">
+        <div style="font-size:20px;font-family:'Cinzel',serif;color:var(--green2)">${done}</div>
+        <div style="font-size:10px;font-family:monospace;color:var(--text3);text-transform:uppercase;margin-top:2px">Done / Skipped</div>
+      </div>
+      <div style="background:var(--bg2);border:1px solid rgba(200,134,26,0.3);border-radius:var(--radius);padding:10px;text-align:center">
+        <div style="font-size:20px;font-family:'Cinzel',serif;color:var(--amber2)">${remaining}</div>
+        <div style="font-size:10px;font-family:monospace;color:var(--text3);text-transform:uppercase;margin-top:2px">Still Available</div>
+      </div>
+      <div style="background:var(--bg2);border:1px solid rgba(168,56,48,0.3);border-radius:var(--radius);padding:10px;text-align:center">
+        <div style="font-size:20px;font-family:'Cinzel',serif;color:var(--red2)">${failed}</div>
+        <div style="font-size:10px;font-family:monospace;color:var(--text3);text-transform:uppercase;margin-top:2px">Missed / Failed</div>
+      </div>
+    </div>`;
+
+  // Points of no return warning
+  h+=`<div style="background:rgba(168,56,48,0.1);border:1px solid rgba(168,56,48,0.35);border-radius:var(--radius2);padding:13px 15px;margin-bottom:16px">
+    <div style="font-size:11px;font-family:monospace;font-weight:700;color:var(--red2);margin-bottom:8px">🚫 POINTS OF NO RETURN — Complete ALL missable content before these quests</div>
+    <div style="display:grid;gap:6px">
+      <div style="display:flex;gap:10px;align-items:flex-start">
+        <span style="color:var(--amber2);font-family:monospace;font-size:11px;white-space:nowrap">Trosky →</span>
+        <span style="font-size:11px;font-family:monospace;color:var(--text2);line-height:1.5"><b style="color:var(--text)">Necessary Evil (MQ8)</b> — All Trosky side quests, tasks, and the full Gules questline (Canker → Casper) must be done before starting this. The Semine family decision here also permanently affects availability.</span>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start">
+        <span style="color:var(--amber2);font-family:monospace;font-size:11px;white-space:nowrap">Kuttenberg →</span>
+        <span style="font-size:11px;font-family:monospace;color:var(--text2);line-height:1.5"><b style="color:var(--text)">Oratores (MQ12)</b> — All Kuttenberg side quests must be done before this. Master Schindel's Toys, Rosa's Book, Under the Straw Hat, and Like Old Times are gated to specific earlier quest windows.</span>
+      </div>
+    </div>
+  </div>`;
+
+  REGIONS.forEach(reg=>{
+    const rqs=byRegion[reg.id];
+    if(!rqs.length)return;
+    const rdone=rqs.filter(q=>q.status===2||q.status===4).length;
+    h+=`<div style="margin-bottom:6px;padding:7px 12px;background:var(--bg3);border-radius:var(--radius);display:flex;align-items:center;gap:8px">
+      <span style="font-size:14px">${reg.icon}</span>
+      <span style="font-size:11px;font-family:monospace;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3)">${reg.label}</span>
+      ${reg.dlc?`<span style="font-size:9px;font-family:monospace;padding:1px 4px;border-radius:3px;background:var(--bg4);color:var(--purple2);border:1px solid rgba(96,64,160,0.3)">DLC</span>`:""}
+      <span style="margin-left:auto;font-size:11px;font-family:monospace;color:var(--text3)">${rdone}/${rqs.length} cleared</span>
+    </div>`;
+    rqs.forEach(q=>{
+      const statusColors=["var(--text3)","var(--amber2)","var(--green2)","var(--red2)","var(--text3)"];
+      const statusBg=["rgba(255,255,255,0.03)","rgba(200,134,26,0.1)","rgba(58,138,88,0.12)","rgba(168,56,48,0.12)","rgba(100,100,90,0.08)"];
+      const SICO=["○","◐","✓","✗","—"];
+      h+=`<div style="background:var(--bg2);border:1px solid ${q.hm?"rgba(168,56,48,0.4)":"var(--border)"};border-radius:var(--radius);padding:12px 14px;margin-bottom:7px;border-left:3px solid ${q.hm?"var(--red2)":q.m?"var(--orange2)":"var(--border2)"}">
+        <div style="display:flex;align-items:flex-start;gap:10px">
+          <div style="flex:1">
+            <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:5px">
+              <span style="font-size:13px;color:var(--text);font-family:'Cinzel',serif">${q.name}</span>
+              ${q.hm?`<span style="font-size:9px;font-family:monospace;padding:2px 6px;border-radius:3px;background:rgba(168,56,48,0.25);color:var(--red2);font-weight:700;border:1px solid rgba(168,56,48,0.4)">⚠ HIGHLY MISSABLE</span>`:`<span style="font-size:9px;font-family:monospace;padding:2px 6px;border-radius:3px;background:rgba(168,88,32,0.2);color:var(--orange2);font-weight:700">missable</span>`}
+              ${q.t?`<span style="font-size:9px;font-family:monospace;padding:2px 6px;border-radius:3px;background:rgba(168,88,32,0.15);color:var(--orange2);font-weight:700">⏱ timed</span>`:""}
+              <span style="font-size:9px;font-family:monospace;padding:2px 5px;border-radius:3px;background:${q.tp==="Main Quest"?"rgba(200,134,26,0.18)":q.tp==="Side Quest"?"rgba(48,96,160,0.2)":"rgba(96,64,160,0.18)"};color:${q.tp==="Main Quest"?"var(--amber2)":q.tp==="Side Quest"?"var(--blue2)":"var(--purple2)"}">${q.tp==="Main Quest"?"Main":q.tp==="Side Quest"?"Side":"Task"}</span>
+            </div>
+            <div style="font-size:12px;font-family:monospace;color:var(--text2);line-height:1.55;margin-bottom:7px">${q.desc}</div>
+            ${q.tip?`<div style="display:flex;gap:7px;padding:6px 9px;background:var(--bg3);border-radius:var(--radius);border-left:2px solid ${q.hm?"var(--red2)":"var(--amber)"}"><span style="color:${q.hm?"var(--red2)":"var(--amber2)"};flex-shrink:0;font-size:12px">${q.hm?"⚠️":"💡"}</span><span style="font-size:11px;font-family:monospace;color:var(--text2);line-height:1.5">${q.tip}</span></div>`:""}
+          </div>
+          <div style="flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:5px">
+            <div style="font-size:16px;color:${statusColors[q.status]}">${SICO[q.status]}</div>
+            <select style="font-size:9px;padding:2px 4px;border-radius:3px;border:1px solid var(--border2);font-family:monospace;cursor:pointer;background:${statusBg[q.status]};color:${statusColors[q.status]}" onchange="setStatus('${q.id}',parseInt(this.value));renderMissable()">
+              ${["Not Started","In Progress","Completed","Failed","Skipped"].map((s,i)=>`<option value="${i}"${q.status===i?" selected":""}>${s}</option>`).join("")}
+            </select>
+          </div>
+        </div>
+      </div>`;
+    });
+  });
+  document.getElementById("missable-content").innerHTML=h;
 }
 
 renderList();renderDetail();updateStats();
