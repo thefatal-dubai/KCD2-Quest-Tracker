@@ -126,6 +126,9 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--bg);color:var(--t
   <button class="tab on" id="tb-tracker" onclick="setTab('tracker')">📜 Quest Tracker</button>
   <button class="tab" id="tb-decisions" onclick="setTab('decisions')">🔀 Key Decisions</button>
   <button class="tab" id="tb-endings" onclick="setTab('endings')">🏆 Endings Guide</button>
+  <button class="tab" id="tb-riddler" onclick="setTab('riddler')">🎭 Riddler Barley</button>
+  <button class="tab" id="tb-npcs" onclick="setTab('npcs')">👥 Key NPCs</button>
+  <button class="tab" id="tb-forge" onclick="setTab('forge')">🔨 Legacy of the Forge</button>
 </div>
 <div class="main" id="app-main">
   <div id="page-tracker" style="display:flex;flex:1;overflow:hidden">
@@ -162,6 +165,9 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--bg);color:var(--t
   </div>
   <div id="page-decisions" style="display:none;flex:1;overflow-y:auto"><div class="dec-page" id="dec-content"></div></div>
   <div id="page-endings" style="display:none;flex:1;overflow-y:auto"><div class="end-page" id="end-content"></div></div>
+  <div id="page-riddler" style="display:none;flex:1;overflow-y:auto"><div style="padding:20px;max-width:740px;margin:0 auto" id="riddler-content"></div></div>
+  <div id="page-npcs" style="display:none;flex:1;overflow-y:auto"><div style="padding:20px;max-width:740px;margin:0 auto" id="npcs-content"></div></div>
+  <div id="page-forge" style="display:none;flex:1;overflow-y:auto"><div style="padding:20px;max-width:740px;margin:0 auto" id="forge-content"></div></div>
 </div>
 
 <script>
@@ -196,12 +202,12 @@ const Q=[
 {id:"mq04",r:"Trosky",tp:"Main Quest",o:4,name:"Laboratores",m:false,hm:false,t:false,b:false,l:false,
  desc:"Henry and Hans arrive in Troskowitz and begin planning their next move with local allies.",
  tip:"Talk to every named NPC in Troskowitz — several side quests become available here.",status:0,notes:""},
-{id:"mq05",r:"Trosky",tp:"Main Quest",o:5,name:"Wedding Crashers",m:false,hm:false,t:false,b:false,l:false,
- desc:"The open world fully opens as Henry tries to make contact with the local lord. The Trosky region is now freely explorable — complete all side content before advancing further.",
- tip:"⚠️ POINT OF NO RETURN approaches at MQ8 (Necessary Evil). Complete ALL Trosky side quests before then.",status:0,notes:""},
-{id:"mq06",r:"Trosky",tp:"Main Quest",o:6,name:"For Whom the Bell Tolls",m:false,hm:false,t:false,b:false,l:false,
- desc:"Henry works urgently to rescue Hans from a dangerous situation. Time-critical story beats.",
- tip:"Complete the Blacksmith questline before this quest if possible.",status:0,notes:""},
+{id:"mq05",r:"Trosky",tp:"Main Quest",o:5,name:"Wedding Crashers",m:false,hm:false,t:false,b:true,l:true,
+ desc:"The open world fully opens. To get into the Semine wedding Henry must choose between two paths: Blacksmith Radovan (combat-focused, unlocks The Blacksmith's Son / Jaunt / Hermit chains) or Miller Kreyzl (stealth-focused, unlocks Materia Prima / Forbidden Fruit / Opus Magnum). Both paths can be progressed but you must choose ONE to attend the wedding with. The Blacksmith path unlocks significantly more side content.",
+ tip:"⚠️ You can do BOTH questlines right up until the moment you go to the wedding — only then must you pick one. Blacksmith path recommended for completionists. Also: win Farkle against Innkeeper Betty to get the Gold Wedding Badge (lets you reroll dice, very useful all game).",status:0,notes:""},
+{id:"mq06",r:"Trosky",tp:"Main Quest",o:6,name:"For Whom the Bell Tolls",m:false,hm:false,t:true,b:true,l:false,
+ desc:"Henry is freed from jail to work off his debt while Hans faces the gallows for poaching. 12 in-game hours to save him — each bell toll is one hour (every 5 real minutes). Multiple paths to reach Captain Thomas: carry charcoal sacks, forge a horseshoe for Blacksmith Osina, get lockpicks from Hired Hand Kabat (return his turquoise rosary from Father Nicodemus via dice, pickpocket, or coin), help Cook Fanka unlock her spice chest, or talk to Jarek to be escorted into the Maiden Tower. Craft Fever Tonic in the Crone Tower to cure Thomas.",
+ tip:"⏱️ 12 bells = game over for Hans. You have enough time to do everything if you don't dawdle. Forge the horseshoe first (opens up Kabat), then get lockpicks, then the rosary route into the Maiden Tower is fastest. Also: Opus Magnum side quest can be advanced here — visit Scribe Erazim in the Crone Tower while you're brewing the tonic.",status:0,notes:""},
 {id:"mq07",r:"Trosky",tp:"Main Quest",o:7,name:"Back in the Saddle",m:false,hm:false,t:false,b:true,l:true,
  desc:"Henry and Hans travel to reach Lord Nebak. A key early decision about the Semine family will either protect them or put them at risk — affecting Old Wounds and the eventual ending.",
  tip:"⚠️ Do NOT betray the Semine secret to Otto. This affects the ending path.",status:0,notes:""},
@@ -302,15 +308,15 @@ const Q=[
 {id:"sq06",r:"Trosky",tp:"Side Quest",o:6,name:"Opus Magnum",m:false,hm:false,t:false,b:false,l:false,
  desc:"The conclusion of the Miller's questline. The results of his experiments are finally revealed.",
  tip:"Best rewards in this questline come from following all optional steps in parts 1 and 2.",status:0,notes:""},
-{id:"sq07",r:"Trosky",tp:"Side Quest",o:7,name:"Frogs",m:false,hm:false,t:false,b:true,l:false,
- desc:"A bitter feud between two villages — Tachov and Zhelejov — comes to a head. Choose a side or try to broker peace. Mutually exclusive with Mice.",
- tip:"You can only do Frogs OR Mice, not both. To do Mice instead: rat out Prochek. Related to the Truce trophy.",status:0,notes:""},
-{id:"sq08",r:"Trosky",tp:"Side Quest",o:8,name:"Mice",m:false,hm:false,t:false,b:true,l:false,
- desc:"The other side of the Tachov/Zhelejov feud. Mutually exclusive with Frogs.",
- tip:"Speak to Innkeeper Procheck in Tachov to start. You can't do both Frogs and Mice.",status:0,notes:""},
-{id:"sq09",r:"Trosky",tp:"Side Quest",o:9,name:"Battle of the Frogs and Mice",m:false,hm:false,t:false,b:false,l:false,
- desc:"The conclusion of the Tachov/Zhelejov conflict. Both Frogs and Mice must be done to unlock this.",
- tip:"Completing all three (Frogs, Mice, this) earns the Truce trophy/achievement.",status:0,notes:""},
+{id:"sq07",r:"Trosky",tp:"Side Quest",o:7,name:"Frogs",m:false,hm:false,t:false,b:true,l:true,
+ desc:"A bitter feud between Tachov and Zhelejov villages. Olbram (Zhelejov) wants Henry to steal the Maypole. Mutually exclusive with Mice — you cannot complete both fully. A third peaceful resolution exists via the Iron Nail oak tree.",
+ tip:"To unlock the peaceful resolution in Battle of the Frogs and Mice: investigate local history with the Bailiff in Troskowitz. This reveals the Iron Nail embedded in an oak tree marking the true border — forcing a peace treaty. Best outcome for both villages.",status:0,notes:""},
+{id:"sq08",r:"Trosky",tp:"Side Quest",o:8,name:"Mice",m:false,hm:false,t:false,b:true,l:true,
+ desc:"The other side of the Tachov/Zhelejov feud. Prochek (Tachov) wants Henry to paint the bull. Mutually exclusive with Frogs — you cannot fully complete both. To start Mice after starting Frogs: rat out Prochek to Olbram.",
+ tip:"Both Frogs and Mice must be started to unlock Battle of the Frogs and Mice. Truce trophy requires all three quests.",status:0,notes:""},
+{id:"sq09",r:"Trosky",tp:"Side Quest",o:9,name:"Battle of the Frogs and Mice",m:false,hm:false,t:false,b:true,l:false,
+ desc:"The conclusion of the Tachov/Zhelejov conflict. Three possible outcomes: side with Tachov (Mice ending), side with Zhelejov (Frogs ending), or broker a lasting peace via the Iron Nail border marker.",
+ tip:"Peaceful resolution (best outcome): investigate local history with the Bailiff in Troskowitz. This reveals an Iron Nail embedded in an oak tree between the villages — the true historical border. Using this evidence lets Henry force a peace treaty. Earns the Truce trophy.",status:0,notes:""},
 {id:"sq10",r:"Trosky",tp:"Side Quest",o:10,name:"Troubadours",m:false,hm:false,t:false,b:false,l:false,
  desc:"A pair of travelling musicians at the Zhelejov Wagoners' Inn need Henry's help with a surprisingly complicated problem.",
  tip:"",status:0,notes:""},
@@ -329,9 +335,9 @@ const Q=[
 {id:"sq15",r:"Trosky",tp:"Side Quest",o:15,name:"Miri Fajta",m:false,hm:false,t:false,b:false,l:false,
  desc:"A quest within the Nomad's Camp involving a personal conflict and Roma customs.",
  tip:"Required to unlock The Voivode's Curse task.",status:0,notes:""},
-{id:"sq16",r:"Trosky",tp:"Side Quest",o:16,name:"Bad Blood",m:false,hm:false,t:false,b:false,l:false,
- desc:"A visit to Bozhena's hut reveals a feud with deep roots. Henry must navigate old wounds and older grudges.",
- tip:"",status:0,notes:""},
+{id:"sq16",r:"Trosky",tp:"Side Quest",o:16,name:"Bad Blood",m:false,hm:false,t:false,b:true,l:false,
+ desc:"Herbwoman Bozhena's daughter Pavlena has gone missing in Troskowitz. Investigate her disappearance — she was secretly seeing a man named Roman, who is found murdered. Farmhand Straw's brother Ota has taken Pavlena hostage. At the gorge: don't move when you enter or Ota kills her. Negotiate — appeal to God's forgiveness, then promise to put in a good word with Von Bergow. After rescuing her, Bozhena demands you kill farmer Jakesh (the man who had her banished). You can kill him, take him to the bailiff, or persuade him to make peace. The ending depends on this final choice.",
+ tip:"BEST OUTCOME: Persuade Jakesh to make peace (pays Bozhena 100g compensation, she returns to town). Pavlena and Bozhena become available as trainers/traders. WARNING: If you refuse to help at all, Bozhena hangs herself and Pavlena is executed days later. Keep Ota's dog alive — mention it during negotiations for better outcomes.",status:0,notes:""},
 {id:"sq17",r:"Trosky",tp:"Side Quest",o:17,name:"Invaders",m:false,hm:false,t:false,b:false,l:false,
  desc:"Troskowitz is threatened by an outside force. Henry is called to help defend the settlement.",
  tip:"",status:0,notes:""},
@@ -341,17 +347,17 @@ const Q=[
  desc:"A task unlocked only by completing all optional objectives in 'The Hermit'. A deeply personal story of guilt and redemption.",
  tip:"🔴 HIGHLY MISSABLE: Only available if you complete every optional step in The Hermit. Speak to Margaret in the graveyard afterwards.",status:0,notes:""},
 {id:"t02",r:"Trosky",tp:"Task",o:2,name:"Canker",m:true,hm:false,t:false,b:false,l:false,
- desc:"First task in the Gules questline (Semine). Gules needs Henry's help with a local problem.",
- tip:"Complete before Necessary Evil or it locks out.",status:0,notes:""},
+ desc:"First task in the Gules questline (Semine). Gules — a former bandit turned guard — needs Henry's help tracking a criminal called Canker.",
+ tip:"⛔ BLOCKED if Semine family was destroyed in Necessary Evil (Hashek path). Gules only exists if the family survived. Complete before Necessary Evil.",status:0,notes:""},
 {id:"t03",r:"Trosky",tp:"Task",o:3,name:"Handsome Charlie",m:true,hm:false,t:false,b:false,l:false,
- desc:"Second task in the Gules questline.",
- tip:"Must complete before Necessary Evil.",status:0,notes:""},
-{id:"t04",r:"Trosky",tp:"Task",o:4,name:"Johnny the Gob",m:true,hm:false,t:false,b:false,l:false,
- desc:"Third task in the Gules questline.",
- tip:"Must complete before Necessary Evil.",status:0,notes:""},
+ desc:"Second task in the Gules questline. Track down a criminal called Handsome Charlie.",
+ tip:"⛔ BLOCKED if Semine family destroyed. Requires Canker to be completed first. Must complete before Necessary Evil.",status:0,notes:""},
+{id:"t04",r:"Trosky",tp:"Task",o:4,name:"Johnny the Gob",m:true,hm:false,t:false,b:true,l:false,
+ desc:"Third task in the Gules questline. Track down Johnny the Gob. Note: if you spare Johnny he surrenders his shield and flees — fast travel back to Gules immediately or the quest bugs out. Knocking him out after he surrenders is a reliable workaround.",
+ tip:"⛔ BLOCKED if Semine family destroyed. Bug warning: if Johnny is spared, fast travel to Gules instantly or knock Johnny out first to prevent auto-complete failure.",status:0,notes:""},
 {id:"t05",r:"Trosky",tp:"Task",o:5,name:"Casper",m:true,hm:false,t:false,b:false,l:false,
  desc:"Fourth and final task in the Gules questline.",
- tip:"Must complete before Necessary Evil.",status:0,notes:""},
+ tip:"⛔ BLOCKED if Semine family destroyed. Must complete before Necessary Evil.",status:0,notes:""},
 {id:"t06",r:"Trosky",tp:"Task",o:6,name:"Melee at the Mill",m:false,hm:false,t:false,b:false,l:false,
  desc:"Brawler questline begins at Lower Semine Mill. Fight in underground bare-knuckle bouts.",
  tip:"Win all four brawler questline tasks for the Henry the Bruiser trophy.",status:0,notes:""},
@@ -640,9 +646,9 @@ const Q=[
 {id:"dlc4_1",r:"DLC4",tp:"Main Quest",o:1,name:"Horses for Courses",m:false,hm:false,t:false,b:false,l:false,
  desc:"Horse Races DLC main quest. Enter the racing circuit with your horse.",
  tip:"Earns the Flagellum Dei trophy.",status:0,notes:""},
-{id:"dlc4_2",r:"DLC4",tp:"Main Quest",o:2,name:"The Executioner's Pride",m:false,hm:false,t:false,b:false,l:false,
- desc:"A rival racer with a grim nickname. Win against the Executioner to earn respect.",
- tip:"Earns the Boneworks trophy.",status:0,notes:""},
+{id:"dlc4_2",r:"DLC4",tp:"Main Quest",o:2,name:"The Executioner's Pride",m:false,hm:false,t:false,b:true,l:false,
+ desc:"Executioner Heinz needs a new sword forged from four cursed ingredients, including a ghostly horseshoe. The ghost horse (Phantom Horse) appears at midnight in a burnt forest between Old Kutná and Grund — it's not truly a ghost, but a real black horse mourning its dead master. Follow it silently until it stops to eat, then take the horseshoe from its hoof. Attacking it makes it vanish. After taking the shoe, you can also claim the horse as your own mount.",
+ tip:"🐴 PHANTOM HORSE: Follow it silently to its master's grave — don't attack before it stops or it vanishes. Once it stops you can either (A) interact to peacefully remove the shoe, then mount and take it to horse dealer Stoia (~1,200g) to claim the best mount in the game, OR (B) kill it and loot the horseshoe — quest still completes but you lose the mount. Earns the Boneworks trophy if you also completed Forbidden Fruit and Thou art but dust.",status:0,notes:""},
 {id:"dlc4_3",r:"DLC4",tp:"Main Quest",o:3,name:"Magic Horseshoes",m:false,hm:false,t:false,b:false,l:false,
  desc:"Legendary horseshoes are said to give any horse extraordinary speed. Track them down.",
  tip:"",status:0,notes:""},
@@ -653,7 +659,67 @@ const Q=[
 // ═══════════════════════════════════════════════════
 const BRANCHES={
 
-// ── BACK IN THE SADDLE ──────────────────────────────────────────
+// ── FOR WHOM THE BELL TOLLS — PATHS TO THOMAS ──────────────────
+"mq06":{title:"For Whom the Bell Tolls — Ways to Reach Captain Thomas",w:580,h:340,
+ nodes:[
+  {id:"d",x:210,y:10,w:160,h:44,type:"decision",label:"12 hours to reach\nCaptain Thomas\n(Maiden Tower)"},
+  {id:"a",x:5,y:105,w:165,h:44,type:"good",label:"Jarek route\n(fastest)"},
+  {id:"b",x:180,y:105,w:165,h:44,type:"good",label:"Lockpick &\nFanka route"},
+  {id:"c",x:405,y:105,w:165,h:44,type:"neutral",label:"Sneak past\nguards (hard)"},
+  {id:"oa",x:0,y:200,w:175,h:52,type:"out-good",label:"Tell Jarek you know Thomas\n→ escorted in free\nGet rosary from Nicodemus\nfirst to confirm you can"},
+  {id:"ob",x:183,y:200,w:175,h:52,type:"out-good",label:"Forge horseshoe → Kabat\n→ get lockpicks via rosary\n→ unlock Fanka's chest\n→ Crone Tower access"},
+  {id:"oc",x:393,y:200,w:180,h:52,type:"out-neutral",label:"Stealth only — no gear\nHard without lockpicks\nRock distraction past guards"},
+  {id:"tip",x:5,y:285,w:570,h:36,type:"decision",label:"All paths: brew Fever Tonic in Crone Tower (Feverfew x3, Ginger x2, Elderberry) → give to Thomas"},
+ ],edges:[["d","a"],["d","b"],["d","c"],["a","oa"],["b","ob"],["c","oc"]]},
+
+// ── BAD BLOOD — JAKESH ENDING ───────────────────────────────────
+"sq16":{title:"Bad Blood — Final Choice: Jakesh's Fate",w:560,h:380,
+ nodes:[
+  {id:"d",x:195,y:10,w:170,h:44,type:"decision",label:"Bozhena demands\nyou kill Jakesh"},
+  {id:"g",x:5,y:105,w:185,h:44,type:"good",label:"Persuade Jakesh\nto make peace"},
+  {id:"n",x:200,y:105,w:160,h:44,type:"neutral",label:"Hand Jakesh\nto the bailiff"},
+  {id:"b",x:370,y:105,w:175,h:44,type:"bad",label:"Kill Jakesh"},
+  {id:"og",x:0,y:200,w:195,h:64,type:"out-good",label:"Best ending:\nJakesh pays 100g comp\nBozhena returns to town\nPavlena & Bozhena become\ntrainers/traders"},
+  {id:"on",x:200,y:200,w:165,h:64,type:"out-neutral",label:"Jakesh sentenced\nRep up in Troskowitz\nBozhena gets limited\nresolution"},
+  {id:"ob",x:370,y:200,w:180,h:64,type:"out-bad",label:"Jakesh dead\nRep drops in Troskowitz\nBozhena gets closure\nbut loses merchant access"},
+  {id:"worst",x:5,y:295,w:545,h:52,type:"out-bad",label:"WORST: Refuse to help Bozhena at all → Bozhena hangs herself in her hut\nPavlena is executed days later by Troskowitz bailiff. Shakespearean tragedy."},
+ ],edges:[["d","g"],["d","n"],["d","b"],["g","og"],["n","on"],["b","ob"]]},
+
+
+"mq05":{title:"Wedding Crashers — Blacksmith or Miller Path?",w:560,h:320,
+ nodes:[
+  {id:"d",x:200,y:10,w:160,h:44,type:"decision",label:"Who do you attend\nthe wedding with?"},
+  {id:"g",x:15,y:100,w:225,h:44,type:"good",label:"Blacksmith Radovan (Recommended)"},
+  {id:"b",x:320,y:100,w:225,h:44,type:"neutral",label:"Miller Kreyzl (Stealth Build)"},
+  {id:"og1",x:0,y:190,w:240,h:52,type:"out-good",label:"Unlocks: Blacksmith's Son\nThe Jaunt · The Hermit · A Sinful Soul\nMore lore & side content"},
+  {id:"ob1",x:310,y:190,w:240,h:52,type:"out-neutral",label:"Unlocks: Materia Prima\nForbidden Fruit · Opus Magnum\nBetter for stealth builds"},
+  {id:"note",x:100,y:278,w:360,h:30,type:"decision",label:"Both can be done until wedding starts — only pick one to attend with"},
+ ],edges:[["d","g"],["d","b"],["g","og1"],["b","ob1"]]},
+
+// ── FROGS AND MICE — THREE OUTCOMES ─────────────────────────────
+"sq09":{title:"Battle of the Frogs and Mice — Three Endings",w:560,h:310,
+ nodes:[
+  {id:"d",x:198,y:10,w:164,h:44,type:"decision",label:"Tachov vs Zhelejov\nfeud reaches boiling point"},
+  {id:"g",x:5,y:100,w:170,h:44,type:"good",label:"Broker peace via\nIron Nail border marker"},
+  {id:"n1",x:195,y:100,w:170,h:44,type:"neutral",label:"Side with Tachov\n(Mice path)"},
+  {id:"n2",x:385,y:100,w:170,h:44,type:"neutral",label:"Side with Zhelejov\n(Frogs path)"},
+  {id:"og",x:0,y:200,w:185,h:56,type:"out-good",label:"Best outcome\nBoth villages at peace\nTruce trophy unlocked\nInvestigate Bailiff first"},
+  {id:"on1",x:190,y:200,w:180,h:56,type:"out-neutral",label:"Tachov wins\nZhelejov loses\nTruce trophy still earnable\nif all 3 quests done"},
+  {id:"on2",x:378,y:200,w:178,h:56,type:"out-neutral",label:"Zhelejov wins\nTachov loses\nTruce trophy still earnable\nif all 3 quests done"},
+ ],edges:[["d","g"],["d","n1"],["d","n2"],["g","og"],["n1","on1"],["n2","on2"]]},
+
+// ── EXECUTIONER'S PRIDE — GHOST HORSE ───────────────────────────
+"dlc4_2":{title:"The Executioner's Pride — Phantom Horse",w:560,h:360,
+ nodes:[
+  {id:"d",x:195,y:10,w:170,h:44,type:"decision",label:"Follow horse to\nits master's grave\n(wait until it STOPS)"},
+  {id:"g",x:10,y:110,w:240,h:44,type:"good",label:"Interact to remove horseshoe\nthen mount & follow to dealer"},
+  {id:"b",x:310,y:110,w:230,h:44,type:"neutral",label:"Kill the horse\n& loot horseshoe"},
+  {id:"warn",x:155,y:10,w:0,h:0,type:"decision",label:""},
+  {id:"og1",x:0,y:200,w:255,h:44,type:"out-good",label:"Horseshoe obtained ✓\nHorse still alive → claim at\nhorse dealer ~1,200g\nBest mount in game"},
+  {id:"ob1",x:305,y:200,w:240,h:44,type:"out-neutral",label:"Horseshoe obtained ✓\nHorse dead — cannot claim\nas mount. Quest still completes."},
+  {id:"bad",x:100,y:290,w:360,h:44,type:"bad",label:"⚠ Attacking BEFORE it reaches the grave = horse vanishes permanently"},
+ ],edges:[["d","g"],["d","b"],["g","og1"],["b","ob1"]]},
+
 "mq07":{title:"Back in the Saddle — Semine Wedding Secret",w:520,h:310,
  nodes:[
   {id:"d",x:180,y:10,w:160,h:44,type:"decision",label:"Mention the Semine\nwedding to Otto?"},
@@ -764,13 +830,258 @@ function save(){const d={};Q.forEach(q=>d[q.id]={s:q.status,n:q.notes});try{loca
 
 function setTab(t){
   currentTab=t;
-  ["tracker","decisions","endings"].forEach(id=>{
+  ["tracker","decisions","endings","riddler","npcs","forge"].forEach(id=>{
     document.getElementById("page-"+id).style.display=id===t?(id==="tracker"?"flex":"block"):"none";
     document.getElementById("tb-"+id).className="tab"+(t===id?" on":"");
   });
   if(t==="decisions")renderDecisions();
   if(t==="endings")renderEndings();
+  if(t==="riddler")renderRiddler();
+  if(t==="npcs")renderNPCs();
+  if(t==="forge")renderForge();
 }
+
+// ═══════════════════════════════════════════════════
+// RIDDLER BARLEY TAB
+// ═══════════════════════════════════════════════════
+function renderRiddler(){
+  const riddles=[
+    {
+      n:1, wager:"Free (no wager)", reward:"150g OR skill buff (your choice)",
+      q:"What belongs to you alone, but is used more often by others than by yourself?",
+      a:"My Name",
+      explain:"Everyone uses your name to address you, but you rarely refer to yourself by name in speech.",
+      region:"Trosky or Kuttenberg — random fast travel encounter"
+    },
+    {
+      n:2, wager:"100 Groschen", reward:"200g OR skill buff",
+      q:"Once upon a time there was a fool of a farmer. Family he had none, no stable boys either, so he talked to his animals instead. And, good man that he was, whenever he made a Groschen or two, he shared it with them according to his own rules. Every hen in the coop was paid 5 Groschen, every bee in the hive 15, and the spider in the loft bagged a full 20 Groschen. And now you tell me, how much did the cat get?",
+      a:"10 Groschen",
+      explain:"The farmer pays 2.5 Groschen per leg. Hen = 2 legs × 2.5 = 5g. Bee = 6 legs × 2.5 = 15g. Spider = 8 legs × 2.5 = 20g. Cat = 4 legs × 2.5 = 10g.",
+      region:"Kuttenberg region — random fast travel encounter"
+    },
+    {
+      n:3, wager:"150 Groschen", reward:"300g OR skill buff",
+      q:"Jaromir the coachman hailed from Raborsch. One morning, he set off for Kuttenberg with an empty coach. Three lads boarded in Bohunowitz. When he arrived in Bojischt, one of the boys got out and a washerwoman took his place. In Horschan, the washerwoman went on her way and a pedlar and his daughter boarded. In Pschitoky, the remaining lads alighted and took the pedlar's daughter with them. And straight away, two fishermen got in. And on reaching Kuttenberg that evening, they invited the coachman to the bathhouse and got pig-drunk. And now you tell me, what was the coachman's name?",
+      a:"Jaromir",
+      explain:"The riddle tells you outright: 'Jaromir the coachman hailed from Raborsch.' The long list of passengers is a deliberate distraction.",
+      region:"Kuttenberg region — road southwest of Devil's Den"
+    },
+    {
+      n:4, wager:"150 Groschen", reward:"300g OR skill buff",
+      q:"A bailiff has twelve men join up for service one day. The bailiff was glad, but soon discovered that he didn't have enough gear for them in the armoury. Of the twelve, six got armour and four got helmets, but three of the men were fortunate enough to get both. How many of the bailiff's men had to go into battle without any protection at all?",
+      a:"Five",
+      explain:"6 got armour, 4 got helmets, 3 got both. Men with only armour: 6-3=3. Men with only helmet: 4-3=1. Men with either: 3+1+3=7. Men with nothing: 12-7=5.",
+      region:"Kuttenberg region — final Barley encounter"
+    },
+    {
+      n:"Bonus",wager:"N/A — story encounter",reward:"Romance scene with Klara",
+      q:"I bloom in silence, a petal's grace. A delicate charm in a hidden place. A whispered scent, a subtle ploy. What am I, elusive and coy?",
+      a:"I think she's called Klara",
+      explain:"This is a flirtatious riddle from bathhouse girl Klara, not Riddler Barley. Answering correctly triggers a romance scene.",
+      region:"Kuttenberg Bathhouse — during 'A Good Scrub' or bathhouse visit"
+    },
+  ];
+  let h=`<p style="font-size:12px;color:var(--text3);font-family:monospace;line-height:1.6;margin-bottom:16px">
+    Riddler Barley is a random fast travel encounter in the Kuttenberg region. He offers one riddle per encounter. The first is free — subsequent ones require a wager. Answer correctly to win the wager back <b>plus</b> Barley's own stake. If you answer wrong you lose your wager. There are exactly 4 Barley encounters, plus 1 bonus riddle from Klara. Total groschen if you take all coin rewards: <b style="color:var(--amber2)">~1,050g</b>.
+  </p>`;
+  riddles.forEach(r=>{
+    h+=`<div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius2);padding:16px;margin-bottom:12px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+        <div style="font-size:22px;width:36px;height:36px;background:var(--bg4);border:1px solid var(--amber);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;color:var(--amber2);font-size:14px;font-weight:700;flex-shrink:0">${r.n}</div>
+        <div>
+          <div style="font-size:13px;font-family:'Cinzel',serif;color:var(--amber2)">${r.n==="Bonus"?"Bonus Riddle — Klara (Bathhouse)":"Riddle #"+r.n+" — Riddler Barley"}</div>
+          <div style="font-size:11px;font-family:monospace;color:var(--text3);margin-top:2px">📍 ${r.region}</div>
+        </div>
+        <div style="margin-left:auto;text-align:right">
+          <div style="font-size:10px;font-family:monospace;color:var(--text3)">Wager</div>
+          <div style="font-size:12px;font-family:monospace;color:var(--amber2)">${r.wager}</div>
+        </div>
+      </div>
+      <div style="background:var(--bg3);border-radius:var(--radius);padding:11px 13px;margin-bottom:10px;border-left:3px solid var(--amber);font-size:13px;color:var(--text2);line-height:1.7;font-style:italic">"${r.q}"</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div style="background:rgba(58,138,88,0.1);border:1px solid rgba(58,138,88,0.35);border-radius:var(--radius);padding:10px 12px">
+          <div style="font-size:10px;font-family:monospace;color:var(--green2);font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px">✅ Answer</div>
+          <div style="font-size:15px;font-family:'Cinzel',serif;color:var(--text)">${r.a}</div>
+        </div>
+        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px">
+          <div style="font-size:10px;font-family:monospace;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px">💡 Why</div>
+          <div style="font-size:12px;font-family:monospace;color:var(--text2);line-height:1.5">${r.explain}</div>
+        </div>
+      </div>
+      <div style="margin-top:8px;font-size:11px;font-family:monospace;color:var(--text3)">🎁 Reward: ${r.reward}</div>
+    </div>`;
+  });
+  document.getElementById("riddler-content").innerHTML=h;
+}
+
+// ═══════════════════════════════════════════════════
+// KEY NPCs TAB
+// ═══════════════════════════════════════════════════
+const NPCS=[
+  {name:"Hans Capon",icon:"👑",role:"Main Companion",importance:"critical",
+   loc:"Travels with Henry throughout the game",
+   desc:"Henry's closest friend and the nobleman he's sworn to protect. Arrogant and charming, Hans grows significantly over the game. His survival is a constant thread of the story — he's sentenced to hang early on, held for ransom later, and nearly killed multiple times. Cannot be killed by the player.",
+   tips:["DO NOT let him hang in For Whom the Bell Tolls — you have 12 bells (real-time hours) to save him","His fate at Maleshov Castle affects several side stories","Sparing Brabant in Reckoning is partly for Hans's sake"],
+   killable:false},
+  {name:"Sir Radzig Kobyla",icon:"⚔️",role:"Henry's Father / Lord",importance:"critical",
+   loc:"Raborsch, then various story locations",
+   desc:"Henry's biological father, though neither knew it until KCD1. A respected diplomat and the man Henry serves. Captured by Istvan Toth and held hostage. His approval or disappointment frames the ending dream sequence.",
+   tips:["Your choices throughout the game are ultimately judged in his name","He appears in the Judgment Day dream as one of Henry's parents"],
+   killable:false},
+  {name:"Father Godwin",icon:"✝️",role:"Priest / Playable Character",importance:"high",
+   loc:"Sent by Radzig to find Henry — becomes playable in certain story sections",
+   desc:"The hard-drinking, woman-chasing parish priest from KCD1 returns with an expanded role. Becomes a second playable character in KCD2. Ordered by Radzig and Hanush to locate Henry and Hans after they go missing. Looting as Godwin is pointless — items don't transfer to Henry.",
+   tips:["When playing as Godwin, don't waste time looting","His sections are largely story-driven — focus on dialogue choices"],
+   killable:false},
+  {name:"Hanush of Leipa",icon:"🏰",role:"Lord of Rattay / Hans's Guardian",importance:"high",
+   loc:"Rattay, Raborsch meetings",
+   desc:"Hans's uncle and guardian. A serious, politically-minded lord who is one of the key figures resisting Sigismund. Drives Hans toward taking a wife and growing up. Always accompanied by Sir Radzig.",
+   tips:["Completing quests that support the anti-Sigismund cause raises standing with Hanush"],
+   killable:false},
+  {name:"Jan Žižka",icon:"🗡️",role:"Mercenary Commander / Historical Figure",importance:"high",
+   loc:"Devil's Pack camp, various battle locations",
+   desc:"The real historical Jan Žižka — later one of Bohemia's greatest military commanders. In KCD2 he's the leader of the Devil's Pack mercenaries and opposes Sigismund. Henry encounters him in Nebakov. He frees Henry and Hans from captivity. A larger-than-life presence.",
+   tips:["Talking to locals at Nebakov Castle before triggering the confrontation reveals the conspiracy early","Žižka's mercenaries become key allies in the final act"],
+   killable:false},
+  {name:"Vauquelin Brabant",icon:"🎭",role:"French Knight / Optional Ally",importance:"high",
+   loc:"Maleshov Castle prison, then free if spared",
+   desc:"A boastful French knight rescued alongside Hans from Maleshov Castle. A charming rogue who loves telling heroic (possibly exaggerated) stories. His fate is entirely in Henry's hands in Reckoning — spare him and he may appear as an ally. Kill him and he's gone forever.",
+   tips:["⚠️ SPARE BRABANT in Reckoning — it affects the ending score and he may assist at Judgment Day","He's the most entertaining character in the game to talk to"],
+   killable:true},
+  {name:"Katherine",icon:"💙",role:"Love Interest",importance:"medium",
+   loc:"Kuttenberg — multiple locations including the Jewish quarter",
+   desc:"A new character in KCD2 and Henry's primary love interest. Initially cold and distant, she warms to Henry through the Kuttenberg story. Plays a role in the Post Scriptum side quest. Found near Liechtenstein in the Jewish quarter.",
+   tips:["The 'Post Scriptum' side quest unlocks after 'Into the Underworld' and develops her story significantly","She is connected to the Liechtenstein thread in the main story"],
+   killable:false},
+  {name:"Riddler Barley",icon:"🎭",role:"Random Encounter NPC",importance:"medium",
+   loc:"Random fast travel encounter in Kuttenberg region",
+   desc:"A travelling riddler who challenges Henry with riddles in exchange for wagers. 4 encounters total — after the fourth he disappears from the game permanently. Take his skill buff rewards on early riddles and groschen on later ones for best value.",
+   tips:["See the Riddler Barley tab for all answers","Choose skill buffs for riddles 1-2, groschen for 3-4 (higher coin value)","He only appears in the Kuttenberg region during fast travel"],
+   killable:false},
+  {name:"Mutt",icon:"🐕",role:"Animal Companion",importance:"high",
+   loc:"Found via the 'Mutt' side quest in Trosky",
+   desc:"Henry's loyal dog. Follows Henry everywhere, alerts him to nearby enemies, helps track scents, and joins in combat. Invaluable for stealth gameplay. Get him as early as possible — he is arguably the most useful companion in the game.",
+   tips:["Complete the 'Mutt' side quest in Trosky immediately","Keep Mutt alive during combat — he's not unkillable","Mutt earns the Man's Best Friend trophy when obtained"],
+   killable:true},
+  {name:"Gules",icon:"🗡️",role:"Quest NPC / Guard",importance:"medium",
+   loc:"Semine estate (only if family survived)",
+   desc:"A former bandit turned Semine estate guard. Gives Henry a series of tasks (Canker, Handsome Charlie, Johnny the Gob, Casper). Entire questline is permanently unavailable if the Semine family was destroyed in Necessary Evil.",
+   tips:["⛔ Only exists if you chose to protect the Semine family in Necessary Evil","Complete all 4 Gules tasks before the Necessary Evil point of no return"],
+   killable:false},
+  {name:"Istvan Toth",icon:"💀",role:"Recurring Antagonist",importance:"critical",
+   loc:"Nebakov, Trosky Castle, final confrontation",
+   desc:"The main antagonist from KCD1 who returns in KCD2. A cunning and dangerous lord loyal to Sigismund. He must be fought and killed — but HOW he dies affects the ending score. Give him a fair duel for the honourable kill.",
+   tips:["⚠️ Offer Istvan a fair duel when confronting him — killing him dishonourably counts against your ending","He is a tough opponent — ensure your combat skills are levelled before the confrontation"],
+   killable:true},
+  {name:"Adam (Bathhouse Owner)",icon:"🛁",role:"Major Quest Hub NPC",importance:"high",
+   loc:"Kuttenberg Bathhouse",
+   desc:"The bathhouse owner Adam is one of the most important NPCs in Kuttenberg. He's an information broker, quest giver, and key to several Kuttenberg side quests including A Good Scrub, Master Schindel's Toys, and Rosa's Book.",
+   tips:["Talk to Adam immediately upon arriving in Kuttenberg","Master Schindel's Toys and Rosa's Book are highly missable tasks gated behind his dialogue during Into the Underworld"],
+   killable:false},
+];
+
+function renderNPCs(){
+  const importCols={critical:"var(--red2)",high:"var(--amber2)",medium:"var(--blue2)"};
+  const importBg={critical:"rgba(168,56,48,0.15)",high:"rgba(200,134,26,0.1)",medium:"rgba(48,96,160,0.1)"};
+  let h=`<p style="font-size:12px;color:var(--text3);font-family:monospace;line-height:1.6;margin-bottom:16px">Key characters in KCD2 — story roles, locations, whether they can be killed, and what you need to know about interacting with them.</p>`;
+  NPCS.forEach(n=>{
+    h+=`<div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius2);padding:15px;margin-bottom:11px">
+      <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:10px">
+        <div style="font-size:24px;flex-shrink:0;width:40px;height:40px;background:var(--bg4);border-radius:50%;display:flex;align-items:center;justify-content:center">${n.icon}</div>
+        <div style="flex:1">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+            <span style="font-family:'Cinzel',serif;font-size:15px;color:var(--amber2)">${n.name}</span>
+            <span style="font-size:9px;font-family:monospace;padding:2px 6px;border-radius:3px;background:${importBg[n.importance]};color:${importCols[n.importance]};font-weight:700;text-transform:uppercase">${n.importance}</span>
+            <span style="font-size:9px;font-family:monospace;padding:2px 6px;border-radius:3px;background:${n.killable?"rgba(168,56,48,0.15)":"rgba(58,138,88,0.12)"};color:${n.killable?"var(--red2)":"var(--green2)"};font-weight:700">${n.killable?"⚠ Can be killed":"✓ Story-protected"}</span>
+          </div>
+          <div style="font-size:11px;font-family:monospace;color:var(--blue2);margin-top:2px">${n.role}</div>
+          <div style="font-size:11px;font-family:monospace;color:var(--text3);margin-top:1px">📍 ${n.loc}</div>
+        </div>
+      </div>
+      <div style="font-size:13px;color:var(--text2);line-height:1.65;margin-bottom:10px;font-family:monospace">${n.desc}</div>
+      <div style="display:grid;gap:5px">${n.tips.map(t=>`<div style="display:flex;gap:8px;align-items:flex-start;padding:6px 10px;background:var(--bg3);border-radius:var(--radius);border-left:2px solid var(--amber)"><span style="color:var(--amber2);flex-shrink:0">→</span><span style="font-size:11px;font-family:monospace;color:var(--text2);line-height:1.5">${t}</span></div>`).join("")}</div>
+    </div>`;
+  });
+  document.getElementById("npcs-content").innerHTML=h;
+}
+
+// ═══════════════════════════════════════════════════
+// LEGACY OF THE FORGE TAB
+// ═══════════════════════════════════════════════════
+function renderForge(){
+  const forgeQuests=[
+    {name:"Adept",order:1,desc:"Henry discovers his father Martin's abandoned forge near the Hole in the Wall tavern (fast travel: Caslavska Gate, Kuttenberg). Magdalena introduces him to the forge and gives the first commission: repair her axe. Establishes the hub for all DLC activities.",tip:"Fast travel to Caslavska Gate. The forge is near the Hole in the Wall tavern. Magdalena is your primary quest-giver throughout."},
+    {name:"Magdalena's Axe",order:2,desc:"Magdalena's first commission — repair her damaged axe. Serves as the tutorial for the blacksmithing system: heat the metal, hammer evenly, quench, finish. Aim for Gold quality. Unlocks the forge as a usable workspace.",tip:"Heat evenly in the furnace, hammer at a steady rhythm, flip the metal to hammer both sides equally. Quench when the colour is right. Gold quality is the target."},
+    {name:"The Master's Game",order:3,desc:"Henry must join the Blacksmiths' Guild to access better materials and commissions. The guild entry trial involves answering theoretical questions about smithing and then forging a longsword to at least Silver quality under the guild master's watch.",tip:"Guild Trial answers: (1) Quenching = cooling hot metal rapidly to harden. (2) Temper = reheat after quenching to reduce brittleness. (3) The sword is reheated briefly before final quench. Aim for Gold quality on the forged sword. If you get Bronze, retry for 200g."},
+    {name:"Klaus' Introduction",order:4,desc:"Henry meets Klaus, a central figure in the DLC's story — a mysterious client with a commission that goes beyond ordinary work. His true motives become clear as the questline progresses.",tip:"Exhaust all dialogue options with Klaus — his backstory matters for later quests."},
+    {name:"Martin's Dream",order:5,desc:"A dreamlike sequence exploring Henry's memories of his father Martin. The boundary between memory and ambition blurs. Henry comes to understand what the forge meant to Martin — and what it could mean for himself.",tip:"Earns the Racing the Leech trophy. Pay attention to the vision — it contains lore about Martin's history in Kuttenberg's Jewish quarter."},
+    {name:"Old Plans",order:6,desc:"Old guild documents surface that threaten both the forge's ownership and several people connected to it. Henry must navigate guild politics and protect what Martin built.",tip:"Having high guild prestige from completing commissions gives extra dialogue options here."},
+    {name:"The Last Step",order:7,desc:"The DLC's conclusion. The future of Martin's forge and the guild is decided. The outcome depends on how Henry has built his reputation through commissions and prestige.",tip:"Earns the Martin's Legacy silver trophy. Your Prestige level affects available endings. Do all guild activities before this quest."},
+  ];
+  const guildActivities=[
+    {name:"Blacksmith's Commission",type:"Repeatable",desc:"Core DLC activity. Townsfolk and Magdalena bring weapon/armour repair or forging requests. Customers only accept Tier 3 or Tier 4 quality. Rewards 80% of item value plus Prestige. Bonus groschen for out-of-town deliveries.",tip:"Always aim for Gold quality. If a requested recipe is unknown, a new objective will appear to buy and learn it first."},
+    {name:"In the Service of the Guild",type:"Repeatable",desc:"Guild-assigned work that builds Prestige faster than standard commissions. Unlocks after joining the guild in The Master's Game.",tip:"Prioritise these over standard commissions for faster Prestige gains."},
+    {name:"Sinners of Kuttenberg",type:"Questline",desc:"A separate questline within the DLC. Completing it earns the Lion's Roar Kilij — one of the better-looking sabres in the game.",tip:""},
+    {name:"Blacksmith's Guild Trial",type:"One-time",desc:"Entry exam for the guild. Theoretical questions followed by forging a sword to Silver+ quality.",tip:"See The Master's Game quest above for trial answers."},
+  ];
+  const weapons=[
+    {name:"Blacksmith's Guild Longsword",how:"Awarded at the guild entry trial (Adept quest)",rarity:"★★★"},
+    {name:"Lingua Belli Longsword",how:"Craftable — obtain the Sketch from a chest at a bandit camp in the Kuttenberg region. Sketch doesn't always spawn; may need multiple camps.",rarity:"★★★★"},
+    {name:"Longsword of the Four Evangelists",how:"Legendary — craft by completing the Blacksmith's Commission activity (final mysterious vendor commission).",rarity:"★★★★★"},
+    {name:"Lion's Roar Kilij",how:"Complete the Sinners of Kuttenberg questline.",rarity:"★★★★"},
+    {name:"Magdalena's Axe (Repaired)",how:"Your first commission — returned to Magdalena but grants a replica.",rarity:"★★"},
+  ];
+  let h=`
+    <div style="background:var(--bg2);border:1px solid rgba(200,134,26,0.3);border-radius:var(--radius2);padding:16px;margin-bottom:16px">
+      <div style="font-family:'Cinzel',serif;font-size:16px;color:var(--amber2);margin-bottom:8px">🔨 Legacy of the Forge — Overview</div>
+      <div style="font-size:13px;font-family:monospace;color:var(--text2);line-height:1.7">Henry discovers and restores his adoptive father Martin's abandoned forge in Kuttenberg. The DLC adds a full blacksmithing system: forge commissions, join the Blacksmiths' Guild, earn Prestige, upgrade the workshop (100M+ design combinations), and recruit assistants. The forge hub is near <b style="color:var(--amber2)">The Hole in the Wall tavern</b> — fast travel to <b style="color:var(--amber2)">Caslavska Gate, Kuttenberg</b>.</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px">
+        <div style="background:var(--bg3);border-radius:var(--radius);padding:9px;text-align:center"><div style="font-size:18px;font-family:'Cinzel',serif;color:var(--amber2)">7</div><div style="font-size:10px;font-family:monospace;color:var(--text3);text-transform:uppercase">Main Quests</div></div>
+        <div style="background:var(--bg3);border-radius:var(--radius);padding:9px;text-align:center"><div style="font-size:18px;font-family:'Cinzel',serif;color:var(--blue2)">12+</div><div style="font-size:10px;font-family:monospace;color:var(--text3);text-transform:uppercase">Guild Tasks</div></div>
+        <div style="background:var(--bg3);border-radius:var(--radius);padding:9px;text-align:center"><div style="font-size:18px;font-family:'Cinzel',serif;color:var(--green2)">9+</div><div style="font-size:10px;font-family:monospace;color:var(--text3);text-transform:uppercase">Sketches</div></div>
+      </div>
+    </div>
+    <div style="font-size:13px;font-family:'Cinzel',serif;color:var(--amber2);margin-bottom:10px">Main Quests</div>
+    ${forgeQuests.map(q=>`<div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius2);padding:13px;margin-bottom:9px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:7px">
+        <div style="width:26px;height:26px;background:var(--bg4);border:1px solid var(--amber);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-family:'Cinzel',serif;color:var(--amber2);flex-shrink:0">${q.order}</div>
+        <div style="font-family:'Cinzel',serif;font-size:14px;color:var(--text)">${q.name}</div>
+      </div>
+      <div style="font-size:12px;font-family:monospace;color:var(--text2);line-height:1.6;margin-bottom:7px">${q.desc}</div>
+      ${q.tip?`<div style="display:flex;gap:7px;padding:7px 10px;background:var(--bg3);border-radius:var(--radius);border-left:2px solid var(--amber)"><span style="color:var(--amber2);flex-shrink:0">💡</span><span style="font-size:11px;font-family:monospace;color:var(--text2);line-height:1.5">${q.tip}</span></div>`:""}
+    </div>`).join("")}
+    <div style="font-size:13px;font-family:'Cinzel',serif;color:var(--amber2);margin:16px 0 10px">Guild Activities</div>
+    ${guildActivities.map(a=>`<div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:12px;margin-bottom:8px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px">
+        <span style="font-size:13px;color:var(--text)">${a.name}</span>
+        <span style="font-size:9px;font-family:monospace;padding:1px 5px;border-radius:3px;background:${a.type==="Repeatable"?"rgba(48,96,160,0.2)":"rgba(200,134,26,0.15)"};color:${a.type==="Repeatable"?"var(--blue2)":"var(--amber2)"};font-weight:700">${a.type}</span>
+      </div>
+      <div style="font-size:12px;font-family:monospace;color:var(--text2);line-height:1.5">${a.desc}</div>
+      ${a.tip?`<div style="font-size:11px;font-family:monospace;color:var(--amber2);margin-top:5px">→ ${a.tip}</div>`:""}
+    </div>`).join("")}
+    <div style="font-size:13px;font-family:'Cinzel',serif;color:var(--amber2);margin:16px 0 10px">Unique Weapons</div>
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius2);overflow:hidden">
+      ${weapons.map((w,i)=>`<div style="display:grid;grid-template-columns:1fr 2fr auto;gap:12px;padding:10px 14px;${i>0?"border-top:1px solid var(--border)":""}">
+        <div style="font-size:12px;color:var(--text);font-family:monospace">${w.name}</div>
+        <div style="font-size:11px;font-family:monospace;color:var(--text3);line-height:1.5">${w.how}</div>
+        <div style="font-size:13px;text-align:right;white-space:nowrap">${w.rarity}</div>
+      </div>`).join("")}
+    </div>
+    <div style="margin-top:14px;padding:12px;background:var(--bg3);border-radius:var(--radius);border:1px solid var(--border)">
+      <div style="font-size:11px;font-family:monospace;color:var(--amber2);font-weight:700;margin-bottom:6px">🔨 Blacksmithing Quality Tips</div>
+      <div style="font-size:11px;font-family:monospace;color:var(--text2);line-height:1.8">
+        • Heat the metal <b>evenly</b> in the furnace — watch the colour<br>
+        • Hammer at a <b>steady rhythm</b> — don't rush<br>
+        • <b>Flip the metal</b> to hammer both sides equally<br>
+        • Quench at the <b>right temperature</b> (Henry comments on progress)<br>
+        • Customers only accept <b>Tier 3 or Tier 4</b> quality for commissions<br>
+        • If you fail a guild trial forge, retry for <b>200 Groschen</b>
+      </div>
+    </div>`;
+  document.getElementById("forge-content").innerHTML=h;
+}
+
 
 function updateStats(){
   const done=Q.filter(q=>q.status===2).length,total=Q.length;
@@ -876,6 +1187,22 @@ function buildBranch(bd){
 }
 
 const DECISIONS=[
+  // ── BAD BLOOD ────────────────────────────────────────────────
+  {qid:"sq16",q:"After rescuing Pavlena — what do you do about Jakesh?",
+   lockout:"Refusing to help Bozhena at all causes her to hang herself and Pavlena to be executed days later.",
+   choices:[
+    {t:"good",l:"Persuade Jakesh to make peace with Bozhena",c:"Best outcome. Jakesh pays 100g compensation. Bozhena returns to Troskowitz. Both become available as trainers and traders."},
+    {t:"neutral",l:"Take Jakesh to the bailiff",c:"Reputation up in Troskowitz. Decent resolution but Bozhena/Pavlena don't become traders."},
+    {t:"bad",l:"Kill Jakesh",c:"Reputation drops in Troskowitz. Bozhena gets closure but loses merchant/trainer access."},
+    {t:"bad",l:"Refuse to help Bozhena at all",c:"Tragedy: Bozhena hangs herself. Pavlena is later executed by the bailiff. Both permanently gone."},
+   ]},
+  // ── WEDDING CRASHERS ─────────────────────────────────────────
+  {qid:"mq05",q:"Do you attend the wedding with Blacksmith Radovan or Miller Kreyzl?",
+   lockout:"Each path locks different side quest chains. You can do BOTH up until the moment you attend the wedding.",
+   choices:[
+    {t:"good",l:"Blacksmith Radovan",c:"Unlocks The Blacksmith's Son, The Jaunt, The Hermit, A Sinful Soul. More content, more lore. Recommended for first playthroughs."},
+    {t:"neutral",l:"Miller Kreyzl",c:"Unlocks Materia Prima, Forbidden Fruit, Opus Magnum. Better for stealth builds. Misses some lore content."},
+   ]},
   // ── BACK IN THE SADDLE ──────────────────────────────────────
   {qid:"mq07",q:"Do you mention the Semine wedding to Otto von Bergow?",
    lockout:"Telling Otto directly triggers the bad path — he sends you and Hashek to the Semine estate. 'Old Wounds' side quest also locked forever.",
