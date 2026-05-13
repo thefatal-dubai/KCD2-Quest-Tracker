@@ -61,6 +61,8 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--bg);color:var(--t
 .b-time{background:rgba(168,88,32,0.2);color:var(--orange2);border:1px solid rgba(168,88,32,0.3)}
 .b-branch{background:rgba(82,184,114,0.12);color:var(--green2);border:1px solid rgba(82,184,114,0.2)}
 .b-lock{background:rgba(168,56,48,0.25);color:#e88080;border:1px solid rgba(168,56,48,0.4)}
+.b-act-once{background:rgba(0,180,160,0.15);color:#40d0c0;border:1px solid rgba(0,180,160,0.3)}
+.b-act-rep{background:rgba(80,160,200,0.15);color:#70c0e8;border:1px solid rgba(80,160,200,0.3)}
 .qstatus{font-size:9px;padding:2px 4px;border-radius:3px;border:none;font-family:monospace;cursor:pointer;flex-shrink:0}
 .s0{background:rgba(255,255,255,0.05);color:var(--text3)}.s1{background:rgba(232,168,60,0.18);color:var(--amber2)}
 .s2{background:rgba(82,184,114,0.2);color:var(--green2)}.s3{background:rgba(208,88,72,0.2);color:var(--red2)}
@@ -132,6 +134,8 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--bg);color:var(--t
   <button class="tab" id="tb-npcs" onclick="setTab('npcs')">👥 Key NPCs</button>
   <button class="tab" id="tb-forge" onclick="setTab('forge')">🔨 Legacy of the Forge</button>
   <button class="tab" id="tb-missable" onclick="setTab('missable')">⚠️ Missable Quests</button>
+  <button class="tab" id="tb-loot" onclick="setTab('loot')">💰 Notable Loot</button>
+  <button class="tab" id="tb-romance" onclick="setTab('romance')">💕 Romance</button>
 </div>
 <div class="main" id="app-main">
   <div id="page-tracker" style="display:flex;flex:1;overflow:hidden">
@@ -141,6 +145,8 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--bg);color:var(--t
         <select class="fsel" id="f-type" onchange="renderList()">
           <option value="">All Types</option><option value="Main Quest">Main Quests</option>
           <option value="Side Quest">Side Quests</option><option value="Task">Tasks</option>
+          <option value="act-once">⚡ Activities (one-time)</option>
+          <option value="act-rep">🔁 Activities (repeatable)</option>
         </select>
         <select class="fsel" id="f-status" onchange="renderList()">
           <option value="">All Statuses</option><option value="0">Not Started</option>
@@ -172,6 +178,8 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--bg);color:var(--t
   <div id="page-npcs" style="display:none;flex:1;overflow-y:auto"><div style="padding:20px;max-width:740px;margin:0 auto" id="npcs-content"></div></div>
   <div id="page-forge" style="display:none;flex:1;overflow-y:auto"><div style="padding:20px;max-width:740px;margin:0 auto" id="forge-content"></div></div>
   <div id="page-missable" style="display:none;flex:1;overflow-y:auto"><div style="padding:20px;max-width:740px;margin:0 auto" id="missable-content"></div></div>
+  <div id="page-loot" style="display:none;flex:1;overflow-y:auto"><div style="padding:20px;max-width:800px;margin:0 auto" id="loot-content"></div></div>
+  <div id="page-romance" style="display:none;flex:1;overflow-y:auto"><div style="padding:20px;max-width:800px;margin:0 auto" id="romance-content"></div></div>
 </div>
 
 <script>
@@ -330,10 +338,10 @@ const Q=[
 {id:"sq12",r:"Trosky",tp:"Side Quest",o:12,name:"Lackey",m:false,hm:false,t:false,b:false,l:false,
  desc:"The start of Vostatek's questline. An unusual man with an unusual request.",
  tip:"",status:0,notes:""},
-{id:"sq13",r:"Trosky",tp:"Side Quest",o:13,name:"Combat Training 1",m:false,hm:false,t:false,b:false,l:false,
+{id:"sq13",r:"Trosky",tp:"Side Quest",o:13,name:"Combat Training 1",m:false,hm:false,t:false,b:false,l:false,act:"once",
  desc:"Train with the fighters at the Nomad's Camp. Significantly improves Henry's combat skills.",
  tip:"Do both Combat Training quests before any major combat — the skill bonuses are substantial.",status:0,notes:""},
-{id:"sq14",r:"Trosky",tp:"Side Quest",o:14,name:"Combat Training 2",m:false,hm:false,t:false,b:false,l:false,
+{id:"sq14",r:"Trosky",tp:"Side Quest",o:14,name:"Combat Training 2",m:false,hm:false,t:false,b:false,l:false,act:"once",
  desc:"Advanced combat training at the Nomad's Camp.",
  tip:"",status:0,notes:""},
 {id:"sq15",r:"Trosky",tp:"Side Quest",o:15,name:"Miri Fajta",m:false,hm:false,t:false,b:false,l:false,
@@ -362,16 +370,16 @@ const Q=[
 {id:"t05",r:"Trosky",tp:"Task",o:5,name:"Casper",m:true,hm:false,t:false,b:false,l:false,
  desc:"Fourth and final task in the Gules questline.",
  tip:"⛔ BLOCKED if Semine family destroyed. Must complete before Necessary Evil.",status:0,notes:""},
-{id:"t06",r:"Trosky",tp:"Task",o:6,name:"Melee at the Mill",m:false,hm:false,t:false,b:false,l:false,
+{id:"t06",r:"Trosky",tp:"Task",o:6,name:"Melee at the Mill",m:false,hm:false,t:false,b:false,l:false,act:"once",
  desc:"Brawler questline begins at Lower Semine Mill. Fight in underground bare-knuckle bouts.",
  tip:"Win all four brawler questline tasks for the Henry the Bruiser trophy.",status:0,notes:""},
-{id:"t07",r:"Trosky",tp:"Task",o:7,name:"More Melee at the Mill",m:false,hm:false,t:false,b:false,l:false,
+{id:"t07",r:"Trosky",tp:"Task",o:7,name:"More Melee at the Mill",m:false,hm:false,t:false,b:false,l:false,act:"rep",
  desc:"Repeatable brawler fights at the mill. Doesn't count toward the 'Been There Done That' total.",
  tip:"Only the first completion of each unique fight counts toward trophies.",status:0,notes:""},
-{id:"t08",r:"Trosky",tp:"Task",o:8,name:"Wine, Women and Blood",m:false,hm:false,t:false,b:false,l:false,
+{id:"t08",r:"Trosky",tp:"Task",o:8,name:"Wine, Women and Blood",m:false,hm:false,t:false,b:false,l:false,act:"once",
  desc:"Brawler questline moves to the Zhelejov Wagoners' Inn.",
  tip:"",status:0,notes:""},
-{id:"t09",r:"Trosky",tp:"Task",o:9,name:"The Best for Last",m:false,hm:false,t:false,b:false,l:false,
+{id:"t09",r:"Trosky",tp:"Task",o:9,name:"The Best for Last",m:false,hm:false,t:false,b:false,l:false,act:"once",
  desc:"Final brawler questline task. The toughest fight of the questline.",
  tip:"Having Combat Training 1 and 2 done makes this significantly easier.",status:0,notes:""},
 {id:"t10",r:"Trosky",tp:"Task",o:10,name:"The Voivode's Curse",m:false,hm:false,t:false,b:false,l:false,
@@ -398,7 +406,7 @@ const Q=[
 {id:"t17",r:"Trosky",tp:"Task",o:17,name:"Demons of Trosky",m:true,hm:true,t:false,b:false,l:false,
  desc:"Speak to Chamberlain Ulrich in Trosky Castle after starting 'Back in the Saddle'.",
  tip:"🔴 HIGHLY MISSABLE: Must complete before the end of Necessary Evil.",status:0,notes:""},
-{id:"t18",r:"Trosky",tp:"Task",o:18,name:"Pilgrimage",m:false,hm:false,t:false,b:false,l:false,
+{id:"t18",r:"Trosky",tp:"Task",o:18,name:"Pilgrimage",m:false,hm:false,t:false,b:false,l:false,act:"rep",
  desc:"If Henry has broken the law, he can atone by speaking to Father Nicodemus and undertaking a pilgrimage.",
  tip:"Repeatable. Does NOT count toward 'Been There Done That' trophy.",status:0,notes:""},
 {id:"t19",r:"Trosky",tp:"Task",o:19,name:"The Lion's Crest",m:false,hm:false,t:false,b:false,l:false,
@@ -427,10 +435,10 @@ const Q=[
 {id:"sq24",r:"Kuttenberg",tp:"Side Quest",o:7,name:"In Vino Veritas",m:false,hm:false,t:false,b:false,l:false,
  desc:"Wine, secrets, and a social gathering where what is said in confidence rarely stays that way.",
  tip:"",status:0,notes:""},
-{id:"sq25",r:"Kuttenberg",tp:"Side Quest",o:8,name:"Ars Dimicatoria",m:false,hm:false,t:false,b:false,l:false,
+{id:"sq25",r:"Kuttenberg",tp:"Side Quest",o:8,name:"Ars Dimicatoria",m:false,hm:false,t:false,b:false,l:false,act:"once",
  desc:"A formal combat questline involving the art of swordsmanship and a challenging instructor.",
  tip:"Leads into the Kuttenberg Tournament. Complete this first.",status:0,notes:""},
-{id:"sq26",r:"Kuttenberg",tp:"Side Quest",o:9,name:"Kuttenberg Tournament",m:false,hm:false,t:false,b:false,l:false,
+{id:"sq26",r:"Kuttenberg",tp:"Side Quest",o:9,name:"Kuttenberg Tournament",m:false,hm:false,t:false,b:false,l:false,act:"once",
  desc:"A full tournament held in Kuttenberg. Multiple combat disciplines. Strong rewards and prestige.",
  tip:"Requires completing Ars Dimicatoria first. Keep your weapon in top repair.",status:0,notes:""},
 {id:"sq27",r:"Kuttenberg",tp:"Side Quest",o:10,name:"Lost Honour",m:true,hm:false,t:false,b:false,l:false,
@@ -480,7 +488,7 @@ const Q=[
 {id:"t20",r:"Kuttenberg",tp:"Task",o:1,name:"Arrow-head",m:true,hm:true,t:true,b:false,l:false,
  desc:"A highly missable task in the wilderness near Kuttenberg. Time-sensitive once encountered.",
  tip:"🔴 HIGHLY MISSABLE: If you pass the trigger point without starting it, it's gone forever.",status:0,notes:""},
-{id:"t21",r:"Kuttenberg",tp:"Task",o:2,name:"Popinjay Shoot",m:false,hm:false,t:false,b:false,l:false,
+{id:"t21",r:"Kuttenberg",tp:"Task",o:2,name:"Popinjay Shoot",m:false,hm:false,t:false,b:false,l:false,act:"rep",
  desc:"A traditional archery competition held in Kuttenberg City.",
  tip:"",status:0,notes:""},
 {id:"t22",r:"Kuttenberg",tp:"Task",o:3,name:"The Thieves' Code",m:false,hm:false,t:false,b:false,l:false,
@@ -525,7 +533,7 @@ const Q=[
 {id:"t35",r:"Kuttenberg",tp:"Task",o:16,name:"Enough!",m:false,hm:false,t:false,b:false,l:false,
  desc:"A Miskowitz local has had enough. Help them resolve a long-running dispute.",
  tip:"",status:0,notes:""},
-{id:"t36",r:"Kuttenberg",tp:"Task",o:17,name:"Fight Dirty",m:false,hm:false,t:false,b:false,l:false,
+{id:"t36",r:"Kuttenberg",tp:"Task",o:17,name:"Fight Dirty",m:false,hm:false,t:false,b:false,l:false,act:"rep",
  desc:"An underground fighting task in Hroschan. Less rule-bound than the Brawler questline.",
  tip:"",status:0,notes:""},
 {id:"t37",r:"Kuttenberg",tp:"Task",o:18,name:"A Moment of Fame",m:false,hm:false,t:false,b:false,l:false,
@@ -834,7 +842,7 @@ function save(){const d={};Q.forEach(q=>d[q.id]={s:q.status,n:q.notes});try{loca
 
 function setTab(t){
   currentTab=t;
-  ["tracker","decisions","endings","riddler","npcs","forge","missable"].forEach(id=>{
+  ["tracker","decisions","endings","riddler","npcs","forge","missable","loot","romance"].forEach(id=>{
     document.getElementById("page-"+id).style.display=id===t?(id==="tracker"?"flex":"block"):"none";
     document.getElementById("tb-"+id).className="tab"+(t===id?" on":"");
   });
@@ -844,6 +852,8 @@ function setTab(t){
   if(t==="npcs")renderNPCs();
   if(t==="forge")renderForge();
   if(t==="missable")renderMissable();
+  if(t==="loot")renderLoot();
+  if(t==="romance")renderRomance();
 }
 
 // ═══════════════════════════════════════════════════
@@ -1111,7 +1121,9 @@ function renderList(){
   REGIONS.forEach(reg=>{
     const qs=Q.filter(q=>{
       if(q.r!==reg.id)return false;
-      if(ftype&&q.tp!==ftype)return false;
+      if(ftype==="act-once"&&q.act!=="once")return false;
+      if(ftype==="act-rep"&&q.act!=="rep")return false;
+      if(ftype&&ftype!=="act-once"&&ftype!=="act-rep"&&q.tp!==ftype)return false;
       if(fstat!==""&&q.status!==parseInt(fstat))return false;
       if(freg&&q.r!==freg)return false;
       if(srch&&!q.name.toLowerCase().includes(srch))return false;
@@ -1125,6 +1137,7 @@ function renderList(){
         `<span class="bdg ${q.tp==="Main Quest"?"b-main":q.tp==="Side Quest"?"b-side":"b-task"}">${q.tp==="Main Quest"?"Main":q.tp==="Side Quest"?"Side":"Task"}</span>`,
         q.hm?`<span class="bdg b-hmiss">⚠ v.missable</span>`:(q.m?`<span class="bdg b-miss">missable</span>`:""),
         q.t?`<span class="bdg b-time">timed</span>`:"",
+        q.act==="once"?`<span class="bdg b-act-once">⚡ activity</span>`:q.act==="rep"?`<span class="bdg b-act-rep">🔁 repeatable</span>`:"",
         q.b?`<span class="bdg b-branch">branching</span>`:"",
         q.l?`<span class="bdg b-lock">locks content</span>`:"",
       ].filter(Boolean).join("");
@@ -1157,6 +1170,8 @@ function renderDetail(){
   else if(q.m)w+=`<div class="warn-box">⚠️ <span><b>Missable:</b> Can be permanently missed. Complete promptly.</span></div>`;
   if(q.t)w+=`<div class="warn-box">⏱️ <span><b>Time Sensitive:</b> Has an in-game timer. Delaying causes auto-fail.</span></div>`;
   if(q.l)w+=`<div class="warn-box">🔒 <span><b>Locks Content:</b> Your choice here permanently locks out other quests or the good ending.</span></div>`;
+  if(q.act==="once")w+=`<div class="info-box">⚡ <span><b>One-Time Activity:</b> A gameplay challenge (combat, sport, competition). Completes once — does not count toward narrative quest totals.</span></div>`;
+  if(q.act==="rep")w+=`<div class="info-box">🔁 <span><b>Repeatable Activity:</b> Can be done multiple times. Does not count toward 'Been There Done That' trophy or narrative totals.</span></div>`;
   if(q.tip&&!q.hm)w+=`<div class="tip-box">💡 <span>${q.tip}</span></div>`;
   el.innerHTML=`<div class="detail">
     <div class="d-type" style="color:${tc}">${q.tp}</div>
@@ -1417,6 +1432,622 @@ function renderMissable(){
     });
   });
   document.getElementById("missable-content").innerHTML=h;
+}
+
+// ═══════════════════════════════════════════════════
+// NOTABLE LOOT TAB
+// ═══════════════════════════════════════════════════
+function renderLoot(){
+  const LOOT={
+    treasureMaps:[
+      {
+        region:"Trosky",
+        id:"tm01",
+        name:"Treasure Map I — Tachov Copse",
+        find:"Found on a dead bandit in the forest northeast of Tachov (random camp spawn).",
+        loot:"Buried chest northeast of Tachov near a large fallen oak. Contains: Hunting Bow, 4× Broadhead Arrows, 80–120 Groschen, Coif of Iron.",
+        tip:"Look for disturbed earth between two large roots on the forest floor. Mutt will alert near it."
+      },
+      {
+        region:"Trosky",
+        id:"tm02",
+        name:"Treasure Map II — Semine Ruins",
+        find:"Inside a chest in the Semine Estate cellar (accessible after Back in the Saddle).",
+        loot:"Near the ruined chapel south of Lower Semine. Chest contains: Padded Gambeson (Fine), Chainmail Hauberk, 200 Groschen.",
+        tip:"The chest is hidden under a loose flagstone inside the ruined apse — use a torch."
+      },
+      {
+        region:"Trosky",
+        id:"tm03",
+        name:"Treasure Map III — Trosky Heights",
+        find:"Reward from Bailiff Markvart in Troskowitz after completing three tasks.",
+        loot:"On the rocky slope below Trosky Castle's north tower. Chest contains: Noble's Sword (Sharpened), Gilded Spurs, 350 Groschen.",
+        tip:"The chest is wedged behind a boulder only reachable by climbing the goat trail on the northwest face."
+      },
+      {
+        region:"Kuttenberg",
+        id:"tm04",
+        name:"Treasure Map IV — Devil's Den",
+        find:"Looted from the den leader during The Magic Arrow side quest.",
+        loot:"Cave alcove southeast of Devil's Den. Contains: Decorated Brigandine, Sabre (Masterwork), 500 Groschen, Topaz Ring.",
+        tip:"Requires lockpick 8 or the key found on the den captain's body."
+      },
+      {
+        region:"Kuttenberg",
+        id:"tm05",
+        name:"Treasure Map V — Sedletz Fields",
+        find:"Sold by a merchant in the Kuttenberg market square for 60 Groschen.",
+        loot:"Buried at the base of the carved stone cross in the field east of Sedletz Monastery. Contains: Chainmail Chausses, Pouch of 400 Groschen, Ruby Brooch.",
+        tip:"The cross is behind a low stone wall — easy to miss at night."
+      },
+      {
+        region:"Kuttenberg",
+        id:"tm06",
+        name:"Treasure Map VI — Bylany Ridge",
+        find:"Hidden in a cracked wall inside the abandoned mill east of Bylany.",
+        loot:"Beneath a flat rock on the ridge overlooking Bylany. Contains: Plate Gauntlets (Engraved), War Axe, 650 Groschen.",
+        tip:"The flat rock is covered in moss — check the eastern edge of the rocky outcrop, not the peak."
+      },
+    ],
+    pois:[
+      {
+        region:"Trosky",
+        id:"poi01",
+        name:"Abandoned Charcoal Camp",
+        type:"Abandoned Camp",
+        location:"Forest west of Tachov, near the river bend.",
+        loot:"Overturned cart with a saddlebag: 2× Healing Salve, Charcoal, Torch, 30–60 Groschen in a purse.",
+        tip:"Respawns after several in-game days. One of the earliest reliable sources of Healing Salve."
+      },
+      {
+        region:"Trosky",
+        id:"poi02",
+        name:"Poacher's Stash",
+        type:"Hidden Cache",
+        location:"Dense thicket south of the Nomad's Camp, behind a fallen birch.",
+        loot:"Wrapped bundle on the ground: Hunting Knife, 3× Rabbit Pelts, 2× Deer Antler, 45 Groschen.",
+        tip:"No combat needed — just spot the bundle. Mutt will sniff it out."
+      },
+      {
+        region:"Trosky",
+        id:"poi03",
+        name:"Ruined Mill Cellar",
+        type:"Ruin",
+        location:"North of Zhelejov, the derelict watermill by the stream.",
+        loot:"Locked cellar (lockpick 3): old chest with Mace (Crude), Leather Gloves, 70 Groschen, Mouldy Bread (nutrition).",
+        tip:"The miller's ghost rumour is unfounded, but bandits sometimes shelter here at night."
+      },
+      {
+        region:"Trosky",
+        id:"poi04",
+        name:"Hermit's Hidden Larder",
+        type:"Secret Stash",
+        location:"Reached only after completing The Hermit — he reveals it as a reward.",
+        loot:"Cave niche behind the icon: Dried Mushrooms ×6, Herbal Remedy ×3, 100 Groschen, Bone Rosary.",
+        tip:"Only accessible if you completed all optional objectives and gained the hermit's full trust."
+      },
+      {
+        region:"Kuttenberg",
+        id:"poi05",
+        name:"Mine Shaft Collapse — Upper Lode",
+        type:"Abandoned Mine",
+        location:"Hillside southeast of Kuttenberg, accessible through a low crawlspace near the road.",
+        loot:"Skeleton with a satchel: Pickaxe, Miner's Lamp, Silver Nugget ×2, 120 Groschen, Linen Bandage ×4.",
+        tip:"Requires a torch. The crawlspace is only visible during daylight from the correct angle."
+      },
+      {
+        region:"Kuttenberg",
+        id:"poi06",
+        name:"Wayside Shrine Cache",
+        type:"Hidden Cache",
+        location:"Crossroads shrine between Miskowitz and Horschan.",
+        loot:"Behind a loose stone in the shrine base: Rosary (Silver), 80 Groschen, Letter (lore).",
+        tip:"Interaction prompt only appears if you approach from the north side. Easy to ride past."
+      },
+      {
+        region:"Kuttenberg",
+        id:"poi07",
+        name:"Waylaid Merchant's Wagon",
+        type:"Random Encounter",
+        location:"Road between Kuttenberg and Pschitoky — random spawn, daytime only.",
+        loot:"Ambushed wagon: Merchant's Chest (lockpick 5) with Bolts of Cloth ×3, Fine Wine ×2, 250 Groschen, Spice Pouch.",
+        tip:"Bandits have already fled. You can loot freely. The chest resets each new encounter spawn."
+      },
+      {
+        region:"Kuttenberg",
+        id:"poi08",
+        name:"Monk's Abandoned Cell",
+        type:"Ruin",
+        location:"Wooded hillside northeast of Sedletz Monastery — a crumbling stone cell.",
+        loot:"Inside: Illuminated Manuscript (sell value ~180g), Wax Tablet, Candles ×4, Medicinal Herbs ×5.",
+        tip:"The manuscript is the most valuable single item. Sell it to Scribe Erazim for a bonus price."
+      },
+    ],
+    lockedChests:[
+      {
+        region:"Trosky",
+        id:"lc01",
+        name:"Troskowitz Armoury Chest",
+        location:"Ground floor of the Troskowitz guard barracks, against the east wall.",
+        lock:"Lockpick difficulty: 5 (Medium). OR acquire the Armoury Key.",
+        keyLocation:"The Armoury Key hangs on a nail behind the head guard's desk. He steps away at midday. Can also be pickpocketed.",
+        loot:"Hunting Sword (Well-maintained), Chainmail Coif, Padded Gambeson, Torch ×3, 150 Groschen.",
+        tip:"Midday is the safest window — guard patrols are thinnest and the key is briefly unattended."
+      },
+      {
+        region:"Trosky",
+        id:"lc02",
+        name:"Hermit's Iron Box",
+        location:"Under the altar stone inside the hermit's cave.",
+        lock:"Lockpick difficulty: 7 (Hard). Henry notes it looks handmade.",
+        keyLocation:"No key exists — lockpick only. The hermit himself cannot open it.",
+        loot:"Illuminated Page (unique lore item), Silver Cross, 200 Groschen, Dried Wolfsbane.",
+        tip:"The Dried Wolfsbane is rare and valuable for alchemy. The Illuminated Page is a collectible."
+      },
+      {
+        region:"Trosky",
+        id:"lc03",
+        name:"Trapper's Strongbox — Rook's Nest",
+        location:"A large bird nest atop a ruined tower wall northeast of Tachov.",
+        lock:"The strongbox is directly in the nest — no lock, but reaching the nest requires climbing.",
+        keyLocation:"No key needed. Climb the ruined tower exterior (requires Agility 4 or higher).",
+        loot:"Trapper's Strongbox: Fur Coat (Fine), 2× Bear Trap, Copper Ring, 90 Groschen, Rabbit Feet ×5.",
+        tip:"🪺 NEST LOOT — Rook nests in Trosky occasionally contain small valuables. Check ruined towers and old barns."
+      },
+      {
+        region:"Trosky",
+        id:"lc04",
+        name:"Miller Kreyzl's Locked Desk",
+        location:"Upper floor of Lower Semine Mill.",
+        lock:"Lockpick difficulty: 4 (Easy-Medium). Or persuade the miller (Speech 6).",
+        keyLocation:"Key is inside the mill on a hook near the grinding wheel, covered by a cloth sack.",
+        loot:"Private Ledger (quest-relevant in Materia Prima), 180 Groschen, Fine Ink, Wax Seal.",
+        tip:"Steal the key and return it after reading the ledger — the miller never notices if you're careful."
+      },
+      {
+        region:"Kuttenberg",
+        id:"lc05",
+        name:"Bathhouse Owner's Safe Room",
+        location:"Locked room behind Adam's office in the Kuttenberg Bathhouse.",
+        lock:"Lockpick difficulty: 8 (Very Hard). Key only recommended.",
+        keyLocation:"Adam carries the key on his person at all times. Must be pickpocketed (Thievery 7+) or obtained after completing A Good Scrub.",
+        loot:"Guest Ledger (lore, names of notable clients), Pouch with 600 Groschen, Engraved Dagger, Silk Handkerchief.",
+        tip:"The Guest Ledger names several blackmail targets — can be used for leverage in Kuttenberg political quests."
+      },
+      {
+        region:"Kuttenberg",
+        id:"lc06",
+        name:"Bylany Manor Wine Cellar Chest",
+        location:"Wine cellar beneath Bylany Manor, behind the wine racks.",
+        lock:"Lockpick difficulty: 6 (Medium-Hard).",
+        keyLocation:"Wine Cellar Key is in a clay pot on the kitchen windowsill — easy to pocket unnoticed.",
+        loot:"Hungarian Wine ×4 (high value), Silver Goblet, 300 Groschen, Dried Meat Provisions.",
+        tip:"The Hungarian Wine fetches excellent prices in Kuttenberg. Don't drink it."
+      },
+      {
+        region:"Kuttenberg",
+        id:"lc07",
+        name:"Sedletz Monastery Scriptorium Chest",
+        location:"Locked scriptorium on the east side of Sedletz Monastery.",
+        lock:"Lockpick difficulty: 7 (Hard). Or borrow the key during Thou art but dust…",
+        keyLocation:"Brother Kryštof holds the scriptorium key. He sets it on the lectern when he sleeps — approx. midnight to 5am.",
+        loot:"Three Illuminated Manuscripts (high sell value, ~180g each), Vellum ×5, Ecclesiastical Ink.",
+        tip:"During the Thou art but dust… quest, you're briefly given free movement in the monastery at night. Best window to visit."
+      },
+      {
+        region:"Kuttenberg",
+        id:"lc08",
+        name:"Eagle Nest Cache — Dänemark Cliffs",
+        location:"Large eagle nest on the cliff face south of Dänemark, reachable via a narrow ledge path.",
+        lock:"No lock — just the climb (Agility 5 or patience with route-finding).",
+        keyLocation:"No key. Navigate the ledge path from the eastern approach.",
+        loot:"🪺 NEST LOOT — Eagle Nest: Gold Ring (75g), Soldier's Brooch, Torn Document (lore), Bone Fragment.",
+        tip:"🪺 NEST LOOT — Eagle nests in Kuttenberg are the best source of random valuables without combat. Three known nests: Dänemark Cliffs, Devil's Den Crag, and the ruined watchtower near Miskowitz."
+      },
+      {
+        region:"Kuttenberg",
+        id:"lc09",
+        name:"Devil's Den Crag — Magpie Nest",
+        location:"Top of the rocky crag above Devil's Den, north face.",
+        lock:"No lock — reached by climbing the crag from the western approach.",
+        keyLocation:"N/A",
+        loot:"🪺 NEST LOOT — Magpie Nest: Silver Earring, Copper Coin ×12, Merchant's Button (lore trinket), Polished Stone.",
+        tip:"🪺 NEST LOOT — Magpies collect shiny objects. Lower value than eagle nests but worth checking after Devil's Den quests."
+      },
+      {
+        region:"Kuttenberg",
+        id:"lc10",
+        name:"Mine Supervisor's Office — Kuttenberg Mine",
+        location:"Locked office on the upper level of the Kuttenberg silver mine complex.",
+        lock:"Lockpick difficulty: 9 (Very Hard). Key strongly recommended.",
+        keyLocation:"Mine Supervisor's Key is on his belt. He's bribeable for 200 Groschen (Speech 8) or can be pickpocketed at the daily ledger meeting.",
+        loot:"Silver Ore Assay Reports (quest-relevant for Via Argentum), 800 Groschen, Masterwork Pickaxe, Mine Survey Map.",
+        tip:"The Mine Survey Map reveals two hidden ore pockets that can be looted freely. Worth having the map before clearing the mine quests."
+      },
+    ]
+  };
+
+  let found=0, checked=0;
+  const lootState=JSON.parse(localStorage.getItem("kcd2_loot")||"{}");
+  const allItems=[...LOOT.treasureMaps,...LOOT.pois,...LOOT.lockedChests];
+  allItems.forEach(item=>{if(lootState[item.id])found++;checked++;});
+
+  let h=`<div style="margin-bottom:20px">
+    <div style="font-family:'Cinzel',serif;font-size:18px;color:var(--amber2);margin-bottom:4px">💰 Notable Loot</div>
+    <div style="font-size:12px;font-family:monospace;color:var(--text3);line-height:1.7;margin-bottom:12px">Treasure map locations, hidden POIs, and locked chests across Trosky and Kuttenberg. Tick items as you collect them.</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:4px">
+      <div style="background:var(--bg2);border:1px solid rgba(200,134,26,0.3);border-radius:var(--radius);padding:10px;text-align:center">
+        <div style="font-size:20px;font-family:'Cinzel',serif;color:var(--amber2)" id="loot-stat-maps">0/${LOOT.treasureMaps.length}</div>
+        <div style="font-size:10px;font-family:monospace;color:var(--text3);text-transform:uppercase;margin-top:2px">Treasure Maps</div>
+      </div>
+      <div style="background:var(--bg2);border:1px solid rgba(82,184,114,0.25);border-radius:var(--radius);padding:10px;text-align:center">
+        <div style="font-size:20px;font-family:'Cinzel',serif;color:var(--green2)" id="loot-stat-pois">0/${LOOT.pois.length}</div>
+        <div style="font-size:10px;font-family:monospace;color:var(--text3);text-transform:uppercase;margin-top:2px">Hidden POIs</div>
+      </div>
+      <div style="background:var(--bg2);border:1px solid rgba(96,64,160,0.3);border-radius:var(--radius);padding:10px;text-align:center">
+        <div style="font-size:20px;font-family:'Cinzel',serif;color:var(--purple2)" id="loot-stat-chests">0/${LOOT.lockedChests.length}</div>
+        <div style="font-size:10px;font-family:monospace;color:var(--text3);text-transform:uppercase;margin-top:2px">Locked Chests</div>
+      </div>
+    </div>
+    <div style="font-size:10px;font-family:monospace;color:var(--text4);text-align:center">🪺 = Nest loot — found on actual bird nests, no combat required</div>
+  </div>`;
+
+  function buildSection(title, icon, items, color, borderColor){
+    let s=`<div style="margin-bottom:22px">
+      <div style="display:flex;align-items:center;gap:9px;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)">
+        <span style="font-size:18px">${icon}</span>
+        <span style="font-family:'Cinzel',serif;font-size:14px;color:${color}">${title}</span>
+      </div>`;
+    items.forEach(item=>{
+      const isDone=lootState[item.id]||false;
+      const isNest=item.tip&&item.tip.includes("NEST LOOT");
+      const isKut=item.region==="Kuttenberg";
+      s+=`<div style="background:var(--bg2);border:1px solid ${isDone?"rgba(82,184,114,0.35)":borderColor};border-radius:var(--radius2);padding:13px 15px;margin-bottom:8px;opacity:${isDone?0.65:1};transition:opacity .2s">
+        <div style="display:flex;align-items:flex-start;gap:11px">
+          <div style="flex:1">
+            <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:5px">
+              <span style="font-family:'Cinzel',serif;font-size:12px;color:${isDone?"var(--text3)":"var(--text)"};${isDone?"text-decoration:line-through":""}">${item.name}</span>
+              <span style="font-size:9px;font-family:monospace;padding:1px 5px;border-radius:3px;background:${isKut?"rgba(96,64,160,0.18)":"rgba(200,134,26,0.15)"};color:${isKut?"var(--purple2)":"var(--amber2)"};font-weight:700">${item.region}</span>
+              ${isNest?`<span style="font-size:9px;font-family:monospace;padding:1px 5px;border-radius:3px;background:rgba(82,184,114,0.12);color:var(--green2);font-weight:700">🪺 nest</span>`:""}
+              ${item.type?`<span style="font-size:9px;font-family:monospace;padding:1px 5px;border-radius:3px;background:var(--bg4);color:var(--text3)">${item.type}</span>`:""}
+            </div>
+            ${item.find?`<div style="font-size:11px;font-family:monospace;color:var(--text3);margin-bottom:4px;line-height:1.5">📜 <b style="color:var(--text2)">Map:</b> ${item.find}</div>`:""}
+            ${item.location?`<div style="font-size:11px;font-family:monospace;color:var(--text3);margin-bottom:4px;line-height:1.5">📍 <b style="color:var(--text2)">Location:</b> ${item.location}</div>`:""}
+            ${item.lock?`<div style="font-size:11px;font-family:monospace;color:rgba(208,88,72,0.9);margin-bottom:4px;line-height:1.5">🔒 <b>Lock:</b> ${item.lock}</div>`:""}
+            ${item.keyLocation?`<div style="font-size:11px;font-family:monospace;color:var(--amber2);margin-bottom:4px;line-height:1.5">🗝 <b>Key:</b> ${item.keyLocation}</div>`:""}
+            <div style="font-size:11px;font-family:monospace;color:var(--green2);margin-bottom:4px;line-height:1.5">💎 <b>Loot:</b> ${item.loot}</div>
+            ${item.tip?`<div style="font-size:11px;font-family:monospace;color:var(--amber2);line-height:1.5;padding:5px 8px;background:var(--bg3);border-radius:var(--radius);border-left:2px solid var(--amber);margin-top:4px">💡 ${item.tip}</div>`:""}
+          </div>
+          <div style="flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:4px">
+            <label style="cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px">
+              <input type="checkbox" ${isDone?"checked":""} onchange="toggleLoot('${item.id}',this.checked)" style="width:16px;height:16px;cursor:pointer;accent-color:var(--green)">
+              <span style="font-size:9px;font-family:monospace;color:var(--text3)">${isDone?"Looted":"Loot?"}</span>
+            </label>
+          </div>
+        </div>
+      </div>`;
+    });
+    s+=`</div>`;
+    return s;
+  }
+
+  // Split by region for readability
+  const troskyMaps=LOOT.treasureMaps.filter(x=>x.region==="Trosky");
+  const kutMaps=LOOT.treasureMaps.filter(x=>x.region==="Kuttenberg");
+  const troskyPOIs=LOOT.pois.filter(x=>x.region==="Trosky");
+  const kutPOIs=LOOT.pois.filter(x=>x.region==="Kuttenberg");
+  const troskyChests=LOOT.lockedChests.filter(x=>x.region==="Trosky");
+  const kutChests=LOOT.lockedChests.filter(x=>x.region==="Kuttenberg");
+
+  h+=`<div style="font-size:11px;font-family:monospace;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--amber);margin-bottom:12px;display:flex;align-items:center;gap:7px"><span>🏰</span> TROSKY</div>`;
+  h+=buildSection("Treasure Maps","🗺️",troskyMaps,"var(--amber2)","rgba(200,134,26,0.25)");
+  h+=buildSection("Hidden POIs & Caches","🌿",troskyPOIs,"var(--green2)","rgba(82,184,114,0.2)");
+  h+=buildSection("Locked Chests & Keys","🔐",troskyChests,"var(--purple2)","rgba(96,64,160,0.25)");
+
+  h+=`<div style="height:1px;background:var(--border2);margin:18px 0"></div>`;
+  h+=`<div style="font-size:11px;font-family:monospace;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--purple2);margin-bottom:12px;display:flex;align-items:center;gap:7px"><span>⛏️</span> KUTTENBERG</div>`;
+  h+=buildSection("Treasure Maps","🗺️",kutMaps,"var(--amber2)","rgba(200,134,26,0.25)");
+  h+=buildSection("Hidden POIs & Caches","🌿",kutPOIs,"var(--green2)","rgba(82,184,114,0.2)");
+  h+=buildSection("Locked Chests & Keys","🔐",kutChests,"var(--purple2)","rgba(96,64,160,0.25)");
+
+  document.getElementById("loot-content").innerHTML=h;
+  updateLootStats();
+}
+
+function toggleLoot(id,val){
+  const state=JSON.parse(localStorage.getItem("kcd2_loot")||"{}");
+  state[id]=val;
+  localStorage.setItem("kcd2_loot",JSON.stringify(state));
+  renderLoot();
+}
+
+function updateLootStats(){
+  const state=JSON.parse(localStorage.getItem("kcd2_loot")||"{}");
+  const mapIds=["tm01","tm02","tm03","tm04","tm05","tm06"];
+  const poiIds=["poi01","poi02","poi03","poi04","poi05","poi06","poi07","poi08"];
+  const chestIds=["lc01","lc02","lc03","lc04","lc05","lc06","lc07","lc08","lc09","lc10"];
+  const mc=mapIds.filter(id=>state[id]).length;
+  const pc=poiIds.filter(id=>state[id]).length;
+  const cc=chestIds.filter(id=>state[id]).length;
+  const mEl=document.getElementById("loot-stat-maps");
+  const pEl=document.getElementById("loot-stat-pois");
+  const cEl=document.getElementById("loot-stat-chests");
+  if(mEl)mEl.textContent=mc+"/"+mapIds.length;
+  if(pEl)pEl.textContent=pc+"/"+poiIds.length;
+  if(cEl)cEl.textContent=cc+"/"+chestIds.length;
+}
+
+// ═══════════════════════════════════════════════════
+// ROMANCE TAB
+// ═══════════════════════════════════════════════════
+function renderRomance(){
+  const ROMANCES=[
+    {
+      id:"r01",
+      name:"Klára",
+      icon:"🌸",
+      type:"Full Romance",
+      availability:"Trosky — available from early game",
+      region:"Trosky",
+      missable:false,
+      questLink:"Miri Fajta",
+      where:"Klára is found at the Nomad's Camp east of Tachov in Trosky. She is a young Romani woman and the heart of the Miri Fajta questline.",
+      when:"First met very early in Trosky, shortly after arriving at the Nomad's Camp. Her questline begins organically from camp interactions.",
+      how:[
+        "Start Miri Fajta by speaking to Aranka at the Nomad's Camp.",
+        "Help the camp resolve its difficulties — Klára's story becomes central as the questline develops.",
+        "Be kind, honest, and respectful in dialogue choices with her throughout.",
+        "Complete Miri Fajta fully — the romance concludes within this questline.",
+      ],
+      tips:"Klára's romance is deeply tied to the fate of the Nomad's Camp. How you handle the camp's troubles directly affects how her story ends. She is one of the most narratively rich romance options in the game.",
+      missableTip:"",
+      trophy:"No dedicated trophy, but her questline contributes to the Trosky completion count.",
+      repeatable:false,
+    },
+    {
+      id:"r02",
+      name:"Johanka",
+      icon:"✝️",
+      type:"Side Quest Romance",
+      availability:"Trosky — mid game, tied to The Hermit questline",
+      region:"Trosky",
+      missable:true,
+      questLink:"The Hermit / A Sinful Soul",
+      where:"Johanka is found near the chapel ruins west of Lower Semine, connected to Father Nicodemus and the local religious community.",
+      when:"Available after progressing through The Hermit and its optional objectives. She appears as part of the broader religious questline in Trosky.",
+      how:[
+        "Complete The Hermit and pursue every optional objective (required to unlock A Sinful Soul).",
+        "Speak to Johanka at the chapel — she opens up to Henry over multiple conversations.",
+        "Choose compassionate and understanding dialogue options when she discusses her guilt.",
+        "Her story concludes in A Sinful Soul — which must be triggered before Necessary Evil.",
+      ],
+      tips:"Johanka's arc is short but emotionally resonant. She is deeply troubled and Henry's role is partly pastoral. Don't expect a traditional romance — it's more of an intimate human connection.",
+      missableTip:"🔴 MISSABLE: A Sinful Soul (and Johanka's full story) is only accessible if you completed every optional step in The Hermit. Must be resolved before Necessary Evil closes off Trosky content.",
+      trophy:"",
+      repeatable:false,
+    },
+    {
+      id:"r03",
+      name:"Katherine",
+      icon:"💙",
+      type:"Main Story Romance",
+      availability:"Kuttenberg — available from mid-game onward",
+      region:"Kuttenberg",
+      missable:false,
+      questLink:"Post Scriptum",
+      where:"Katherine is first encountered in Kuttenberg — she appears near the Liechtenstein household in the Jewish quarter and at several key story locations. She is Henry's primary love interest in KCD2.",
+      when:"Introduced during the Kuttenberg main storyline. Initially cold and guarded, she becomes more open to Henry after Into the Underworld. The dedicated romance quest Post Scriptum unlocks after Via Argentum.",
+      how:[
+        "Progress the Kuttenberg main story until Into the Underworld.",
+        "Interact with Katherine at every opportunity — don't skip her dialogue.",
+        "Complete Via Argentum to unlock Post Scriptum.",
+        "Speak to Katherine to begin Post Scriptum — this is her dedicated romance questline.",
+        "Make choices that demonstrate respect and genuine care rather than flattery.",
+      ],
+      tips:"Katherine is the most developed romance in KCD2 and is tightly woven into the main story. Her arc rewards players who have been attentive to the Liechtenstein plotline throughout. Post Scriptum contains some of the best writing in the game.",
+      missableTip:"Post Scriptum is not missable in the conventional sense, but it only unlocks after Via Argentum — don't rush the ending before starting it.",
+      trophy:"",
+      repeatable:false,
+    },
+    {
+      id:"r04",
+      name:"Bathhouse Women",
+      icon:"🛁",
+      type:"One-Night Encounter",
+      availability:"Kuttenberg — available after arriving in Kuttenberg",
+      region:"Kuttenberg",
+      missable:false,
+      questLink:"A Good Scrub (loosely)",
+      where:"The Kuttenberg Bathhouse, run by Adam. Located in central Kuttenberg — easily found once you arrive in the city.",
+      when:"Available after reaching Kuttenberg. No quest prerequisite required, though A Good Scrub deepens the bathhouse storyline.",
+      how:[
+        "Visit the Kuttenberg Bathhouse and speak to Adam.",
+        "Pay for a bath — the option to request company becomes available.",
+        "This is a transactional encounter, not a relationship arc.",
+      ],
+      tips:"A classic KCD tradition. No relationship flags are affected. Adam's bathhouse is also a major quest hub — see A Good Scrub for the full storyline.",
+      missableTip:"",
+      trophy:"",
+      repeatable:true,
+    },
+    {
+      id:"r05",
+      name:"Innkeeper's Wife / Barmaid Encounters",
+      icon:"🍺",
+      type:"One-Night Encounter",
+      availability:"Various — Trosky and Kuttenberg",
+      region:"Both",
+      missable:false,
+      questLink:"None",
+      where:"Several inns across both regions — including the Zhelejov Wagoners' Inn (Trosky) and certain Kuttenberg taverns. Interactions vary by location.",
+      when:"Available once you've established yourself locally and have sufficient coin and/or speech skill. Some require Speech 6+ or high reputation with the establishment.",
+      how:[
+        "Drink at the bar and engage the barmaid in conversation.",
+        "Exhaust friendly dialogue options and compliment her.",
+        "With sufficient Speech or Charisma, an invitation becomes available.",
+        "Some locations require you to have previously helped the innkeeper (reputation check).",
+      ],
+      tips:"These are ambient encounters rather than story moments. Coin and a high Speech stat are your best tools. Not all inns have this option — it's specific to certain named barmaids.",
+      missableTip:"",
+      trophy:"",
+      repeatable:true,
+    },
+    {
+      id:"r06",
+      name:"Zofka",
+      icon:"🌿",
+      type:"Side Story Encounter",
+      availability:"Trosky — mid game",
+      region:"Trosky",
+      missable:false,
+      questLink:"Shepherd questline (Carrot on a Stick)",
+      where:"Zofka is encountered during the Shepherd questline near Apollonia in the Trosky region. She is Shepherd Stanislav's daughter.",
+      when:"Available during Carrot on a Stick, the third task in the Shepherd questline. Henry visits Stanislav and Zofka is present at the farm.",
+      how:[
+        "Complete Sheep among Wolves and The Lost Sheep first.",
+        "Visit Stanislav south of Apollonia to begin Carrot on a Stick.",
+        "Speak with Zofka — she is direct and has her own thoughts on Henry.",
+        "A moment of connection is available if Henry is sympathetic and doesn't rush.",
+      ],
+      tips:"Zofka is a minor but memorable character. This is a brief encounter rather than a full arc, and it doesn't affect the Shepherd questline outcome either way.",
+      missableTip:"",
+      trophy:"",
+      repeatable:false,
+    },
+    {
+      id:"r07",
+      name:"Lady Stephanie",
+      icon:"👑",
+      type:"Returning Character — Limited Encounter",
+      availability:"Kuttenberg — specific story moment",
+      region:"Kuttenberg",
+      missable:true,
+      questLink:"Main story (Kuttenberg)",
+      where:"Lady Stephanie from KCD1 appears briefly during the Kuttenberg main story at a social event. She is recognisable to returning players and Henry clearly remembers her.",
+      when:"Encountered during a specific Kuttenberg main story social event — approximately mid-game in the Kuttenberg arc. The window is narrow.",
+      how:[
+        "Progress the Kuttenberg main story to the relevant social event.",
+        "Recognise and speak with Stephanie — choose dialogue that acknowledges your history.",
+        "The encounter is brief and nostalgic rather than a full romance arc.",
+      ],
+      tips:"This is a fan-service moment for KCD1 players rather than a new romance. The chemistry is there but the game doesn't develop it — her appearance is a cameo. Still a lovely reunion if you remember her from the first game.",
+      missableTip:"🟡 MISSABLE: She only appears at this specific story moment. Don't skip the social event or rush through it.",
+      trophy:"",
+      repeatable:false,
+    },
+  ];
+
+  const state=JSON.parse(localStorage.getItem("kcd2_romance")||"{}");
+  const typeCols={
+    "Full Romance":"var(--red2)",
+    "Main Story Romance":"var(--amber2)",
+    "Side Quest Romance":"var(--purple2)",
+    "One-Night Encounter":"var(--blue2)",
+    "Side Story Encounter":"var(--green2)",
+    "Returning Character — Limited Encounter":"var(--orange2)",
+  };
+  const typeBg={
+    "Full Romance":"rgba(168,56,48,0.15)",
+    "Main Story Romance":"rgba(200,134,26,0.12)",
+    "Side Quest Romance":"rgba(96,64,160,0.15)",
+    "One-Night Encounter":"rgba(48,96,160,0.15)",
+    "Side Story Encounter":"rgba(58,138,88,0.12)",
+    "Returning Character — Limited Encounter":"rgba(168,88,32,0.15)",
+  };
+  const regionCols={"Trosky":"var(--amber2)","Kuttenberg":"var(--purple2)","Both":"var(--green2)"};
+  const regionBg={"Trosky":"rgba(200,134,26,0.12)","Kuttenberg":"rgba(96,64,160,0.15)","Both":"rgba(58,138,88,0.12)"};
+
+  const done=ROMANCES.filter(r=>state[r.id]).length;
+
+  let h=`<div style="margin-bottom:20px">
+    <div style="font-family:'Cinzel',serif;font-size:18px;color:var(--red2);margin-bottom:4px">💕 Romance Guide</div>
+    <div style="font-size:12px;font-family:monospace;color:var(--text3);line-height:1.7;margin-bottom:14px">All romance options in KCD2 — who they are, where to find them, when they become available, and how to pursue them. Includes both full relationship arcs and one-time encounters.</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px">
+      <div style="background:var(--bg2);border:1px solid rgba(208,88,72,0.3);border-radius:var(--radius);padding:10px;text-align:center">
+        <div style="font-size:20px;font-family:'Cinzel',serif;color:var(--red2)">${ROMANCES.filter(r=>["Full Romance","Main Story Romance","Side Quest Romance","Side Story Encounter","Returning Character — Limited Encounter"].includes(r.type)).length}</div>
+        <div style="font-size:10px;font-family:monospace;color:var(--text3);text-transform:uppercase;margin-top:2px">Relationship Arcs</div>
+      </div>
+      <div style="background:var(--bg2);border:1px solid rgba(48,96,160,0.3);border-radius:var(--radius);padding:10px;text-align:center">
+        <div style="font-size:20px;font-family:'Cinzel',serif;color:var(--blue2)">${ROMANCES.filter(r=>r.type==="One-Night Encounter").length}</div>
+        <div style="font-size:10px;font-family:monospace;color:var(--text3);text-transform:uppercase;margin-top:2px">One-Night Encounters</div>
+      </div>
+      <div style="background:var(--bg2);border:1px solid rgba(168,56,48,0.3);border-radius:var(--radius);padding:10px;text-align:center">
+        <div style="font-size:20px;font-family:'Cinzel',serif;color:var(--red2)">${ROMANCES.filter(r=>r.missable).length}</div>
+        <div style="font-size:10px;font-family:monospace;color:var(--text3);text-transform:uppercase;margin-top:2px">Missable</div>
+      </div>
+      <div style="background:var(--bg2);border:1px solid rgba(82,184,114,0.25);border-radius:var(--radius);padding:10px;text-align:center">
+        <div style="font-size:20px;font-family:'Cinzel',serif;color:var(--green2)">${done}/${ROMANCES.length}</div>
+        <div style="font-size:10px;font-family:monospace;color:var(--text3);text-transform:uppercase;margin-top:2px">Encountered</div>
+      </div>
+    </div>
+  </div>`;
+
+  ROMANCES.forEach(r=>{
+    const isDone=state[r.id]||false;
+    h+=`<div style="background:var(--bg2);border:1px solid ${isDone?"rgba(82,184,114,0.3)":"var(--border)"};border-radius:var(--radius2);padding:16px;margin-bottom:12px;opacity:${isDone?0.65:1};transition:opacity .2s">
+      <div style="display:flex;align-items:flex-start;gap:13px">
+        <div style="font-size:28px;width:48px;height:48px;flex-shrink:0;background:var(--bg4);border-radius:50%;display:flex;align-items:center;justify-content:center;border:1px solid ${typeCols[r.type]||"var(--border2)"}">${r.icon}</div>
+        <div style="flex:1;min-width:0">
+
+          <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:6px">
+            <span style="font-family:'Cinzel',serif;font-size:16px;color:${isDone?"var(--text3)":"var(--text)"};${isDone?"text-decoration:line-through":""}">${r.name}</span>
+            <span style="font-size:9px;font-family:monospace;padding:2px 6px;border-radius:3px;background:${typeBg[r.type]||"var(--bg4)"};color:${typeCols[r.type]||"var(--text2)"};font-weight:700">${r.type}</span>
+            <span style="font-size:9px;font-family:monospace;padding:2px 6px;border-radius:3px;background:${regionBg[r.region]||"var(--bg4)"};color:${regionCols[r.region]||"var(--text2)"};font-weight:700">${r.region}</span>
+            ${r.missable?`<span style="font-size:9px;font-family:monospace;padding:2px 6px;border-radius:3px;background:rgba(168,56,48,0.2);color:var(--red2);font-weight:700">⚠ missable</span>`:""}
+            ${r.repeatable?`<span style="font-size:9px;font-family:monospace;padding:2px 6px;border-radius:3px;background:rgba(48,96,160,0.15);color:var(--blue2);font-weight:700">🔁 repeatable</span>`:""}
+          </div>
+
+          <div style="font-size:11px;font-family:monospace;color:var(--text3);margin-bottom:10px;line-height:1.5">⏱ ${r.availability}</div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+            <div style="background:var(--bg3);border-radius:var(--radius);padding:10px">
+              <div style="font-size:10px;font-family:monospace;font-weight:700;color:var(--amber2);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:5px">📍 Where</div>
+              <div style="font-size:12px;font-family:monospace;color:var(--text2);line-height:1.55">${r.where}</div>
+            </div>
+            <div style="background:var(--bg3);border-radius:var(--radius);padding:10px">
+              <div style="font-size:10px;font-family:monospace;font-weight:700;color:var(--amber2);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:5px">🕐 When</div>
+              <div style="font-size:12px;font-family:monospace;color:var(--text2);line-height:1.55">${r.when}</div>
+            </div>
+          </div>
+
+          <div style="background:var(--bg3);border-radius:var(--radius);padding:10px;margin-bottom:10px">
+            <div style="font-size:10px;font-family:monospace;font-weight:700;color:var(--amber2);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:7px">❤️ How to pursue</div>
+            <div style="display:grid;gap:5px">${r.how.map((step,i)=>`<div style="display:flex;gap:8px;align-items:flex-start"><span style="font-size:10px;font-family:monospace;color:var(--amber);background:var(--bg4);border-radius:50%;width:18px;height:18px;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px">${i+1}</span><span style="font-size:12px;font-family:monospace;color:var(--text2);line-height:1.55">${step}</span></div>`).join("")}</div>
+          </div>
+
+          ${r.tips?`<div style="font-size:12px;font-family:monospace;color:var(--text2);line-height:1.6;padding:8px 10px;background:var(--bg3);border-radius:var(--radius);border-left:2px solid var(--amber);margin-bottom:${r.missableTip?8:0}px">💡 ${r.tips}</div>`:""}
+          ${r.missableTip?`<div style="font-size:12px;font-family:monospace;color:var(--red2);line-height:1.6;padding:8px 10px;background:rgba(168,56,48,0.1);border-radius:var(--radius);border-left:2px solid var(--red)">${r.missableTip}</div>`:""}
+          ${r.questLink?`<div style="font-size:10px;font-family:monospace;color:var(--text3);margin-top:7px">🔗 Related quest: <span style="color:var(--amber2)">${r.questLink}</span></div>`:""}
+        </div>
+        <div style="flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:4px;padding-top:4px">
+          <label style="cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px">
+            <input type="checkbox" ${isDone?"checked":""} onchange="toggleRomance('${r.id}',this.checked)" style="width:16px;height:16px;cursor:pointer;accent-color:var(--red)">
+            <span style="font-size:9px;font-family:monospace;color:var(--text3)">${isDone?"Done":"Track"}</span>
+          </label>
+        </div>
+      </div>
+    </div>`;
+  });
+
+  h+=`<div style="margin-top:16px;padding:12px 14px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius2)">
+    <div style="font-size:11px;font-family:monospace;font-weight:700;color:var(--amber2);margin-bottom:7px">ℹ️ Notes on KCD2 Romance</div>
+    <div style="font-size:11px;font-family:monospace;color:var(--text3);line-height:1.8">
+      • KCD2 does not penalise Henry for pursuing multiple romance options — there are no jealousy or exclusivity flags between most characters.<br>
+      • Full relationship arcs (Klára, Katherine) have meaningfully different tones — Klára is passionate and tragic, Katherine is slow-burn and intellectually grounded.<br>
+      • One-night encounters (bathhouse, inns) do not affect any relationship arcs or quest outcomes.<br>
+      • Lady Stephanie's appearance is a cameo — pursuing the encounter does not reopen a full KCD1-style relationship.<br>
+      • Speech and Charisma stats help unlock some encounter dialogue but are not required for the main romance arcs.
+    </div>
+  </div>`;
+
+  document.getElementById("romance-content").innerHTML=h;
+}
+
+function toggleRomance(id,val){
+  const state=JSON.parse(localStorage.getItem("kcd2_romance")||"{}");
+  state[id]=val;
+  localStorage.setItem("kcd2_romance",JSON.stringify(state));
+  renderRomance();
 }
 
 renderList();renderDetail();updateStats();
