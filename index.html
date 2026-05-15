@@ -136,6 +136,7 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--bg);color:var(--t
   <button class="tab" id="tb-missable" onclick="setTab('missable')">⚠️ Missable Quests</button>
   <button class="tab" id="tb-loot" onclick="setTab('loot')">💰 Notable Loot</button>
   <button class="tab" id="tb-romance" onclick="setTab('romance')">💕 Romance</button>
+  <button class="tab" id="tb-trophies" onclick="setTab('trophies')">🏆 Trophies</button>
 </div>
 <div class="main" id="app-main">
   <div id="page-tracker" style="display:flex;flex:1;overflow:hidden">
@@ -180,6 +181,7 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--bg);color:var(--t
   <div id="page-missable" style="display:none;flex:1;overflow-y:auto"><div style="padding:20px;max-width:740px;margin:0 auto" id="missable-content"></div></div>
   <div id="page-loot" style="display:none;flex:1;overflow-y:auto"><div style="padding:20px;max-width:800px;margin:0 auto" id="loot-content"></div></div>
   <div id="page-romance" style="display:none;flex:1;overflow-y:auto"><div style="padding:20px;max-width:800px;margin:0 auto" id="romance-content"></div></div>
+  <div id="page-trophies" style="display:none;flex:1;overflow-y:auto"><div style="padding:20px;max-width:860px;margin:0 auto" id="trophies-content"></div></div>
 </div>
 
 <script>
@@ -235,9 +237,9 @@ const Q=[
 {id:"mq11",r:"Trosky",tp:"Main Quest",o:11,name:"The Finger of God",m:false,hm:false,t:false,b:false,l:false,
  desc:"A dramatic confrontation with heavy consequences for Trosky's political landscape.",
  tip:"Preparation pays off here — complete combat training side quests first.",status:0,notes:""},
-{id:"mq12",r:"Trosky",tp:"Main Quest",o:12,name:"Storm",m:false,hm:false,t:false,b:false,l:false,
- desc:"The Trosky storyline reaches its climax. After this quest Henry travels to Kuttenberg and a new chapter begins.",
- tip:"After this you can still fast-travel back to Trosky via the red carriage icon on the map.",status:0,notes:""},
+{id:"mq12",r:"Trosky",tp:"Main Quest",o:12,name:"Storm",m:false,hm:false,t:false,b:true,l:true,
+ desc:"The Trosky storyline's climax. Istvan Toth must be confronted. Two branches: (A) Offer Istvan a honourable duel — fight him one-on-one. If you win, it counts as an honourable kill and awards the Honourable Duel trophy. Affects ending score positively and parents approve. (B) Defenestrate Istvan — throw him from the castle window during the confrontation. Counts as dishonourable, negatively affects ending score, parents disapprove. There is no middle path; one of these two must happen before you can advance to Kuttenberg.",
+ tip:"⚠️ FIGHT THE DUEL. Defenestration is faster but permanently costs you Honour and the good ending path. Prepare for the duel: Sword 15+, your best weapon fully repaired. Istvan fights dirty at low health — don't let up.",status:0,notes:""},
 
 // ── KUTTENBERG MAIN QUESTS (20) ──────────────────
 {id:"mq13",r:"Kuttenberg",tp:"Main Quest",o:1,name:"The Sword and the Quill",m:false,hm:false,t:false,b:false,l:false,
@@ -271,8 +273,8 @@ const Q=[
  desc:"A tense social event that serves as cover for a dangerous intelligence operation.",
  tip:"Dress appropriately — wearing the right clothes gives bonuses in conversation.",status:0,notes:""},
 {id:"mq23",r:"Kuttenberg",tp:"Main Quest",o:11,name:"A Needle in a Haystack",m:false,hm:false,t:false,b:true,l:false,
- desc:"Henry must infiltrate a monastery to root out a conspirator hidden among the clergy. The method chosen — stealth, persuasion, or force — changes the outcome significantly.",
- tip:"Full stealth is the cleanest approach. Force makes the subsequent quest harder.",status:0,notes:""},
+ desc:"Henry must infiltrate Sedletz Monastery to expose a conspirator hiding among the clergy. Three branches: (A) Full stealth — slip in at night, gather evidence by searching cells and eavesdropping on confessions, identify the conspirator without alerting anyone. Cleanest outcome, no monks harmed, Sedletz remains friendly. (B) Persuasion — befriend the abbot and get access through dialogue (Speech 9+), then use the evidence to confront the conspirator publicly. (C) Force — enter openly, threaten monks for information, culminating in a brawl. The conspirator is caught but Sedletz turns hostile and the monastery NPCs remain unfriendly for the rest of the game.",
+ tip:"Stealth path is strongly recommended — Sedletz has unique loot and quest content (Thou art but dust…) that requires good standing with the monks. Force locks you out of significant content. Approach at night, wear dark clothing, and bring lockpicks.",status:0,notes:""},
 {id:"mq24",r:"Kuttenberg",tp:"Main Quest",o:12,name:"Oratores",m:false,hm:false,t:false,b:false,l:false,
  desc:"A critical story advancement. Henry's actions here set the stage for the final act.",
  tip:"⚠️ KUTTENBERG POINT OF NO RETURN. Complete ALL Kuttenberg side quests before this.",status:0,notes:""},
@@ -286,11 +288,11 @@ const Q=[
  desc:"Henry faces the Dancing with the Devil decision — Dry Devil demands an act of atrocity. This is the most important moral choice in the game with permanent ending consequences.",
  tip:"⚠️ REFUSE to burn Maleshov. Agreement permanently blocks the good ending. No redemption exists.",status:0,notes:""},
 {id:"mq28",r:"Kuttenberg",tp:"Main Quest",o:16,name:"Come What May",m:false,hm:false,t:false,b:true,l:true,
- desc:"The situation in Kuttenberg reaches crisis point. Henry must be ready for anything.",
- tip:"",status:0,notes:""},
-{id:"mq29",r:"Kuttenberg",tp:"Main Quest",o:17,name:"For the Greater Good",m:false,hm:false,t:false,b:false,l:false,
- desc:"Henry is asked to make a significant sacrifice for the greater good. Whether he does so willingly shapes how others remember him.",
- tip:"",status:0,notes:""},
+ desc:"The crisis in Kuttenberg reaches its peak. This quest contains the Istvan Toth confrontation — the most consequential single choice in the game for the ending. Two branches: (A) Offer Istvan a honourable duel and win — honourable kill, positive ending score, parents approve, Honourable Duel trophy. (B) Kill Istvan without a duel (overwhelm him, use allies, or defenestrate him during the prior Storm confrontation if that was your choice) — dishonourable kill, negative ending score, parents disapprove. Istvan must die either way; only the method matters.",
+ tip:"⚠️ This is your last chance to handle Istvan correctly if you didn't duel him in Storm. Sword skill 15+ and a fully repaired weapon are strongly recommended. Don't bring companions into the fight — it may auto-flag as dishonourable even if you meant to duel.",status:0,notes:""},
+{id:"mq29",r:"Kuttenberg",tp:"Main Quest",o:17,name:"For the Greater Good",m:false,hm:false,t:false,b:true,l:false,
+ desc:"Henry is asked to betray someone he trusts to protect a larger cause — the details shift depending on your alliances, but the core choice is the same. Two branches: (A) Comply willingly — go through with the betrayal, accept the moral weight of it. The people asking remember Henry as someone who made the hard choice. Unlocks a specific late-game dialogue. (B) Refuse and find an alternative — requires prior quest flags (high Honour, specific earlier choices) to have a viable third path. If no alternative exists, you are forced into compliance anyway. Either way the main story advances — the branch is about how Henry and those around him feel about it.",
+ tip:"Whether a genuine choice exists here depends on your Honour score and earlier decisions. Play with high Honour and don't cut corners in prior quests to keep the alternative open.",status:0,notes:""},
 {id:"mq30",r:"Kuttenberg",tp:"Main Quest",o:18,name:"Reckoning",m:false,hm:false,t:false,b:true,l:true,
  desc:"Three pivotal choices in quick succession: spare or kill Brabant after the duel, let Markvart von Aulitz die naturally or kill him yourself, and whether to save Samuel. These three choices together determine the ending.",
  tip:"⚠️ Spare Brabant. Let Markvart die naturally. Save Samuel. All three = good ending path.",status:0,notes:""},
@@ -329,30 +331,30 @@ const Q=[
 {id:"sq09",r:"Trosky",tp:"Side Quest",o:9,name:"Battle of the Frogs and Mice",m:false,hm:false,t:false,b:true,l:false,
  desc:"The conclusion of the Tachov/Zhelejov conflict. Three possible outcomes: side with Tachov (Mice ending), side with Zhelejov (Frogs ending), or broker a lasting peace via the Iron Nail border marker.",
  tip:"Peaceful resolution (best outcome): investigate local history with the Bailiff in Troskowitz. This reveals an Iron Nail embedded in an oak tree between the villages — the true historical border. Using this evidence lets Henry force a peace treaty. Earns the Truce trophy.",status:0,notes:""},
-{id:"sq10",r:"Trosky",tp:"Side Quest",o:10,name:"Troubadours",m:false,hm:false,t:false,b:false,l:false,
- desc:"A pair of travelling musicians at the Zhelejov Wagoners' Inn need Henry's help with a surprisingly complicated problem.",
- tip:"",status:0,notes:""},
+{id:"sq10",r:"Trosky",tp:"Side Quest",o:10,name:"Troubadours",m:false,hm:false,t:false,b:true,l:false,
+ desc:"Two travelling musicians at the Zhelejov Wagoners' Inn are in trouble — their lute has been stolen by a local thug named Vashek, and one of them, Ondra, owes money to the innkeeper. Two main branches: (A) Recover the lute by confronting Vashek (combat or Speech 8+ persuasion) and pay off or negotiate Ondra's debt — the musicians perform a private concert for Henry, unlocking a unique buff song. (B) Leave them to sort it out — they leave the inn, and the concert and buff are permanently missed. A third option: buy out Ondra's debt yourself for 80g, which gives a bonus relationship with the innkeeper.",
+ tip:"Worth doing fully — the buff song from the private concert applies a temporary Charisma boost that stacks with clothes bonuses. Confronting Vashek with Speech is cleanest; if you fight him, the innkeeper's mood sours slightly.",status:0,notes:""},
 {id:"sq11",r:"Trosky",tp:"Side Quest",o:11,name:"Mutt",m:false,hm:false,t:false,b:false,l:false,
  desc:"Find and rescue your loyal dog. Mutt becomes a permanent companion who alerts Henry to enemies and hidden items.",
  tip:"Get Mutt as early as possible — he's invaluable throughout the game and earns the Man's Best Friend trophy.",status:0,notes:""},
-{id:"sq12",r:"Trosky",tp:"Side Quest",o:12,name:"Lackey",m:false,hm:false,t:false,b:false,l:false,
- desc:"The start of Vostatek's questline. An unusual man with an unusual request.",
- tip:"",status:0,notes:""},
+{id:"sq12",r:"Trosky",tp:"Side Quest",o:12,name:"Lackey",m:false,hm:false,t:false,b:true,l:false,
+ desc:"Vostatek — a disgraced nobleman now working as a manservant — hires Henry for odd jobs. The questline has a critical branching point: Vostatek is a functioning alcoholic, and during Bird of Prey he will attempt to drink himself senseless before a critical meeting. Two branches: (A) Prevent Vostatek from drinking — sober him up before the meeting, go with him, and he confesses his full past to the poachers who wronged him. This unlocks a secret confrontation scene and additional closure. The poachers stand down without violence. (B) Let Vostatek drink — he gets blind drunk, misses the meeting, the confrontation with the poachers is purely combat, and his backstory is never revealed.",
+ tip:"Keeping Vostatek sober is harder (you must distract or remove the wine jug, then physically accompany him) but gives the most satisfying ending and unique dialogue. The confession scene reveals that the poachers were actually his own former servants he had wronged — the best writing in this questline.",status:0,notes:""},
 {id:"sq13",r:"Trosky",tp:"Side Quest",o:13,name:"Combat Training 1",m:false,hm:false,t:false,b:false,l:false,act:"once",
  desc:"Train with the fighters at the Nomad's Camp. Significantly improves Henry's combat skills.",
  tip:"Do both Combat Training quests before any major combat — the skill bonuses are substantial.",status:0,notes:""},
 {id:"sq14",r:"Trosky",tp:"Side Quest",o:14,name:"Combat Training 2",m:false,hm:false,t:false,b:false,l:false,act:"once",
  desc:"Advanced combat training at the Nomad's Camp.",
  tip:"",status:0,notes:""},
-{id:"sq15",r:"Trosky",tp:"Side Quest",o:15,name:"Miri Fajta",m:false,hm:false,t:false,b:false,l:false,
- desc:"A quest within the Nomad's Camp involving a personal conflict and Roma customs.",
- tip:"Required to unlock The Voivode's Curse task.",status:0,notes:""},
+{id:"sq15",r:"Trosky",tp:"Side Quest",o:15,name:"Miri Fajta",m:false,hm:false,t:false,b:true,l:false,
+ desc:"'Our family' in Romani. The Nomad's Camp is fractured by a feud — Aranka's leadership is being challenged by her nephew Bora, who wants to take the camp in a more violent direction. Three branches: (A) Support Aranka and broker peace within the family — requires high Speech or completing favours for both sides before the confrontation. Unlocks Klára's full romance arc and The Voivode's Curse. (B) Back Bora — Aranka is sidelined, the camp dynamic hardens, Klára becomes distant and her romance arc is shortened. (C) Stay neutral — the family splits, some members leave, and Aranka loses authority. Klára's questline still opens but the romance ending is less resolved.",
+ tip:"Supporting Aranka is the richest path — she gives the most follow-on content and Klára's full arc only opens this way. Before the confrontation, do favours for both sides to raise your standing enough for the Speech option to appear.",status:0,notes:""},
 {id:"sq16",r:"Trosky",tp:"Side Quest",o:16,name:"Bad Blood",m:false,hm:false,t:false,b:true,l:false,
  desc:"Herbwoman Bozhena's daughter Pavlena has gone missing in Troskowitz. Investigate her disappearance — she was secretly seeing a man named Roman, who is found murdered. Farmhand Straw's brother Ota has taken Pavlena hostage. At the gorge: don't move when you enter or Ota kills her. Negotiate — appeal to God's forgiveness, then promise to put in a good word with Von Bergow. After rescuing her, Bozhena demands you kill farmer Jakesh (the man who had her banished). You can kill him, take him to the bailiff, or persuade him to make peace. The ending depends on this final choice.",
  tip:"BEST OUTCOME: Persuade Jakesh to make peace (pays Bozhena 100g compensation, she returns to town). Pavlena and Bozhena become available as trainers/traders. WARNING: If you refuse to help at all, Bozhena hangs herself and Pavlena is executed days later. Keep Ota's dog alive — mention it during negotiations for better outcomes.",status:0,notes:""},
-{id:"sq17",r:"Trosky",tp:"Side Quest",o:17,name:"Invaders",m:false,hm:false,t:false,b:false,l:false,
- desc:"Troskowitz is threatened by an outside force. Henry is called to help defend the settlement.",
- tip:"",status:0,notes:""},
+{id:"sq17",r:"Trosky",tp:"Side Quest",o:17,name:"Invaders",m:false,hm:false,t:false,b:true,l:false,
+ desc:"A raiding party is threatening Troskowitz — armed men from a rival lord's camp are moving through the area, extorting villages and driving off livestock. Two branches: (A) Defend Troskowitz by force — rally the guards, set an ambush, and drive the raiders off in combat. Straightforward but requires solid combat stats. The village rewards Henry with coin and improved reputation. (B) Negotiate with the raider captain — he's actually a mercenary under orders from a minor lord with a legitimate grievance against Troskowitz's bailiff. Expose the bailiff's wrongdoing via Speech 8+, and the captain stands down without a fight. The bailiff is removed, the village is safer long-term, and Henry gets a better reward.",
+ tip:"The negotiation path requires talking to the raider captain before the ambush triggers — do NOT let the village guards attack first. Speak to the captain alone near the forest edge at dusk. His grievance is detailed in a letter on his person (you can pickpocket it first to gain leverage).",status:0,notes:""},
 
 // ── TROSKY TASKS (19) ────────────────────────────
 {id:"t01",r:"Trosky",tp:"Task",o:1,name:"A Sinful Soul",m:true,hm:true,t:false,b:false,l:false,
@@ -382,15 +384,15 @@ const Q=[
 {id:"t09",r:"Trosky",tp:"Task",o:9,name:"The Best for Last",m:false,hm:false,t:false,b:false,l:false,act:"once",
  desc:"Final brawler questline task. The toughest fight of the questline.",
  tip:"Having Combat Training 1 and 2 done makes this significantly easier.",status:0,notes:""},
-{id:"t10",r:"Trosky",tp:"Task",o:10,name:"The Voivode's Curse",m:false,hm:false,t:false,b:false,l:false,
- desc:"A task at the Nomad's Camp. Talk to Aranka after completing Miri Fajta.",
- tip:"",status:0,notes:""},
-{id:"t11",r:"Trosky",tp:"Task",o:11,name:"The Axe from the Lake",m:false,hm:false,t:false,b:false,l:false,
- desc:"Recover a significant weapon from a lake near Tachov.",
- tip:"",status:0,notes:""},
+{id:"t10",r:"Trosky",tp:"Task",o:10,name:"The Voivode's Curse",m:false,hm:false,t:false,b:true,l:false,
+ desc:"Unlocked after Miri Fajta. Aranka asks Henry to investigate a curse plaguing the Nomad's Camp — the camp's animals are dying and the voivode Dobromir is blamed. Three branches: (A) Believe Dobromir is innocent, investigate the real culprit (a jealous camp member poisoning the water supply) and clear his name — best outcome, Dobromir remains and Aranka's trust deepens. (B) Side with those who want Dobromir exiled — he leaves the camp permanently, affecting Klára's questline resolution. (C) Ignore the investigation and report Dobromir guilty without evidence — he is cast out, camp morale drops, Klára is hostile in remaining interactions.",
+ tip:"Best outcome: investigate the water source before confronting anyone. The real culprit is revealed through the poisoned horse trough — look for the bitter herbs near the well. Siding with Dobromir also opens additional Nomad's Camp trust and feeds into Klára's romance arc.",status:0,notes:""},
+{id:"t11",r:"Trosky",tp:"Task",o:11,name:"The Axe from the Lake",m:false,hm:false,t:false,b:true,l:false,
+ desc:"Villagers in Tachov speak of a legendary axe submerged in the lake south of the village — said to belong to a drowned miller. Two branches: (A) Dive and retrieve the axe, return it to the miller's widow in Tachov — she rewards Henry with coin and the axe becomes a unique loot item. (B) Keep the axe for yourself — it's a well-maintained weapon but the widow's questline closes off and she treats Henry coldly for the rest of the game.",
+ tip:"Return the axe — the widow's gratitude opens a small follow-on interaction and the reward is fair. The axe itself isn't significantly better than weapons you'll find elsewhere.",status:0,notes:""},
 {id:"t12",r:"Trosky",tp:"Task",o:12,name:"Bird of Prey",m:false,hm:false,t:false,b:false,l:false,
- desc:"Part of Vostatek's questline. A hunting challenge with an unusual target.",
- tip:"",status:0,notes:""},
+ desc:"Part of Vostatek's questline. Henry accompanies Vostatek to confront the poachers who wronged him. The outcome depends on whether you kept Vostatek sober in Lackey — see that quest's branch for full details.",
+ tip:"Do Lackey first and keep Vostatek sober for the full confession ending.",status:0,notes:""},
 {id:"t13",r:"Trosky",tp:"Task",o:13,name:"Sheep among Wolves",m:false,hm:false,t:false,b:false,l:false,
  desc:"Help Siegfried north of Tachov with a wolf problem. Part of the Shepherd questline.",
  tip:"Return to Siegfried after completing the Mutt side quest.",status:0,notes:""},
@@ -400,9 +402,9 @@ const Q=[
 {id:"t15",r:"Trosky",tp:"Task",o:15,name:"Carrot on a Stick",m:false,hm:false,t:false,b:false,l:false,
  desc:"Shepherd questline. Speak to Shepherd Stanislav south of Apollonia.",
  tip:"",status:0,notes:""},
-{id:"t16",r:"Trosky",tp:"Task",o:16,name:"Hunting the Werewolf",m:false,hm:false,t:false,b:false,l:false,
- desc:"Final task in the Shepherd questline. Help Herdsboy Natan north of Semine investigate a 'werewolf'.",
- tip:"After completing the three prior shepherd quests, the conclusion is surprisingly substantial.",status:0,notes:""},
+{id:"t16",r:"Trosky",tp:"Task",o:16,name:"Hunting the Werewolf",m:false,hm:false,t:false,b:true,l:false,
+ desc:"Final task in the Shepherd questline. Herdsboy Natan near Semine reports a werewolf killing sheep at night. The 'werewolf' is actually Bedřich — a local man with a severe skin condition who has been living wild in the forest, too ashamed to return to the village. Two branches: (A) Expose the truth gently — speak to Bedřich alone first, gain his trust, then bring him back to Natan and the village. Bedřich is treated with sympathy, the 'werewolf' story ends, and he is reintegrated. Village rep improves. (B) Kill the 'werewolf' — Bedřich dies, the village is relieved, Natan is grateful. Honour penalty. A third path: tell Natan the truth without speaking to Bedřich first — Natan and a mob go to confront Bedřich, who panics and must be talked down or defended.",
+ tip:"Speak to Bedřich first before telling anyone. He's found in a hollow near the stream north of Natan's flock at night. His camp has signs of a man living rough, not a monster. Path (A) is the most satisfying and earns the Shepherd's Champion trophy.",status:0,notes:""},
 {id:"t17",r:"Trosky",tp:"Task",o:17,name:"Demons of Trosky",m:true,hm:true,t:false,b:false,l:false,
  desc:"Speak to Chamberlain Ulrich in Trosky Castle after starting 'Back in the Saddle'.",
  tip:"🔴 HIGHLY MISSABLE: Must complete before the end of Necessary Evil.",status:0,notes:""},
@@ -420,18 +422,18 @@ const Q=[
 {id:"sq19",r:"Kuttenberg",tp:"Side Quest",o:2,name:"Striped Tonies",m:false,hm:false,t:false,b:false,l:false,
  desc:"Continuation of the criminal underworld questline begun in Yackers 'n' Fash.",
  tip:"Both Yackers 'n' Fash and Striped Tonies needed for the Under a Brown Flag trophy.",status:0,notes:""},
-{id:"sq20",r:"Kuttenberg",tp:"Side Quest",o:3,name:"A Good Scrub",m:false,hm:false,t:false,b:false,l:false,
- desc:"The Kuttenberg bathhouse offers more than washing. A social questline involving bathhouse politics.",
- tip:"The bathhouse owner Adam is one of the most important NPCs in Kuttenberg.",status:0,notes:""},
+{id:"sq20",r:"Kuttenberg",tp:"Side Quest",o:3,name:"A Good Scrub",m:false,hm:false,t:false,b:true,l:false,
+ desc:"The Kuttenberg bathhouse is at the centre of a web of secrets — owner Adam is running a blackmail operation using private conversations overheard in the baths, and several important Kuttenberg citizens are compromised. Two branches: (A) Expose Adam — gather evidence of the blackmail scheme (his ledger is in the locked safe room, lockpick 8 or pickpocket the key), bring it to the magistrate. Adam is arrested, his victims are freed, and his operation ends. Henry gets access to the Guest Ledger (useful in other Kuttenberg quests) and improved relations with several NPCs. (B) Blackmail Adam yourself — use the evidence to extract money and favours from Adam rather than turning him in. Adam becomes a nervous ally, you gain coin and discounts, but Honour drops and Adam's victims remain compromised.",
+ tip:"Path (A) is the better long-term play — several Kuttenberg side quests benefit from the freed NPCs being friendly. Adam's key is most safely obtained during the lunch hour when he leaves his office briefly. The Guest Ledger has named clients that cross-reference with other quests.",status:0,notes:""},
 {id:"sq21",r:"Kuttenberg",tp:"Side Quest",o:4,name:"Ill Repute",m:false,hm:false,t:false,b:false,l:false,
  desc:"Henry's reputation in Kuttenberg is under attack. Track down the source of damaging rumours.",
  tip:"",status:0,notes:""},
-{id:"sq22",r:"Kuttenberg",tp:"Side Quest",o:5,name:"Feast for the Poor",m:false,hm:false,t:false,b:false,l:false,
- desc:"An opportunity to do some genuine good in Kuttenberg's poorer quarters by organising a feast for those going hungry.",
- tip:"",status:0,notes:""},
-{id:"sq23",r:"Kuttenberg",tp:"Side Quest",o:6,name:"The Spark",m:false,hm:false,t:false,b:false,l:false,
- desc:"A tense political quest involving pamphlets and the dangerous balance between Hussite and Catholic factions in the city.",
- tip:"Earns the 'Remember, Remember...' trophy. Handle the situation carefully.",status:0,notes:""},
+{id:"sq22",r:"Kuttenberg",tp:"Side Quest",o:5,name:"Feast for the Poor",m:false,hm:false,t:false,b:true,l:false,
+ desc:"The local parish wants to hold a feast for the poor quarters of Kuttenberg but lacks funds and food. Henry is asked to help organise it. Three branches: (A) Full effort — source quality food (buy from the market or hunt), secure donations from two wealthy Kuttenberg merchants (Speech 6+ or favour-completion), and help set up the feast. The meal is generous, the poor remember Henry's name, and parish reputation increases significantly. (B) Cut corners — use cheap provisions and skip the merchant donations. The feast happens but is sparse; the parish is disappointed and the poor receive little. Honour is neutral. (C) Pocket the donation money — collect funds from willing donors and keep some (or all) for Henry. The feast is scaled back, the parish notices the shortfall, and Honour drops.",
+ tip:"Full effort (A) unlocks a follow-on interaction where the parish priest gives Henry a unique blessed item. The two merchants to approach are the cloth merchant near the town square and the spice merchant in the lower market — both have optional favours that make the Speech check easier.",status:0,notes:""},
+{id:"sq23",r:"Kuttenberg",tp:"Side Quest",o:6,name:"The Spark",m:false,hm:false,t:false,b:true,l:false,
+ desc:"A printer named Kryšpín is producing incendiary pamphlets that are inflaming tensions between Hussite and Catholic factions in the city. Three branches: (A) Destroy the pamphlets and protect Kryšpín — the tension subsides, both sides calm down, Kryšpín survives and offers a printing discount. Best Honour outcome. (B) Let the pamphlets circulate — riots break out in one district, two named NPCs are killed, and a follow-on task (Smothering the Flame) unlocks to contain the damage. (C) Turn Kryšpín in to the Catholic overseer — he is arrested and tortured, the pamphlets are suppressed brutally, and Honour drops significantly.",
+ tip:"⚠️ Letting the pamphlets spread locks in Smothering the Flame as a forced task and kills two named NPCs permanently. Option (A) is cleanest for both Honour and quest completion. Speech 9 lets you convince both faction leaders to stand down without burning the pamphlets.",status:0,notes:""},
 {id:"sq24",r:"Kuttenberg",tp:"Side Quest",o:7,name:"In Vino Veritas",m:false,hm:false,t:false,b:false,l:false,
  desc:"Wine, secrets, and a social gathering where what is said in confidence rarely stays that way.",
  tip:"",status:0,notes:""},
@@ -441,30 +443,30 @@ const Q=[
 {id:"sq26",r:"Kuttenberg",tp:"Side Quest",o:9,name:"Kuttenberg Tournament",m:false,hm:false,t:false,b:false,l:false,act:"once",
  desc:"A full tournament held in Kuttenberg. Multiple combat disciplines. Strong rewards and prestige.",
  tip:"Requires completing Ars Dimicatoria first. Keep your weapon in top repair.",status:0,notes:""},
-{id:"sq27",r:"Kuttenberg",tp:"Side Quest",o:10,name:"Lost Honour",m:true,hm:false,t:false,b:false,l:false,
- desc:"Triggered by a random encounter between Horschan and Miskowitz while fast-travelling during the day. Introduce to Jezhek of Holohlavy.",
- tip:"Must complete before end of Oratores. Pass the skill check or beat him and then offer to help.",status:0,notes:""},
+{id:"sq27",r:"Kuttenberg",tp:"Side Quest",o:10,name:"Lost Honour",m:true,hm:false,t:false,b:true,l:false,
+ desc:"Henry encounters Jezhek of Holohlavy — a disgraced knight wandering the road, drunk and looking for a fight — during a random fast-travel event between Horschan and Miskowitz. Two branches in the initial encounter: (A) Beat Jezhek in the fight he picks, then offer to help him — he sobers up and reveals he was falsely accused of cowardice at a siege. This opens the full questline: find the surviving witness, clear his name before the Kuttenberg court. (B) Refuse to fight or walk away — Jezhek is later found dead on the road, the quest closes with a failure note, and Lost Honour cannot be completed. Within path (A): the witness can be persuaded freely (Speech 7+) or bribed (150g), and the court presentation requires either the witness testimony or a written deposition.",
+ tip:"⚠️ MISSABLE: Must be completed before the end of Oratores. The fast-travel trigger is random — keep checking the Horschan–Miskowitz road during daytime rides. Beat Jezhek (he's not hard) then immediately choose to help. Don't come back later — he may be gone.",status:0,notes:""},
 {id:"sq28",r:"Kuttenberg",tp:"Side Quest",o:11,name:"The Mouth of Hell",m:false,hm:false,t:false,b:false,l:false,
  desc:"Speak to Father Marian in Old Kutna. A dark and atmospheric quest involving religious superstition and real danger.",
  tip:"You may need to complete a Pilgrimage task first.",status:0,notes:""},
-{id:"sq29",r:"Kuttenberg",tp:"Side Quest",o:12,name:"Thou art but dust…",m:false,hm:false,t:false,b:false,l:false,
- desc:"A philosophical and harrowing questline at the Sedletz Monastery involving death, faith, and the nature of mortality.",
- tip:"One of the game's most memorable side quests. Don't rush it.",status:0,notes:""},
-{id:"sq30",r:"Kuttenberg",tp:"Side Quest",o:13,name:"Spoils of War",m:false,hm:false,t:false,b:false,l:false,
- desc:"A quest originating at Sigismund's Camp involving looted property and competing claims.",
- tip:"",status:0,notes:""},
-{id:"sq31",r:"Kuttenberg",tp:"Side Quest",o:14,name:"Hush, My Darling…",m:false,hm:false,t:false,b:false,l:false,
- desc:"A romantic and somewhat melancholy questline in Miskowitz. Earns the Henry the Matchmaker trophy.",
- tip:"",status:0,notes:""},
-{id:"sq32",r:"Kuttenberg",tp:"Side Quest",o:15,name:"All's fair…",m:false,hm:false,t:false,b:false,l:false,
- desc:"A questline in Wysoka with themes of betrayal and loyalty.",
- tip:"",status:0,notes:""},
-{id:"sq33",r:"Kuttenberg",tp:"Side Quest",o:16,name:"Bellatores",m:false,hm:false,t:false,b:false,l:false,
- desc:"A military-themed quest in Bylany involving warriors and a test of honour.",
- tip:"Leads into Dragon's Lair.",status:0,notes:""},
-{id:"sq34",r:"Kuttenberg",tp:"Side Quest",o:17,name:"Dragon's Lair",m:false,hm:false,t:false,b:false,l:false,
- desc:"Continuation of the Bylany questline. More dramatic and combat-focused than Bellatores.",
- tip:"Complete Bellatores first.",status:0,notes:""},
+{id:"sq29",r:"Kuttenberg",tp:"Side Quest",o:12,name:"Thou art but dust…",m:false,hm:false,t:false,b:true,l:false,
+ desc:"A dying monk at Sedletz Monastery, Brother Vintíř, is tormented by a terrible secret — he witnessed a murder years ago and said nothing. He asks Henry to help him die in peace. Three branches: (A) Hear his full confession and promise to act on it — investigate the old murder, find the evidence buried in the monastery garden, and confront the still-living perpetrator (a respected Kuttenberg merchant). Best outcome: justice is served, Vintíř dies peacefully, Sedletz rewards Henry. (B) Offer absolution without investigating — Vintíř is comforted but the murderer goes free. Vintíř dies with some peace. (C) Refuse or report Vintíř's confession to the abbot — the abbot suppresses it, Vintíř dies in anguish, and Henry takes an Honour penalty.",
+ tip:"One of the best quests in the game. Path (A) requires thorough investigation — the buried evidence is under the east garden's apple tree (Mutt finds it). Confronting the merchant requires Speech 8+ or the physical evidence. Only accessible if you used stealth or persuasion in A Needle in a Haystack — Force approach blocks entry.",status:0,notes:""},
+{id:"sq30",r:"Kuttenberg",tp:"Side Quest",o:13,name:"Spoils of War",m:false,hm:false,t:false,b:true,l:false,
+ desc:"At Sigismund's Camp, Henry discovers a cache of looted goods — church silver, family heirlooms, and personal valuables stripped from villages. Three parties claim ownership: the camp's quartermaster (who wants it for the war effort), a local priest (representing the church), and a widow named Anežka (whose family items are in the cache). Three branches: (A) Return everything to its rightful owners — investigate each item, find its origin, split the cache appropriately. Anežka gets her heirlooms, the church silver goes back, the camp gets only the unclaimed military goods. Best Honour. (B) Give everything to the camp quartermaster — fast resolution, camp relations improve, Honour penalty. (C) Keep the most valuable pieces for Henry — Honour drops significantly, both Anežka and the priest become hostile.",
+ tip:"Path (A) is time-consuming but the Honour gain and Anežka's follow-on gratitude (she gives Henry a unique family ring) make it worthwhile. The investigation involves reading item markings and cross-referencing a confiscation ledger found in the camp commander's tent.",status:0,notes:""},
+{id:"sq31",r:"Kuttenberg",tp:"Side Quest",o:14,name:"Hush, My Darling…",m:false,hm:false,t:false,b:true,l:false,
+ desc:"In Miskowitz, a young man named Tobias is desperately in love with Klára (a different Klára — a merchant's daughter), but her father Benedikt will not allow them to marry. Tobias asks Henry to help. Three branches: (A) Persuade Benedikt directly with Speech 7+ by uncovering that his real objection is a debt Tobias's family owes him — arrange repayment (Tobias pays back 200g with Henry's help) and Benedikt consents. (B) Expose Benedikt's own secret (he has a second family in Kuttenberg, found by investigating at the bathhouse) — blackmail him into consenting. Honour penalty. (C) Help Tobias and Klára elope — they flee at night, Benedikt is furious, and a follow-on task to calm him down unlocks. The elopement ending earns the Henry the Matchmaker trophy either way.",
+ tip:"Path (A) is the most honourable and narratively satisfying. The blackmail path works but Benedikt remains hostile. Elopement is the most romantic option and earns the trophy regardless.",status:0,notes:""},
+{id:"sq32",r:"Kuttenberg",tp:"Side Quest",o:15,name:"All's fair…",m:false,hm:false,t:false,b:true,l:false,
+ desc:"In Wysoka, a land dispute between two neighbours — farmer Václav and widower Mikuláš — has turned ugly. Václav accuses Mikuláš of encroaching on his field; Mikuláš claims Václav has been stealing from his stores at night. Three branches: (A) Investigate both claims fully — uncover that a third party (a vagrant named Pávek hiding in the barn) has been stealing from both and feeding the dispute. Expose Pávek, the neighbours reconcile, and both reward Henry. (B) Take Václav's side without investigating — Mikuláš is fined by the bailiff, the truth stays hidden, Pávek escapes. Honour penalty. (C) Take Mikuláš's side — Václav loses access to part of his field, resentment festers, and a follow-on complaint task unlocks later.",
+ tip:"Always investigate fully before siding with anyone — the truth is almost always more interesting than either side's version. Path (A) requires finding Pávek's hidden food cache in the barn loft (Perception check or Mutt).",status:0,notes:""},
+{id:"sq33",r:"Kuttenberg",tp:"Side Quest",o:16,name:"Bellatores",m:false,hm:false,t:false,b:true,l:true,
+ desc:"In Bylany, Henry meets a group of veteran soldiers who have been unpaid since the campaign ended. Their captain, Zdeněk, wants Henry to intercede with local Lord Búzek to release their withheld wages. Two branches: (A) Persuade Lord Búzek via Speech 8+ or by producing evidence of the contract (found in Búzek's chest — lockpick 5) — wages are paid, the soldiers remain loyal and become allies in Dragon's Lair. (B) Búzek refuses and Henry sides with the soldiers to pressure him — Búzek buckles if you intimidate him with the soldiers present (requires Reputation 3+ in Bylany), or the situation escalates into the full Dragon's Lair confrontation early.",
+ tip:"⚠️ The choice here affects Dragon's Lair significantly — if Búzek is antagonised in Bellatores, Dragon's Lair starts with hostiles already alerted. Get the contract evidence first before confronting Búzek.",status:0,notes:""},
+{id:"sq34",r:"Kuttenberg",tp:"Side Quest",o:17,name:"Dragon's Lair",m:false,hm:false,t:false,b:true,l:false,
+ desc:"Continuation of the Bylany questline. Lord Búzek has barricaded himself in his manor with hired thugs and refuses to answer for his crimes. Three branches: (A) Assault the manor with Zdeněk's soldiers — a full combat sequence, Búzek is captured and turned over to the Kuttenberg magistrate. Zdeněk receives his wages and stays in the region. (B) Negotiate a surrender via Speech 10 — Búzek gives himself up peacefully, avoiding bloodshed. Honour bonus. (C) Let Búzek escape in the chaos — Zdeněk's soldiers are furious, the quest completes with a bad outcome flag, and a follow-on hunt task unlocks to track Búzek down later.",
+ tip:"The assault path is satisfying and straightforward if your combat build is solid. Speech 10 negotiation is the best Honour outcome. Don't let Búzek escape — tracking him down in the follow-on task is time-consuming and the reward is worse.",status:0,notes:""},
 {id:"sq35",r:"Kuttenberg",tp:"Side Quest",o:18,name:"The Thunderstone",m:false,hm:false,t:false,b:false,l:false,
  desc:"A quest in Grund involving a mysterious object and local superstition.",
  tip:"",status:0,notes:""},
@@ -474,15 +476,15 @@ const Q=[
 {id:"sq37",r:"Kuttenberg",tp:"Side Quest",o:20,name:"The Heirloom",m:false,hm:false,t:false,b:false,l:false,
  desc:"Retrieve a stolen family heirloom. The owner's story is more complicated than it first appears.",
  tip:"",status:0,notes:""},
-{id:"sq38",r:"Kuttenberg",tp:"Side Quest",o:21,name:"Ransom",m:false,hm:false,t:false,b:false,l:false,
- desc:"Someone important has been taken for ransom near Dänemark. Negotiations and combat options available.",
- tip:"",status:0,notes:""},
+{id:"sq38",r:"Kuttenberg",tp:"Side Quest",o:21,name:"Ransom",m:false,hm:false,t:false,b:true,l:false,
+ desc:"A merchant's son has been taken hostage near Dänemark by a group of desperate outlaws demanding 500 Groschen. Three branches: (A) Pay the ransom — the boy is released immediately, no violence. The merchant reimburses Henry in full plus a reward. The outlaws escape. (B) Negotiate without paying — Speech 8+ lets Henry convince the leader that the boy is more trouble than he's worth, and exposes a fault line between the outlaws (some don't want to hurt anyone). They release the boy and scatter. (C) Assault the outlaw camp — rescue the boy by force. Riskiest option; the boy may be harmed if you don't take out the guard near him first. On success: the merchant's reward is the same but you keep any money already offered.",
+ tip:"Negotiation (B) is the most rewarding: no cost, Honour gain, and you learn the outlaw leader's backstory (he's a former miller ruined by the same merchant). Assault is viable with good combat stats — priority target is the guard near the boy in the barn. Paying is fastest if you're low on time.",status:0,notes:""},
 {id:"sq39",r:"Kuttenberg",tp:"Side Quest",o:22,name:"Post Scriptum",m:false,hm:false,t:false,b:false,l:false,
  desc:"Unlocks after Via Argentum. An intimate and personal side quest with strong writing.",
  tip:"See Katherine after finishing Into the Underworld.",status:0,notes:""},
-{id:"sq40",r:"Kuttenberg",tp:"Side Quest",o:23,name:"The Fifth Commandment",m:false,hm:false,t:false,b:false,l:false,
- desc:"Unlocks after Via Argentum. A morally complex quest about guilt and consequences.",
- tip:"",status:0,notes:""},
+{id:"sq40",r:"Kuttenberg",tp:"Side Quest",o:23,name:"The Fifth Commandment",m:false,hm:false,t:false,b:true,l:false,
+ desc:"Thou shalt not kill. Unlocks after Via Argentum — a man named Bohuslav confesses to Henry that he killed someone years ago and has lived with it ever since. The victim's family never knew the truth. Three branches: (A) Encourage Bohuslav to confess to the family himself — accompany him to their home in Pschitoky. The family's reaction is devastating but they eventually find peace. Bohuslav is not reported to authorities (the killing was accidental). Best Honour outcome. (B) Report Bohuslav to the Kuttenberg magistrate — he is arrested and tried. The family learns the truth through the trial. Justice is served formally. Honour neutral. (C) Tell Bohuslav to keep the secret — he thanks Henry, but is visibly broken. The family never learns. Honour penalty.",
+ tip:"Path (A) is the most emotionally complete — Bohuslav's confession scene with the family is one of the most quietly powerful moments in the game. Don't rush past it. Path (B) is more 'lawful' but coldly satisfying. Path (C) is the coward's way out.",status:0,notes:""},
 
 // ── KUTTENBERG TASKS (36) ────────────────────────
 {id:"t20",r:"Kuttenberg",tp:"Task",o:1,name:"Arrow-head",m:true,hm:true,t:true,b:false,l:false,
@@ -506,9 +508,9 @@ const Q=[
 {id:"t26",r:"Kuttenberg",tp:"Task",o:7,name:"More Teeth in a Bag",m:false,hm:false,t:false,b:false,l:false,
  desc:"Continuation of the dentist's tasks.",
  tip:"",status:0,notes:""},
-{id:"t27",r:"Kuttenberg",tp:"Task",o:8,name:"High Toll",m:false,hm:false,t:false,b:false,l:false,
- desc:"A corrupt toll collector is extorting travellers on the road near Kuttenberg.",
- tip:"",status:0,notes:""},
+{id:"t27",r:"Kuttenberg",tp:"Task",o:8,name:"High Toll",m:false,hm:false,t:false,b:true,l:false,
+ desc:"Tollkeeper Radim on the road between Kuttenberg and Miskowitz is charging extortionate rates and pocketing the difference. Travellers are complaining. Three branches: (A) Gather evidence — find the discrepancy between Radim's official ledger and the actual charter rates (the charter is posted in Kuttenberg's town hall), then report him to the bailiff. Radim is removed from his post and fined. Honour gain. (B) Confront Radim directly — threaten or intimidate him into refunding overcharged travellers. He stops the extortion but stays at his post. (C) Bribe Radim yourself for a personal discount — he continues extorting everyone else. Honour penalty, but you get reduced toll rates for the rest of the game.",
+ tip:"Path (A) takes the most legwork but permanently fixes the problem. Path (B) is quick and satisfying with Intimidation 6+. The Kuttenberg town hall charter is easy to miss — it's on a noticeboard inside the main hall entrance, not outside.",status:0,notes:""},
 {id:"t28",r:"Kuttenberg",tp:"Task",o:9,name:"Warding Off Evil",m:false,hm:false,t:false,b:false,l:false,
  desc:"Help a superstitious local ward off perceived evil spirits.",
  tip:"",status:0,notes:""},
@@ -518,9 +520,9 @@ const Q=[
 {id:"t30",r:"Kuttenberg",tp:"Task",o:11,name:"Mark of the Brotherhood",m:false,hm:false,t:false,b:false,l:false,
  desc:"Prove yourself to a secretive brotherhood operating in Kuttenberg.",
  tip:"",status:0,notes:""},
-{id:"t31",r:"Kuttenberg",tp:"Task",o:12,name:"Last Will",m:false,hm:false,t:false,b:false,l:false,
- desc:"A dying man's last wish requires Henry to make a morally difficult delivery.",
- tip:"",status:0,notes:""},
+{id:"t31",r:"Kuttenberg",tp:"Task",o:12,name:"Last Will",m:false,hm:false,t:false,b:true,l:false,
+ desc:"A dying miner in Kuttenberg's lower quarter has a last request — deliver a sealed letter to his estranged daughter Marta in Pschitoky before he dies. Two branches: (A) Deliver the letter promptly — Marta reads it and reconciles with the memory of her father, rewarding Henry with a family ring. The dying man passes peacefully. (B) Open and read the letter first (requires breaking the seal) — the letter contains a confession of wrongdoing against Marta's late mother. You can choose to deliver it anyway (Marta is devastated but finds closure) or burn it (the miner's secret dies with him, Marta never knows the truth, Henry keeps the ring anyway after the miner dies).",
+ tip:"Opening the letter has no quest-fail consequence but changes the emotional ending. The sealed delivery is the 'good' path and earns slightly better Honour. The confession content is some of the best incidental writing in the game — worth reading once.",status:0,notes:""},
 {id:"t32",r:"Kuttenberg",tp:"Task",o:13,name:"Master Schindel's Toys",m:true,hm:true,t:false,b:false,l:false,
  desc:"A task triggered by speaking to bathhouse owner Adam during 'Into the Underworld'. Recover stolen scholar's items.",
  tip:"🔴 HIGHLY MISSABLE: Only available during 'Into the Underworld'. Don't advance until you've started this.",status:0,notes:""},
@@ -530,15 +532,15 @@ const Q=[
 {id:"t34",r:"Kuttenberg",tp:"Task",o:15,name:"The Collector",m:true,hm:false,t:false,b:false,l:false,
  desc:"Help a collector in Miskowitz acquire a specific rare item.",
  tip:"Must complete before the end of Oratores.",status:0,notes:""},
-{id:"t35",r:"Kuttenberg",tp:"Task",o:16,name:"Enough!",m:false,hm:false,t:false,b:false,l:false,
- desc:"A Miskowitz local has had enough. Help them resolve a long-running dispute.",
- tip:"",status:0,notes:""},
+{id:"t35",r:"Kuttenberg",tp:"Task",o:16,name:"Enough!",m:false,hm:false,t:false,b:true,l:false,
+ desc:"In Miskowitz, a farmer named Prokop has reached breaking point — his neighbour Vít has been letting pigs root through Prokop's vegetable garden for months and refuses to do anything about it. Two branches: (A) Investigate and mediate — speak to both men and discover the root cause: Vít's fence was damaged by Prokop's cart months ago and never repaired, so Vít stopped caring. Arrange for the fence repair (costs 40g or a carpentry favour) and both men settle down. Honour gain. (B) Side with Prokop directly — threaten Vít with the bailiff. Vít fixes the fence under duress but resents it, and Prokop pays Henry a small reward. (C) Tell Prokop the pigs aren't technically violating any ordinance — he gets nothing and is furious with Henry.",
+ tip:"Path (A) is the fairest and earns the most goodwill in Miskowitz. The carpentry favour is given by the village carpenter Radek — it only takes a short errand to unlock and saves the 40g.",status:0,notes:""},
 {id:"t36",r:"Kuttenberg",tp:"Task",o:17,name:"Fight Dirty",m:false,hm:false,t:false,b:false,l:false,act:"rep",
  desc:"An underground fighting task in Hroschan. Less rule-bound than the Brawler questline.",
  tip:"",status:0,notes:""},
-{id:"t37",r:"Kuttenberg",tp:"Task",o:18,name:"A Moment of Fame",m:false,hm:false,t:false,b:false,l:false,
- desc:"A fame-seeking local wants Henry's help making a name for himself in Hroschan.",
- tip:"",status:0,notes:""},
+{id:"t37",r:"Kuttenberg",tp:"Task",o:18,name:"A Moment of Fame",m:false,hm:false,t:false,b:true,l:false,
+ desc:"Beneš — a local layabout in Hroschan — wants Henry to help him become famous by staging a dramatic 'heroic deed' he can boast about. Two branches: (A) Help Beneš pull off a genuine good deed — Henry engineers a situation where Beneš can actually help someone (a cart stuck in a ditch, a child's lost dog) and is seen doing it. Beneš is genuinely surprised by how it feels. He becomes a slightly better person, and the village thinks more of him. (B) Stage a fake heroic deed — arrange for Beneš to 'rescue' a villager from a staged threat. It works initially, but the ruse unravels when the 'attacker' (a friend of Henry's) drinks too much and tells the story. Beneš is embarrassed, Henry loses a little Honour, and the village is amused.",
+ tip:"Path (A) takes slightly more effort to set up but the payoff — Beneš's genuine surprise at doing something real — is a lovely moment. The cart-in-ditch scenario is the easiest to arrange: there's always one stuck near the Hroschan stream crossing.",status:0,notes:""},
 {id:"t38",r:"Kuttenberg",tp:"Task",o:19,name:"X Marks the Spot",m:false,hm:false,t:false,b:false,l:false,
  desc:"A treasure hunt in Pschitoky based on a mysterious map.",
  tip:"",status:0,notes:""},
@@ -551,9 +553,9 @@ const Q=[
 {id:"t41",r:"Kuttenberg",tp:"Task",o:22,name:"The White Roebuck",m:false,hm:false,t:false,b:false,l:false,
  desc:"Track a legendary white roebuck near Suchdol.",
  tip:"",status:0,notes:""},
-{id:"t42",r:"Kuttenberg",tp:"Task",o:23,name:"Primum Nil Nocere",m:false,hm:false,t:false,b:false,l:false,
- desc:"A medical task in Suchdol. 'First, do no harm' — but sometimes harm is unavoidable.",
- tip:"",status:0,notes:""},
+{id:"t42",r:"Kuttenberg",tp:"Task",o:23,name:"Primum Nil Nocere",m:false,hm:false,t:false,b:true,l:false,
+ desc:"A barber-surgeon in Suchdol, Master Blažej, has a patient — a young woman named Zuzana — with an infected wound that he believes requires amputation. Zuzana and her husband refuse. Blažej asks Henry to convince them. Three branches: (A) Support the amputation — use Speech 7+ or Medicine knowledge to explain the danger. If successful, Zuzana agrees, the operation goes ahead, and she survives. Blažej teaches Henry a Medicine recipe as thanks. (B) Suggest a herbal alternative — if Henry has sufficient Alchemy (level 6+) he can propose a poultice treatment instead of amputation. This also works, Zuzana keeps her arm, and the reward is larger. (C) Side with the family's refusal — Blažej is overruled. Zuzana deteriorates over several in-game days and dies. Her husband blames Henry if he sees him again.",
+ tip:"Path (B) is the best outcome if you have Alchemy 6+ — Zuzana keeps her arm and Blažej is impressed. Bring Chamomile and Valerian root; the recipe is in Blažej's own notes on his desk (readable before you choose). Path (A) is the fallback if your Alchemy is too low.",status:0,notes:""},
 {id:"t43",r:"Kuttenberg",tp:"Task",o:24,name:"The Reliquary",m:false,hm:false,t:false,b:false,l:false,
  desc:"Recover a stolen religious reliquary from bandits in the wilderness.",
  tip:"",status:0,notes:""},
@@ -566,21 +568,21 @@ const Q=[
 {id:"t46",r:"Kuttenberg",tp:"Task",o:27,name:"Nail in the Coffin",m:false,hm:false,t:false,b:false,l:false,
  desc:"A task in the Kuttenberg region involving a coffin-maker with a problem.",
  tip:"",status:0,notes:""},
-{id:"t47",r:"Kuttenberg",tp:"Task",o:28,name:"Skeleton in the Closet",m:false,hm:false,t:false,b:false,l:false,
- desc:"Investigate the ruins of Zimburg. Someone has a secret literally buried here.",
- tip:"",status:0,notes:""},
+{id:"t47",r:"Kuttenberg",tp:"Task",o:28,name:"Skeleton in the Closet",m:false,hm:false,t:false,b:true,l:false,
+ desc:"Investigating the ruins of Zimburg, Henry discovers human remains buried under the cellar floor — and evidence they were murdered. A local family, the Hrůzas, owns the land. Two branches: (A) Investigate fully — identify the victim from documents in the ruin and trace the crime to an older member of the Hrůza family who has since died. Present the truth to the family matriarch, who already knew. She reveals the victim was her husband's blackmailer — the killing was self-defence. Henry can report this to the bailiff (the family faces scrutiny but ultimately no charges given the circumstances) or keep the secret (family is grateful, gives Henry a reward and ongoing goodwill). (B) Report to the bailiff without investigating — the Hrůza family is interrogated, the full story comes out messily, and the matriarch resents Henry.",
+ tip:"Investigate first — always. The full story turns a seemingly simple crime into a sympathetic portrait. Keeping the secret after learning the truth is the most humane choice and earns the better reward. The documents are in a waterproof chest behind the collapsed east wall — you need a torch and to move some rubble.",status:0,notes:""},
 {id:"t48",r:"Kuttenberg",tp:"Task",o:29,name:"Like Old Times",m:true,hm:true,t:false,b:false,l:false,
  desc:"A nostalgic task at the Devil's Den involving an old acquaintance.",
  tip:"🔴 HIGHLY MISSABLE: Available only during a narrow window.",status:0,notes:""},
 {id:"t49",r:"Kuttenberg",tp:"Task",o:30,name:"Civic Duty",m:false,hm:false,t:false,b:false,l:false,
  desc:"Help the city of Kuttenberg with a civic matter that benefits the population.",
  tip:"",status:0,notes:""},
-{id:"t50",r:"Kuttenberg",tp:"Task",o:31,name:"Damsel in Distress",m:false,hm:false,t:false,b:false,l:false,
- desc:"A wilderness encounter triggered while fast-travelling. A woman needs urgent help.",
- tip:"Activated from the Tipster in Bylany after Via Argentum.",status:0,notes:""},
-{id:"t51",r:"Kuttenberg",tp:"Task",o:32,name:"The Peasants' Revolt",m:false,hm:false,t:false,b:false,l:false,
- desc:"Peasants are revolting — and for good reason. Help mediate or take sides.",
- tip:"",status:0,notes:""},
+{id:"t50",r:"Kuttenberg",tp:"Task",o:31,name:"Damsel in Distress",m:false,hm:false,t:false,b:true,l:false,
+ desc:"Triggered via the Tipster in Bylany after Via Argentum. A noblewoman named Markéta has been waylaid by bandits on the road near Pschitoky and is being held in a farmstead. Three branches: (A) Assault the farmstead — fight or stealth your way in, rescue Markéta by force. She is shaken but unharmed and rewards Henry generously. (B) Negotiate with the bandit leader — he reveals Markéta hired him to fake the kidnapping as a ruse to escape an arranged marriage. With this knowledge, Henry can: (B1) keep the secret and help her truly escape — she flees to family in Moravia, the husband-to-be is told she was rescued but fled in shock. Or (B2) expose the ruse — she is returned to her betrothed, furious. She makes a powerful enemy of Henry. (C) Take the bandit's bribe — keep the secret for payment, Markéta escapes, but Honour drops.",
+ tip:"Path (B1) is the most interesting outcome and earns Markéta as a positive contact. To reach it you must speak to the bandit leader before fighting breaks out — approach the farmstead from the back and enter through the barn first to intercept him alone.",status:0,notes:""},
+{id:"t51",r:"Kuttenberg",tp:"Task",o:32,name:"The Peasants' Revolt",m:false,hm:false,t:false,b:true,l:false,
+ desc:"Peasants in Grund have stopped work and are blocking the road in protest over unpaid wages and brutal treatment from their foreman, Havel. Three branches: (A) Mediate — speak to both Havel and the peasant leader Jirka, use Speech 7+ to negotiate back pay and dismiss Havel. The peasants return to work peacefully, Jirka thanks Henry, and the road clears. (B) Side with the foreman — help Havel disperse the peasants by force or threat. The revolt ends violently, two peasants are arrested, and Honour takes a minor penalty. (C) Side fully with the peasants — help them barricade the road and confront the mine overseer directly. Havel is exposed as embezzling wages and dismissed. Higher Honour gain, but the confrontation involves a fight.",
+ tip:"Full peasant support (C) gives the best Honour outcome and the most narrative satisfaction. The mediation path (A) is safest if your combat stats are low. Siding with Havel is the fastest resolution but penalises Honour.",status:0,notes:""},
 {id:"t52",r:"Kuttenberg",tp:"Task",o:33,name:"Something rotten…",m:false,hm:false,t:false,b:false,l:false,
  desc:"Something is very wrong in Grund. Track down the source of the problem.",
  tip:"",status:0,notes:""},
@@ -826,12 +828,381 @@ const BRANCHES={
   {id:"ob",x:305,y:190,w:240,h:88,type:"out-bad",label:"Voyta burns his unfinished\nmasterpiece — destroyed\nNo skull reward\nNo Rest in One Piece trophy\nVoyta gets a different closure"},
  ],edges:[["d","g"],["d","b"],["g","og1"],["og1","og2"],["b","ob"]]},
 
+// ── FOR THE GREATER GOOD ────────────────────────────────────────
+"mq29":{title:"For the Greater Good — Comply or Resist?",w:520,h:255,
+ nodes:[
+  {id:"d",x:180,y:10,w:160,h:44,type:"decision",label:"Henry is asked to\nbetray someone he trusts"},
+  {id:"g",x:10,y:100,w:205,h:44,type:"good",label:"Resist — find alternative\n(needs high Honour + prior flags)"},
+  {id:"b",x:305,y:100,w:205,h:44,type:"neutral",label:"Comply willingly —\naccept the moral weight"},
+  {id:"og",x:0,y:200,w:215,h:44,type:"out-good",label:"Alternative path taken ✓\nSpecific late-game dialogue unlocked"},
+  {id:"ob",x:295,y:200,w:220,h:44,type:"out-neutral",label:"Story advances\nAllies remember Henry\nmade the hard choice"},
+ ],edges:[["d","g"],["d","b"],["g","og"],["b","ob"]]},
+
+// ── LACKEY — KEEP VOSTATEK SOBER ───────────────────────────────
+"sq12":{title:"Lackey (Vostatek) — Sober or Drunk?",w:540,h:310,
+ nodes:[
+  {id:"d",x:190,y:10,w:160,h:44,type:"decision",label:"Vostatek about to\ndrink before the meeting"},
+  {id:"g",x:10,y:100,w:200,h:44,type:"good",label:"Keep him sober —\nremove wine, escort him"},
+  {id:"b",x:320,y:100,w:205,h:44,type:"bad",label:"Let him drink"},
+  {id:"og",x:0,y:200,w:255,h:56,type:"out-good",label:"Vostatek confesses to poachers ✓\nPoachers stand down (no fight)\nFull backstory revealed\nBest questline ending"},
+  {id:"ob",x:265,y:200,w:265,h:56,type:"out-bad",label:"Vostatek misses meeting\nPoachers confronted by combat only\nBackstory never revealed"},
+ ],edges:[["d","g"],["d","b"],["g","og"],["b","ob"]]},
+
+// ── INVADERS — FIGHT OR NEGOTIATE ──────────────────────────────
+"sq17":{title:"Invaders — Fight the Raiders or Expose the Bailiff?",w:540,h:280,
+ nodes:[
+  {id:"d",x:190,y:10,w:160,h:44,type:"decision",label:"Raiders threatening\nTroskowitz"},
+  {id:"g",x:10,y:100,w:225,h:44,type:"good",label:"Negotiate with captain —\nexpose bailiff (Speech 8+)"},
+  {id:"b",x:305,y:100,w:220,h:44,type:"neutral",label:"Defend by force —\nrally guards, set ambush"},
+  {id:"og",x:0,y:195,w:235,h:56,type:"out-good",label:"Captain stands down ✓\nBailiff removed\nBetter reward\nVillage safer long-term"},
+  {id:"ob",x:295,y:195,w:235,h:56,type:"out-neutral",label:"Raiders driven off ✓\nVillage coin reward\nBailiff stays in post"},
+ ],edges:[["d","g"],["d","b"],["g","og"],["b","ob"]]},
+
+// ── A GOOD SCRUB — EXPOSE OR EXPLOIT ADAM ──────────────────────
+"sq20":{title:"A Good Scrub — What to do with Adam's blackmail scheme?",w:540,h:280,
+ nodes:[
+  {id:"d",x:190,y:10,w:160,h:44,type:"decision",label:"Evidence of Adam's\nblackmail operation found"},
+  {id:"g",x:10,y:100,w:215,h:44,type:"good",label:"Report to magistrate —\nAdam arrested"},
+  {id:"b",x:315,y:100,w:215,h:44,type:"bad",label:"Blackmail Adam yourself —\nextract money & favours"},
+  {id:"og",x:0,y:195,w:225,h:56,type:"out-good",label:"Adam arrested ✓\nVictims freed & friendly\nGuest Ledger acquired\nBest long-term outcome"},
+  {id:"ob",x:305,y:195,w:225,h:56,type:"out-bad",label:"Coin & discounts gained\nAdam a nervous ally\nHonour drops\nVictims stay compromised"},
+ ],edges:[["d","g"],["d","b"],["g","og"],["b","ob"]]},
+
+// ── FEAST FOR THE POOR ──────────────────────────────────────────
+"sq22":{title:"Feast for the Poor — How much effort?",w:560,h:310,
+ nodes:[
+  {id:"d",x:195,y:10,w:170,h:44,type:"decision",label:"Organise a feast\nfor Kuttenberg's poor"},
+  {id:"g",x:0,y:100,w:185,h:44,type:"good",label:"Full effort:\nquality food + donations"},
+  {id:"n",x:195,y:100,w:175,h:44,type:"neutral",label:"Cut corners:\ncheap provisions only"},
+  {id:"b",x:380,y:100,w:175,h:44,type:"bad",label:"Pocket some\ndonation money"},
+  {id:"og",x:0,y:200,w:190,h:56,type:"out-good",label:"Generous feast ✓\nParish & poor grateful\nUnique blessed item\nrewarded by priest"},
+  {id:"on",x:194,y:200,w:182,h:56,type:"out-neutral",label:"Sparse feast\nParish disappointed\nNo follow-on reward"},
+  {id:"ob",x:378,y:200,w:178,h:56,type:"out-bad",label:"Feast scaled back\nShortfall noticed\nHonour drops"},
+ ],edges:[["d","g"],["d","n"],["d","b"],["g","og"],["n","on"],["b","ob"]]},
+
+// ── LOST HONOUR — JEZHEK ────────────────────────────────────────
+"sq27":{title:"Lost Honour — Beat Jezhek then Help or Walk Away?",w:540,h:310,
+ nodes:[
+  {id:"d",x:190,y:10,w:160,h:44,type:"decision",label:"Jezhek picks a fight\non the road"},
+  {id:"g",x:5,y:100,w:205,h:44,type:"good",label:"Beat him in the fight\nthen offer to help"},
+  {id:"b",x:325,y:100,w:205,h:44,type:"bad",label:"Refuse fight\nor walk away"},
+  {id:"og1",x:0,y:195,w:150,h:56,type:"out-good",label:"Full questline opens:\nfind witness,\nclear his name"},
+  {id:"og2",x:160,y:195,w:160,h:56,type:"out-good",label:"Court: witness\nor deposition\n(Speech 7 / 150g)"},
+  {id:"ob",x:330,y:195,w:205,h:56,type:"out-bad",label:"Jezhek found dead\non road later\nQuest fails permanently"},
+ ],edges:[["d","g"],["d","b"],["g","og1"],["og1","og2"],["b","ob"]]},
+
+// ── THOU ART BUT DUST ───────────────────────────────────────────
+"sq29":{title:"Thou art but dust… — Brother Vintíř's Confession",w:560,h:320,
+ nodes:[
+  {id:"d",x:195,y:10,w:170,h:44,type:"decision",label:"Dying monk confesses\nhe witnessed a murder"},
+  {id:"g",x:0,y:100,w:190,h:44,type:"good",label:"Hear confession, investigate\n& confront the killer"},
+  {id:"n",x:200,y:100,w:165,h:44,type:"neutral",label:"Offer absolution\nwithout investigating"},
+  {id:"b",x:375,y:100,w:180,h:44,type:"bad",label:"Report confession\nto the abbot"},
+  {id:"og",x:0,y:200,w:195,h:64,type:"out-good",label:"Justice served ✓\nKiller confronted\nVintíř dies peacefully\nSedletz rewards Henry"},
+  {id:"on",x:200,y:200,w:170,h:64,type:"out-neutral",label:"Vintíř comforted\nDies with some peace\nKiller goes free"},
+  {id:"ob",x:375,y:200,w:180,h:64,type:"out-bad",label:"Abbot suppresses it\nVintíř dies in anguish\nHonour penalty"},
+ ],edges:[["d","g"],["d","n"],["d","b"],["g","og"],["n","on"],["b","ob"]]},
+
+// ── SPOILS OF WAR ───────────────────────────────────────────────
+"sq30":{title:"Spoils of War — Who gets the looted goods?",w:560,h:310,
+ nodes:[
+  {id:"d",x:195,y:10,w:170,h:44,type:"decision",label:"Cache of looted goods:\nthree parties claim it"},
+  {id:"g",x:0,y:100,w:185,h:44,type:"good",label:"Investigate each item\n& return to rightful owners"},
+  {id:"b1",x:195,y:100,w:170,h:44,type:"bad",label:"Give everything to\ncamp quartermaster"},
+  {id:"b2",x:375,y:100,w:180,h:44,type:"bad",label:"Keep the most\nvaluable pieces"},
+  {id:"og",x:0,y:200,w:190,h:56,type:"out-good",label:"Church silver returned ✓\nAnežka's heirlooms back\nFamily ring reward\nBest Honour"},
+  {id:"ob1",x:194,y:200,w:175,h:56,type:"out-bad",label:"Camp relations improve\nAnežka & priest hostile\nHonour penalty"},
+  {id:"ob2",x:373,y:200,w:183,h:56,type:"out-bad",label:"Henry profits\nBoth NPCs hostile\nHonour drops significantly"},
+ ],edges:[["d","g"],["d","b1"],["d","b2"],["g","og"],["b1","ob1"],["b2","ob2"]]},
+
+// ── RANSOM ──────────────────────────────────────────────────────
+"sq38":{title:"Ransom — Pay, Negotiate, or Fight?",w:560,h:310,
+ nodes:[
+  {id:"d",x:195,y:10,w:170,h:44,type:"decision",label:"Merchant's son held\nfor 500 Groschen ransom"},
+  {id:"g",x:0,y:100,w:185,h:44,type:"good",label:"Negotiate — expose\nfault line (Speech 8+)"},
+  {id:"n",x:195,y:100,w:170,h:44,type:"neutral",label:"Pay the 500g ransom\n(reimbursed + reward)"},
+  {id:"b",x:375,y:100,w:180,h:44,type:"neutral",label:"Assault the camp\nrescue by force"},
+  {id:"og",x:0,y:200,w:190,h:56,type:"out-good",label:"Boy freed, no cost ✓\nOutlaws scatter\nHonour gain\nLeader's story revealed"},
+  {id:"on",x:194,y:200,w:175,h:56,type:"out-neutral",label:"Boy freed immediately\nOutlaws escape\nFull reward received"},
+  {id:"ob",x:373,y:200,w:183,h:56,type:"out-neutral",label:"Boy freed (if guard\ntaken out first)\nSame reward kept"},
+ ],edges:[["d","g"],["d","n"],["d","b"],["g","og"],["n","on"],["b","ob"]]},
+
+// ── THE FIFTH COMMANDMENT ───────────────────────────────────────
+"sq40":{title:"The Fifth Commandment — What to do with Bohuslav's confession?",w:560,h:310,
+ nodes:[
+  {id:"d",x:195,y:10,w:170,h:44,type:"decision",label:"Bohuslav confesses\nan old killing to Henry"},
+  {id:"g",x:0,y:100,w:190,h:44,type:"good",label:"Encourage Bohuslav to\nconfess to the family himself"},
+  {id:"n",x:200,y:100,w:165,h:44,type:"neutral",label:"Report him to the\nKuttenberg magistrate"},
+  {id:"b",x:375,y:100,w:180,h:44,type:"bad",label:"Tell Bohuslav to\nkeep the secret"},
+  {id:"og",x:0,y:200,w:195,h:56,type:"out-good",label:"Family finds peace ✓\nBohuslav unburdened\nBest Honour\nMost powerful scene"},
+  {id:"on",x:198,y:200,w:170,h:56,type:"out-neutral",label:"Formal justice served\nFamily learns via trial\nHonour neutral"},
+  {id:"ob",x:373,y:200,w:182,h:56,type:"out-bad",label:"Secret kept\nBohuslav broken\nFamily never knows\nHonour penalty"},
+ ],edges:[["d","g"],["d","n"],["d","b"],["g","og"],["n","on"],["b","ob"]]},
+
+// ── HUNTING THE WEREWOLF ────────────────────────────────────────
+"t16":{title:"Hunting the Werewolf — Kill or Save Bedřich?",w:560,h:310,
+ nodes:[
+  {id:"d",x:195,y:10,w:170,h:44,type:"decision",label:"'Werewolf' killing sheep —\nactually Bedřich, a sick man"},
+  {id:"g",x:0,y:100,w:190,h:44,type:"good",label:"Speak to Bedřich alone first,\ngain trust, reintegrate him"},
+  {id:"n",x:200,y:100,w:165,h:44,type:"neutral",label:"Tell Natan the truth\nwithout talking to Bedřich"},
+  {id:"b",x:375,y:100,w:180,h:44,type:"bad",label:"Kill the 'werewolf'"},
+  {id:"og",x:0,y:200,w:195,h:56,type:"out-good",label:"Bedřich reintegrated ✓\nVillage rep improves\nSherpherd's Champion trophy\nBest Honour"},
+  {id:"on",x:198,y:200,w:170,h:56,type:"out-neutral",label:"Mob confronts Bedřich\nMust be talked down\nor defended"},
+  {id:"ob",x:373,y:200,w:182,h:56,type:"out-bad",label:"Bedřich killed\nNatan grateful\nHonour penalty"},
+ ],edges:[["d","g"],["d","n"],["d","b"],["g","og"],["n","on"],["b","ob"]]},
+
+// ── HIGH TOLL ───────────────────────────────────────────────────
+"t27":{title:"High Toll — Report, Confront, or Bribe?",w:560,h:310,
+ nodes:[
+  {id:"d",x:195,y:10,w:170,h:44,type:"decision",label:"Tollkeeper Radim\nextorting travellers"},
+  {id:"g",x:0,y:100,w:190,h:44,type:"good",label:"Gather evidence,\nreport to bailiff"},
+  {id:"n",x:200,y:100,w:165,h:44,type:"neutral",label:"Confront Radim directly\n(Intimidation 6+)"},
+  {id:"b",x:375,y:100,w:180,h:44,type:"bad",label:"Bribe Radim for\npersonal discount"},
+  {id:"og",x:0,y:200,w:195,h:56,type:"out-good",label:"Radim removed ✓\nExtortion ends\nHonour gain"},
+  {id:"on",x:198,y:200,w:170,h:56,type:"out-neutral",label:"Radim stops extorting\nStays at post\nNo Honour change"},
+  {id:"ob",x:373,y:200,w:182,h:56,type:"out-bad",label:"Discounted tolls\nEveryone else still\nextorted · Honour drops"},
+ ],edges:[["d","g"],["d","n"],["d","b"],["g","og"],["n","on"],["b","ob"]]},
+
+// ── ENOUGH! ─────────────────────────────────────────────────────
+"t35":{title:"Enough! — Prokop vs Vít (pig dispute)",w:540,h:280,
+ nodes:[
+  {id:"d",x:190,y:10,w:160,h:44,type:"decision",label:"Vít's pigs destroying\nProkop's garden"},
+  {id:"g",x:5,y:100,w:190,h:44,type:"good",label:"Investigate: arrange\nfence repair (40g or favour)"},
+  {id:"n",x:210,y:100,w:165,h:44,type:"neutral",label:"Side with Prokop —\nthreaten Vít with bailiff"},
+  {id:"b",x:385,y:100,w:150,h:44,type:"bad",label:"Tell Prokop pigs\naren't illegal"},
+  {id:"og",x:0,y:195,w:200,h:44,type:"out-good",label:"Both men settle ✓\nBest Miskowitz goodwill\nHonour gain"},
+  {id:"on",x:205,y:195,w:170,h:44,type:"out-neutral",label:"Vít fixes fence\nunder duress, resentful\nSmall reward"},
+  {id:"ob",x:380,y:195,w:155,h:44,type:"out-bad",label:"Prokop gets nothing\nFurious at Henry"},
+ ],edges:[["d","g"],["d","n"],["d","b"],["g","og"],["n","on"],["b","ob"]]},
+
+// ── A MOMENT OF FAME ────────────────────────────────────────────
+"t37":{title:"A Moment of Fame — Real deed or staged stunt?",w:540,h:265,
+ nodes:[
+  {id:"d",x:190,y:10,w:160,h:44,type:"decision",label:"Beneš wants to\nbecome famous"},
+  {id:"g",x:5,y:100,w:215,h:44,type:"good",label:"Engineer a real good deed —\nBeneš helps someone genuinely"},
+  {id:"b",x:320,y:100,w:215,h:44,type:"bad",label:"Stage a fake\n'heroic rescue'"},
+  {id:"og",x:0,y:195,w:225,h:44,type:"out-good",label:"Beneš genuinely surprised ✓\nSlightly better person\nVillage respects him"},
+  {id:"ob",x:305,y:195,w:230,h:44,type:"out-bad",label:"Ruse unravels when\naccomplice talks · Beneš embarrassed\nHenry loses Honour"},
+ ],edges:[["d","g"],["d","b"],["g","og"],["b","ob"]]},
+
+// ── PRIMUM NIL NOCERE ───────────────────────────────────────────
+"t42":{title:"Primum Nil Nocere — Amputate, Treat, or Refuse?",w:560,h:310,
+ nodes:[
+  {id:"d",x:195,y:10,w:170,h:44,type:"decision",label:"Zuzana's infected wound:\namputation recommended"},
+  {id:"g",x:0,y:100,w:185,h:44,type:"good",label:"Herbal poultice\n(Alchemy 6+ required)"},
+  {id:"n",x:195,y:100,w:170,h:44,type:"neutral",label:"Support amputation\n(Speech 7+ / Medicine)"},
+  {id:"b",x:375,y:100,w:180,h:44,type:"bad",label:"Side with family refusal —\nno treatment"},
+  {id:"og",x:0,y:200,w:190,h:56,type:"out-good",label:"Zuzana survives ✓\nKeeps her arm\nLarger reward\nBlažej impressed"},
+  {id:"on",x:194,y:200,w:175,h:56,type:"out-neutral",label:"Zuzana survives ✓\nLoses arm\nBlažej teaches\nMedicine recipe"},
+  {id:"ob",x:373,y:200,w:182,h:56,type:"out-bad",label:"Zuzana deteriorates\nand dies in days\nHusband blames Henry"},
+ ],edges:[["d","g"],["d","n"],["d","b"],["g","og"],["n","on"],["b","ob"]]},
+
+// ── SKELETON IN THE CLOSET ──────────────────────────────────────
+"t47":{title:"Skeleton in the Closet — Report or Keep the Secret?",w:560,h:310,
+ nodes:[
+  {id:"d",x:195,y:10,w:170,h:44,type:"decision",label:"Human remains found\nat Zimburg ruins"},
+  {id:"g1",x:0,y:100,w:185,h:44,type:"good",label:"Investigate fully —\nlearn the whole truth"},
+  {id:"b",x:375,y:100,w:180,h:44,type:"bad",label:"Report to bailiff\nwithout investigating"},
+  {id:"og1",x:0,y:195,w:185,h:44,type:"out-good",label:"Full story uncovered:\nself-defence killing by\nHrůza family"},
+  {id:"og2a",x:0,y:260,w:185,h:44,type:"out-good",label:"Keep secret →\nFamily grateful, reward +\ngoodwill"},
+  {id:"og2b",x:192,y:260,w:185,h:44,type:"out-neutral",label:"Report anyway →\nFamily scrutinised,\nno charges · matriarch cold"},
+  {id:"ob",x:375,y:195,w:180,h:100,type:"out-bad",label:"Hrůzas interrogated\nFull story emerges messily\nMatriarch resents Henry\nNo reward"},
+ ],edges:[["d","g1"],["d","b"],["g1","og1"],["og1","og2a"],["og1","og2b"],["b","ob"]]},
+
+// ── DAMSEL IN DISTRESS ──────────────────────────────────────────
+"t50":{title:"Damsel in Distress — Is it even a real kidnapping?",w:560,h:330,
+ nodes:[
+  {id:"d",x:195,y:10,w:170,h:44,type:"decision",label:"Noblewoman Markéta\nheld at farmstead"},
+  {id:"g",x:0,y:100,w:185,h:44,type:"good",label:"Negotiate with leader —\nlearn it's a faked kidnapping"},
+  {id:"b2",x:375,y:100,w:180,h:44,type:"neutral",label:"Assault the farmstead\n(fight / stealth)"},
+  {id:"og1",x:0,y:195,w:185,h:44,type:"out-good",label:"Truth revealed:\nMarkéta staged it\nto escape marriage"},
+  {id:"ob2",x:375,y:195,w:180,h:44,type:"out-neutral",label:"Markéta rescued\nGenerous reward"},
+  {id:"og2a",x:0,y:265,w:185,h:44,type:"out-good",label:"Help her truly escape (B1) →\nMarkéta flees to Moravia\nPositive contact gained"},
+  {id:"og2b",x:192,y:265,w:178,h:44,type:"out-bad",label:"Expose the ruse (B2) →\nReturned to betrothed\nMarkéta hostile"},
+ ],edges:[["d","g"],["d","b2"],["g","og1"],["og1","og2a"],["og1","og2b"],["b2","ob2"]]},
+
+// ── FROGS — STARTING CHOICE ─────────────────────────────────────
+"sq07":{title:"Frogs — Which Village Do You Help First?",w:520,h:255,
+ nodes:[
+  {id:"d",x:180,y:10,w:160,h:44,type:"decision",label:"Olbram (Zhelejov)\nwants Maypole stolen"},
+  {id:"g",x:10,y:100,w:195,h:44,type:"good",label:"Accept — but also\nstart Mice (Tachov side)"},
+  {id:"n",x:315,y:100,w:195,h:44,type:"neutral",label:"Refuse or ignore\nentirely"},
+  {id:"og",x:0,y:195,w:210,h:44,type:"out-good",label:"Both quests active →\nBattle of Frogs & Mice\nunlocks. Peace path possible."},
+  {id:"ob",x:305,y:195,w:210,h:44,type:"out-neutral",label:"Feud unresolved\nBattle of Frogs & Mice\ndoes NOT unlock"},
+ ],edges:[["d","g"],["d","n"],["g","og"],["n","ob"]]},
+
+// ── MICE — STARTING CHOICE ──────────────────────────────────────
+"sq08":{title:"Mice — Which Village Do You Help First?",w:520,h:255,
+ nodes:[
+  {id:"d",x:180,y:10,w:160,h:44,type:"decision",label:"Prochek (Tachov)\nwants bull painted"},
+  {id:"g",x:10,y:100,w:195,h:44,type:"good",label:"Accept — but also\nstart Frogs (Zhelejov side)"},
+  {id:"n",x:315,y:100,w:195,h:44,type:"neutral",label:"Rat out Prochek\nto Olbram (Zhelejov)"},
+  {id:"og",x:0,y:195,w:210,h:44,type:"out-good",label:"Both quests active →\nBattle of Frogs & Mice\nunlocks. Peace path possible."},
+  {id:"on",x:305,y:195,w:210,h:44,type:"out-neutral",label:"Zhelejov path only\nBattle still unlocks\nbut peace path harder"},
+ ],edges:[["d","g"],["d","n"],["g","og"],["n","on"]]},
+
+// ── JOHNNY THE GOB — SPARE OR KILL ──────────────────────────────
+"t04":{title:"Johnny the Gob — Spare or Kill?",w:520,h:310,
+ nodes:[
+  {id:"d",x:180,y:10,w:160,h:44,type:"decision",label:"Johnny the Gob\ncornered — what now?"},
+  {id:"g",x:10,y:100,w:195,h:44,type:"good",label:"Spare Johnny — he\nsurrenders his shield"},
+  {id:"b",x:315,y:100,w:195,h:44,type:"neutral",label:"Kill Johnny"},
+  {id:"warn",x:0,y:195,w:520,h:44,type:"bad",label:"⚠ BUG: If spared, fast-travel to Gules IMMEDIATELY or knock Johnny out first — auto-complete can break the quest"},
+  {id:"og",x:0,y:265,w:245,h:36,type:"out-good",label:"Johnny flees · quest completes · Gules gets his shield"},
+  {id:"on",x:265,y:265,w:245,h:36,type:"out-neutral",label:"Quest completes · Gules receives news of death"},
+ ],edges:[["d","g"],["d","b"],["g","warn"],["b","on"]]},
+"mq12":{title:"Storm — Istvan Toth: Duel or Defenestration?",w:520,h:310,
+ nodes:[
+  {id:"d",x:180,y:10,w:160,h:44,type:"decision",label:"Confront Istvan Toth\nat Trosky Castle"},
+  {id:"g",x:15,y:100,w:205,h:44,type:"good",label:"Offer honourable duel\nFight him one-on-one"},
+  {id:"b",x:300,y:100,w:205,h:44,type:"bad",label:"Defenestrate Istvan\n(throw from window)"},
+  {id:"og",x:0,y:200,w:225,h:56,type:"out-good",label:"Honourable kill ✓\nHonourable Duel trophy\nGood ending path open\nParents approve"},
+  {id:"ob",x:285,y:200,w:225,h:56,type:"out-bad",label:"Dishonourable kill ✗\nNegative ending score\nParents disapprove\nGood ending harder to reach"},
+ ],edges:[["d","g"],["d","b"],["g","og"],["b","ob"]]},
+
+// ── A NEEDLE IN A HAYSTACK — INFILTRATION METHOD ────────────────
+"mq23":{title:"A Needle in a Haystack — Infiltration Method",w:560,h:320,
+ nodes:[
+  {id:"d",x:198,y:10,w:164,h:44,type:"decision",label:"Infiltrate Sedletz\nMonastery"},
+  {id:"g",x:0,y:100,w:175,h:44,type:"good",label:"Full stealth\n(night, dark clothes)"},
+  {id:"n",x:192,y:100,w:175,h:44,type:"neutral",label:"Persuade the abbot\n(Speech 9+)"},
+  {id:"b",x:385,y:100,w:175,h:44,type:"bad",label:"Force & threats"},
+  {id:"og",x:0,y:195,w:185,h:64,type:"out-good",label:"Monks unharmed\nSedletz stays friendly\nThou art but dust… accessible\nUnique loot available"},
+  {id:"on",x:190,y:195,w:180,h:64,type:"out-neutral",label:"Clean outcome\nSedletz mostly friendly\nAll follow-on content intact"},
+  {id:"ob",x:375,y:195,w:180,h:64,type:"out-bad",label:"Sedletz turns hostile\nMonk traders unavailable\nThou art but dust… blocked\nMajor loot locked out"},
+ ],edges:[["d","g"],["d","n"],["d","b"],["g","og"],["n","on"],["b","ob"]]},
+
+// ── MIRI FAJTA — WHO DO YOU BACK ────────────────────────────────
+"sq15":{title:"Miri Fajta — Side with Aranka or Bora?",w:560,h:320,
+ nodes:[
+  {id:"d",x:195,y:10,w:170,h:44,type:"decision",label:"Nomad's Camp feud:\nAranka vs Bora"},
+  {id:"g",x:10,y:100,w:185,h:44,type:"good",label:"Support Aranka\n(+ Speech / do favours)"},
+  {id:"n",x:385,y:100,w:165,h:44,type:"neutral",label:"Stay neutral"},
+  {id:"b",x:205,y:100,w:175,h:44,type:"bad",label:"Back Bora"},
+  {id:"og",x:0,y:195,w:200,h:64,type:"out-good",label:"Aranka leads ✓\nKlára full romance unlocked\nVoivode's Curse available\nMax Nomad's Camp trust"},
+  {id:"on",x:355,y:195,w:200,h:64,type:"out-neutral",label:"Camp splits\nAranka weakened\nKlára romance shortened\nVoivode's Curse still opens"},
+  {id:"ob",x:190,y:195,w:160,h:64,type:"out-bad",label:"Bora leads\nAranka sidelined\nKlára distant\nRomance arc cut short"},
+ ],edges:[["d","g"],["d","n"],["d","b"],["g","og"],["n","on"],["b","ob"]]},
+
+// ── THE VOIVODE'S CURSE — WHO'S GUILTY ─────────────────────────
+"t10":{title:"The Voivode's Curse — Investigate or Accuse?",w:560,h:310,
+ nodes:[
+  {id:"d",x:195,y:10,w:170,h:44,type:"decision",label:"Camp animals dying\nDobromir is blamed"},
+  {id:"g",x:10,y:100,w:190,h:44,type:"good",label:"Investigate the water source\n(find real culprit)"},
+  {id:"b1",x:215,y:100,w:165,h:44,type:"bad",label:"Exile Dobromir\nwithout investigating"},
+  {id:"b2",x:390,y:100,w:160,h:44,type:"bad",label:"Report Dobromir\nguilty immediately"},
+  {id:"og",x:0,y:200,w:210,h:56,type:"out-good",label:"Real culprit exposed ✓\nDobromir stays\nKlára romance deepens\nExtra Nomad's Camp trust"},
+  {id:"ob1",x:215,y:200,w:165,h:56,type:"out-bad",label:"Dobromir exiled\nKlára affected\nCamp morale drops"},
+  {id:"ob2",x:390,y:200,w:160,h:56,type:"out-bad",label:"Dobromir cast out\nKlára hostile\nCamp relations damaged"},
+ ],edges:[["d","g"],["d","b1"],["d","b2"],["g","og"],["b1","ob1"],["b2","ob2"]]},
+
+// ── TROUBADOURS — HELP OR IGNORE ────────────────────────────────
+"sq10":{title:"Troubadours — Help the Musicians?",w:540,h:310,
+ nodes:[
+  {id:"d",x:190,y:10,w:160,h:44,type:"decision",label:"Musicians at inn:\nlute stolen, debt owed"},
+  {id:"g1",x:0,y:100,w:200,h:44,type:"good",label:"Recover lute + pay debt\nor negotiate it away"},
+  {id:"g2",x:210,y:100,w:190,h:44,type:"good",label:"Pay Ondra's debt\nyourself (80g)"},
+  {id:"b",x:410,y:100,w:125,h:44,type:"bad",label:"Ignore them"},
+  {id:"og",x:0,y:200,w:210,h:56,type:"out-good",label:"Private concert ✓\nTemporary Charisma buff\nInnkeeper relationship +"},
+  {id:"og2",x:215,y:200,w:185,h:56,type:"out-good",label:"Concert unlocked ✓\nBonus innkeeper trust\nCharisma buff"},
+  {id:"ob",x:405,y:200,w:130,h:56,type:"out-bad",label:"Musicians leave\nConcert & buff\npermanently missed"},
+ ],edges:[["d","g1"],["d","g2"],["d","b"],["g1","og"],["g2","og2"],["b","ob"]]},
+
+// ── THE SPARK — PAMPHLETS ───────────────────────────────────────
+"sq23":{title:"The Spark — What happens to Kryšpín's pamphlets?",w:580,h:320,
+ nodes:[
+  {id:"d",x:205,y:10,w:170,h:44,type:"decision",label:"Pamphlets inflaming\nHussite/Catholic tensions"},
+  {id:"g",x:0,y:100,w:185,h:44,type:"good",label:"Destroy pamphlets\n& protect Kryšpín"},
+  {id:"n",x:200,y:100,w:180,h:44,type:"neutral",label:"Let pamphlets\ncirculate freely"},
+  {id:"b",x:395,y:100,w:180,h:44,type:"bad",label:"Turn Kryšpín in\nto Catholic overseer"},
+  {id:"og",x:0,y:200,w:190,h:64,type:"out-good",label:"Tensions subside ✓\nKryšpín survives\nPrinting discount\nBest Honour outcome"},
+  {id:"on",x:195,y:200,w:195,h:64,type:"out-neutral",label:"Riots in one district\n2 named NPCs killed\nSmothering the Flame\nunlocks as forced task"},
+  {id:"ob",x:395,y:200,w:180,h:64,type:"out-bad",label:"Kryšpín arrested\n& tortured\nPamphlets suppressed\nHonour drops significantly"},
+ ],edges:[["d","g"],["d","n"],["d","b"],["g","og"],["n","on"],["b","ob"]]},
+
+// ── HUSH MY DARLING — TOBIAS & KLÁRA ───────────────────────────
+"sq31":{title:"Hush, My Darling… — Tobias & Klára's Marriage",w:560,h:320,
+ nodes:[
+  {id:"d",x:195,y:10,w:170,h:44,type:"decision",label:"Benedikt won't allow\nTobias to marry Klára"},
+  {id:"g",x:0,y:100,w:185,h:44,type:"good",label:"Investigate & arrange\ndebt repayment (200g)"},
+  {id:"n1",x:195,y:100,w:170,h:44,type:"neutral",label:"Blackmail Benedikt\nwith his secret"},
+  {id:"n2",x:375,y:100,w:180,h:44,type:"neutral",label:"Help them elope\nat night"},
+  {id:"og",x:0,y:200,w:190,h:56,type:"out-good",label:"Benedikt consents ✓\nHenry the Matchmaker\ntrophy · best Honour"},
+  {id:"on1",x:195,y:200,w:175,h:56,type:"out-neutral",label:"Marriage permitted\nBenedikt hostile\nHonour penalty"},
+  {id:"on2",x:375,y:200,w:180,h:56,type:"out-neutral",label:"Couple escapes ✓\nMatchmaker trophy\nFollow-on task to\ncalm Benedikt unlocks"},
+ ],edges:[["d","g"],["d","n1"],["d","n2"],["g","og"],["n1","on1"],["n2","on2"]]},
+
+// ── ALL'S FAIR — WYSOKA LAND DISPUTE ───────────────────────────
+"sq32":{title:"All's fair… — Who's really to blame?",w:560,h:320,
+ nodes:[
+  {id:"d",x:195,y:10,w:170,h:44,type:"decision",label:"Václav vs Mikuláš:\nland dispute in Wysoka"},
+  {id:"g",x:5,y:100,w:185,h:44,type:"good",label:"Investigate both sides\n(find Pávek in barn loft)"},
+  {id:"b1",x:205,y:100,w:165,h:44,type:"bad",label:"Side with Václav\nwithout investigating"},
+  {id:"b2",x:380,y:100,w:175,h:44,type:"bad",label:"Side with Mikuláš\nwithout investigating"},
+  {id:"og",x:0,y:200,w:200,h:56,type:"out-good",label:"Pávek exposed ✓\nBoth neighbours rewarded\nTruth revealed\nBest Honour outcome"},
+  {id:"ob1",x:205,y:200,w:165,h:56,type:"out-bad",label:"Mikuláš fined\nPávek escapes\nHonour penalty"},
+  {id:"ob2",x:375,y:200,w:180,h:56,type:"out-bad",label:"Václav loses field\nPávek escapes\nFollow-on complaint unlocks"},
+ ],edges:[["d","g"],["d","b1"],["d","b2"],["g","og"],["b1","ob1"],["b2","ob2"]]},
+
+// ── BELLATORES — BÚZEK'S WAGES ─────────────────────────────────
+"sq33":{title:"Bellatores — Getting Búzek to Pay",w:560,h:310,
+ nodes:[
+  {id:"d",x:195,y:10,w:170,h:44,type:"decision",label:"Soldiers want withheld\nwages from Lord Búzek"},
+  {id:"g",x:5,y:100,w:200,h:44,type:"good",label:"Produce contract evidence\n(lockpick chest, Speech 8+)"},
+  {id:"n",x:215,y:100,w:180,h:44,type:"neutral",label:"Intimidate Búzek\nwith soldiers present"},
+  {id:"b",x:405,y:100,w:150,h:44,type:"bad",label:"Antagonise Búzek\nopenly"},
+  {id:"og",x:0,y:200,w:210,h:56,type:"out-good",label:"Wages paid peacefully ✓\nSoldiers become allies\nin Dragon's Lair\nClean start to next quest"},
+  {id:"on",x:215,y:200,w:185,h:56,type:"out-neutral",label:"Búzek buckles ✓\n(Reputation 3+ in Bylany)\nSoldiers paid\nDragon's Lair slightly tense"},
+  {id:"ob",x:405,y:200,w:150,h:56,type:"out-bad",label:"Dragon's Lair starts\nwith guards alerted\nHarder stealth/combat"},
+ ],edges:[["d","g"],["d","n"],["d","b"],["g","og"],["n","on"],["b","ob"]]},
+
+// ── DRAGON'S LAIR — BÚZEK'S FATE ───────────────────────────────
+"sq34":{title:"Dragon's Lair — Búzek's Fate",w:560,h:310,
+ nodes:[
+  {id:"d",x:195,y:10,w:170,h:44,type:"decision",label:"Búzek barricaded\nin manor with thugs"},
+  {id:"g",x:5,y:100,w:190,h:44,type:"good",label:"Negotiate surrender\n(Speech 10)"},
+  {id:"n",x:205,y:100,w:185,h:44,type:"neutral",label:"Assault manor with\nZdeněk's soldiers"},
+  {id:"b",x:400,y:100,w:155,h:44,type:"bad",label:"Búzek escapes\nin the chaos"},
+  {id:"og",x:0,y:200,w:200,h:56,type:"out-good",label:"Peaceful surrender ✓\nBest Honour outcome\nZdeněk paid & stays"},
+  {id:"on",x:205,y:200,w:190,h:56,type:"out-neutral",label:"Búzek captured ✓\nZdeněk paid\nSatisfying combat end"},
+  {id:"ob",x:400,y:200,w:155,h:56,type:"out-bad",label:"Follow-on hunt task\nunlocks to chase Búzek\nWorse reward on capture"},
+ ],edges:[["d","g"],["d","n"],["d","b"],["g","og"],["n","on"],["b","ob"]]},
+
+// ── THE PEASANTS' REVOLT ────────────────────────────────────────
+"t51":{title:"The Peasants' Revolt — Whose Side?",w:560,h:320,
+ nodes:[
+  {id:"d",x:195,y:10,w:170,h:44,type:"decision",label:"Peasants blocking road\nForeman Havel vs workers"},
+  {id:"g",x:5,y:100,w:185,h:44,type:"good",label:"Fully back the peasants:\nexpose Havel's embezzlement"},
+  {id:"n",x:200,y:100,w:165,h:44,type:"neutral",label:"Mediate: negotiate\nback pay, dismiss Havel"},
+  {id:"b",x:375,y:100,w:180,h:44,type:"bad",label:"Side with Havel:\ndisperse by force/threat"},
+  {id:"og",x:0,y:200,w:195,h:56,type:"out-good",label:"Havel dismissed ✓\nEmbezzlement exposed\nBest Honour gain\n(involves a fight)"},
+  {id:"on",x:200,y:200,w:165,h:56,type:"out-neutral",label:"Peasants return to work\nHavel dismissed\nRoad cleared peacefully"},
+  {id:"ob",x:375,y:200,w:180,h:56,type:"out-bad",label:"Two peasants arrested\nRoad cleared fast\nHonour penalty"},
+ ],edges:[["d","g"],["d","n"],["d","b"],["g","og"],["n","on"],["b","ob"]]},
+
+// ── LAST WILL — OPEN OR DELIVER? ───────────────────────────────
+"t31":{title:"Last Will — The Sealed Letter",w:540,h:310,
+ nodes:[
+  {id:"d",x:190,y:10,w:160,h:44,type:"decision",label:"Dying miner:\ndeliver letter to Marta"},
+  {id:"g",x:5,y:100,w:175,h:44,type:"good",label:"Deliver sealed\n(don't open it)"},
+  {id:"n1",x:190,y:100,w:170,h:44,type:"neutral",label:"Open, read,\nthen deliver anyway"},
+  {id:"n2",x:370,y:100,w:165,h:44,type:"neutral",label:"Open, read,\nthen burn it"},
+  {id:"og",x:0,y:200,w:185,h:56,type:"out-good",label:"Marta reconciles ✓\nFamily ring reward\nBest Honour\nMiner dies peacefully"},
+  {id:"on1",x:190,y:200,w:170,h:56,type:"out-neutral",label:"Marta devastated\nbut finds closure\nRing still rewarded"},
+  {id:"on2",x:365,y:200,w:170,h:56,type:"out-neutral",label:"Secret dies with miner\nMarta never knows truth\nRing kept after miner dies"},
+ ],edges:[["d","g"],["d","n1"],["d","n2"],["g","og"],["n1","on1"],["n2","on2"]]},
+
+// ── THE AXE FROM THE LAKE ───────────────────────────────────────
+"t11":{title:"The Axe from the Lake — Keep or Return?",w:500,h:255,
+ nodes:[
+  {id:"d",x:170,y:10,w:160,h:44,type:"decision",label:"Recover axe\nfrom the lake"},
+  {id:"g",x:10,y:100,w:195,h:44,type:"good",label:"Return axe to\nmiller's widow in Tachov"},
+  {id:"b",x:295,y:100,w:195,h:44,type:"bad",label:"Keep the axe\nfor yourself"},
+  {id:"og",x:0,y:200,w:210,h:44,type:"out-good",label:"Coin reward + follow-on\nWidow friendly going forward"},
+  {id:"ob",x:280,y:200,w:215,h:44,type:"out-bad",label:"Axe kept (decent weapon)\nWidow's questline closed\nShe treats Henry coldly"},
+ ],edges:[["d","g"],["d","b"],["g","og"],["b","ob"]]},
+
 };
-
-
-// ═══════════════════════════════════════════════════
-// STATE
-// ═══════════════════════════════════════════════════
 const STATUSES=["Not Started","In Progress","Completed","Failed","Skipped"];
 const SCLS=["s0","s1","s2","s3","s4"];
 const SICO=["○","◐","✓","✗","—"];
@@ -842,7 +1213,7 @@ function save(){const d={};Q.forEach(q=>d[q.id]={s:q.status,n:q.notes});try{loca
 
 function setTab(t){
   currentTab=t;
-  ["tracker","decisions","endings","riddler","npcs","forge","missable","loot","romance"].forEach(id=>{
+  ["tracker","decisions","endings","riddler","npcs","forge","missable","loot","romance","trophies"].forEach(id=>{
     document.getElementById("page-"+id).style.display=id===t?(id==="tracker"?"flex":"block"):"none";
     document.getElementById("tb-"+id).className="tab"+(t===id?" on":"");
   });
@@ -854,6 +1225,7 @@ function setTab(t){
   if(t==="missable")renderMissable();
   if(t==="loot")renderLoot();
   if(t==="romance")renderRomance();
+  if(t==="trophies")renderTrophies();
 }
 
 // ═══════════════════════════════════════════════════
@@ -2048,6 +2420,377 @@ function toggleRomance(id,val){
   state[id]=val;
   localStorage.setItem("kcd2_romance",JSON.stringify(state));
   renderRomance();
+}
+
+// ═══════════════════════════════════════════════════
+// TROPHIES / ACHIEVEMENTS TAB
+// ═══════════════════════════════════════════════════
+function renderTrophies(){
+  // rarity: "platinum","gold","silver","bronze","steam" (steam-only unlisted on PSN)
+  // missable: true = can be permanently locked out
+  // cats: category tags for grouping
+  const TROPHIES=[
+    // ── PLATINUM ──
+    {id:"pl01",name:"A New Henry",icon:"💎",rarity:"platinum",missable:false,cat:"Platinum",
+     desc:"Unlock all other trophies.",
+     how:"Complete every other trophy in the list. Requires a full-completion playthrough including all DLC trophies.",
+     tip:"The platinum requires two full playthroughs (or one + chapter select) due to mutually exclusive endings choices. Plan your ending choices carefully."},
+
+    // ── GOLD ──
+    {id:"g01",name:"My Father's Son",icon:"🥇",rarity:"gold",missable:false,cat:"Story",
+     desc:"Complete the main story of KCD2.",
+     how:"Finish the final main quest of the Kuttenberg arc.",
+     tip:"Cannot be missed if you complete the game. Does not depend on which ending choices you made."},
+    {id:"g02",name:"Been There, Done That",icon:"🥇",rarity:"gold",missable:false,cat:"Completion",
+     desc:"Complete all side quests and tasks (excluding repeatable activities).",
+     how:"Complete every unique side quest and task across Trosky and Kuttenberg. Repeatable tasks like Pilgrimage and More Melee at the Mill do NOT count.",
+     tip:"⚠️ Several missable quests will lock you out permanently if skipped. Use the Missable Quests tab to track them. DLC quests do NOT count toward this trophy."},
+    {id:"g03",name:"Knight Errant",icon:"🥇",rarity:"gold",missable:false,cat:"Exploration",
+     desc:"Discover all locations on the map in both Trosky and Kuttenberg.",
+     how:"Visit every named location marker on both region maps. Locations include villages, camps, ruins, mills, and clearings.",
+     tip:"Mount up and systematically sweep each map edge-to-edge. Some locations are only revealed by talking to NPCs first. Mutt helps locate hidden camps."},
+    {id:"g04",name:"Polymath",icon:"🥇",rarity:"gold",missable:false,cat:"Skills",
+     desc:"Max out all of Henry's main skills.",
+     how:"Reach the maximum level in every skill category (Strength, Agility, Vitality, Speech, Stealth, Riding, Hunting, Sword, etc.).",
+     tip:"This takes significant grinding. Brawler fights (Melee at the Mill repeatable) build combat skills fast. Speech is levelled by any persuasion dialogue. Best done over multiple playthroughs or post-game."},
+
+    // ── SILVER ──
+    {id:"s01",name:"Henry the Bruiser",icon:"🥈",rarity:"silver",missable:false,cat:"Activities",
+     desc:"Win all four unique brawler fights in the Brawler questline (Trosky).",
+     how:"Complete Melee at the Mill, Wine Women and Blood, and The Best for Last. The four fights are: Lower Semine Mill, Zhelejov Wagoners' Inn (x2), and the final bout.",
+     tip:"Combat Training 1 and 2 first will make this noticeably easier. Don't neglect your Strength and Unarmed stats."},
+    {id:"s02",name:"Confessor",icon:"🥈",rarity:"silver",missable:false,cat:"Story — DLC1",
+     desc:"Complete the Brushes with Death DLC main questline.",
+     how:"Finish God Disposes and all subsequent quests in the DLC.",
+     tip:"Earned near the end of the DLC regardless of your ending choice in God Disposes."},
+    {id:"s03",name:"Martin's Legacy",icon:"🥈",rarity:"silver",missable:false,cat:"Story — DLC2",
+     desc:"Complete the Legacy of the Forge DLC main questline.",
+     how:"Finish The Last Step, the final quest of Legacy of the Forge.",
+     tip:"Your Prestige level affects the ending cutscene content. Do all guild commissions before finishing."},
+    {id:"s04",name:"Lord of the Manor",icon:"🥈",rarity:"silver",missable:false,cat:"Story",
+     desc:"Resolve the Semine estate questline in Trosky.",
+     how:"Complete all quests and tasks related to the Semine estate, including the Gules questline (Canker, Handsome Charlie, Johnny the Gob, Casper) if available.",
+     tip:"⚠️ The Gules questline (4 tasks) is BLOCKED if you chose the Hashek path in Necessary Evil and destroyed the Semine family. Plan ahead."},
+    {id:"s05",name:"Master of the Blacksmiths' Guild",icon:"🥈",rarity:"silver",missable:false,cat:"Story — DLC2",
+     desc:"Join and achieve full standing in the Blacksmiths' Guild.",
+     how:"Complete The Master's Game (guild entry trial) and reach maximum Prestige through commissions and guild work.",
+     tip:"Earned alongside or shortly after Martin's Legacy if you've kept up with guild commissions."},
+    {id:"s06",name:"The Perfect Knight",icon:"🥈",rarity:"silver",missable:true,cat:"Endings",
+     desc:"Achieve the best possible ending score.",
+     how:"Maximise your Honour score: complete all missable quests, protect Semine family, give Istvan a fair duel, make honourable choices throughout.",
+     tip:"⚠️ MISSABLE: This requires specific choices across the whole game. See the Endings Guide tab for the full checklist. Istvan's duel outcome is especially important."},
+    {id:"s07",name:"Racing the Leech",icon:"🥈",rarity:"silver",missable:false,cat:"Story — DLC2",
+     desc:"Complete Martin's Dream in the Legacy of the Forge DLC.",
+     how:"Finish the Martin's Dream quest within the DLC.",
+     tip:"Story-locked, cannot be missed if playing the DLC."},
+
+    // ── BRONZE — STORY ──
+    {id:"b01",name:"Back in the Saddle",icon:"🥉",rarity:"bronze",missable:false,cat:"Story",
+     desc:"Complete the Back in the Saddle main quest (Trosky).",
+     how:"Finish Back in the Saddle — this is one of the earliest main quests in Trosky.",
+     tip:"Cannot be missed."},
+    {id:"b02",name:"Necessary Evil",icon:"🥉",rarity:"bronze",missable:false,cat:"Story",
+     desc:"Complete the Necessary Evil main quest.",
+     how:"Finish Necessary Evil. This is the major branching point in Trosky — but the trophy is awarded regardless of which path you take.",
+     tip:"Cannot be missed — but your CHOICE here affects Lord of the Manor and The Perfect Knight."},
+    {id:"b03",name:"Into the Underworld",icon:"🥉",rarity:"bronze",missable:false,cat:"Story",
+     desc:"Complete the Into the Underworld main quest (Kuttenberg).",
+     how:"Finish Into the Underworld.",
+     tip:"Cannot be missed. ⚠️ Several highly missable tasks are ONLY available during this quest window — see the Missable Quests tab before advancing."},
+    {id:"b04",name:"Via Argentum",icon:"🥉",rarity:"bronze",missable:false,cat:"Story",
+     desc:"Complete Via Argentum.",
+     how:"Finish Via Argentum, the pivotal late-game main quest.",
+     tip:"Cannot be missed. Unlocks Post Scriptum and The Fifth Commandment side quests."},
+    {id:"b05",name:"Oratores",icon:"🥉",rarity:"bronze",missable:false,cat:"Story",
+     desc:"Complete the Oratores main quest.",
+     how:"Finish Oratores.",
+     tip:"Cannot be missed. Several Kuttenberg tasks must be completed before this — check the Missable Quests tab."},
+
+    // ── BRONZE — SIDE QUESTS ──
+    {id:"b06",name:"Man's Best Friend",icon:"🥉",rarity:"bronze",missable:false,cat:"Side Quests",
+     desc:"Get Mutt the dog as a companion.",
+     how:"Complete the Mutt side quest in Trosky.",
+     tip:"Do this as early as possible — Mutt is invaluable for stealth and exploration throughout the game."},
+    {id:"b07",name:"Under a Brown Flag",icon:"🥉",rarity:"bronze",missable:false,cat:"Side Quests",
+     desc:"Complete both Yackers 'n' Fash and Striped Tonies.",
+     how:"Complete both Kuttenberg criminal underworld side quests in sequence.",
+     tip:"Both must be finished. Yackers 'n' Fash leads directly into Striped Tonies."},
+    {id:"b08",name:"Remember, Remember…",icon:"🥉",rarity:"bronze",missable:false,cat:"Side Quests",
+     desc:"Complete The Spark side quest.",
+     how:"Finish The Spark in Kuttenberg — the pamphlet/faction political quest.",
+     tip:"Handle the religious faction balance carefully — the wrong choice can escalate unexpectedly."},
+    {id:"b09",name:"Poet's Gut",icon:"🥉",rarity:"bronze",missable:false,cat:"Story — DLC1",
+     desc:"Complete Source of Inspiration in the Brushes with Death DLC.",
+     how:"Finish Source of Inspiration — the second DLC main quest.",
+     tip:"Story-locked, cannot be missed if playing the DLC."},
+    {id:"b10",name:"Vengeance Solves Nothing",icon:"🥉",rarity:"bronze",missable:false,cat:"Story — DLC1",
+     desc:"Complete Portrait in Red in the Brushes with Death DLC.",
+     how:"Finish Portrait in Red.",
+     tip:"Story-locked."},
+    {id:"b11",name:"Curiosity Killed the Cat",icon:"🥉",rarity:"bronze",missable:false,cat:"Story — DLC1",
+     desc:"Complete Man Proposes in the Brushes with Death DLC.",
+     how:"Finish Man Proposes.",
+     tip:"Story-locked."},
+    {id:"b12",name:"Nothing But the Best",icon:"🥉",rarity:"bronze",missable:false,cat:"Story — DLC1",
+     desc:"Complete Root of Evil in the Brushes with Death DLC.",
+     how:"Finish Root of Evil.",
+     tip:"Story-locked."},
+    {id:"b13",name:"Painted",icon:"🥉",rarity:"bronze",missable:false,cat:"Story — DLC1",
+     desc:"Complete Stained Honour in the Brushes with Death DLC.",
+     how:"Finish Stained Honour.",
+     tip:"Story-locked."},
+
+    // ── BRONZE — DLC1 ENDINGS ──
+    {id:"b14",name:"All Fun and Games",icon:"🥉",rarity:"bronze",missable:false,cat:"Story — DLC1",
+     desc:"Earn one of the Brushes with Death DLC endings.",
+     how:"Complete Unveiling — unlocked by one of the final choices in God Disposes.",
+     tip:"All three DLC endings can be earned in a single playthrough using chapter select after finishing."},
+    {id:"b15",name:"Masterpiece",icon:"🥉",rarity:"bronze",missable:false,cat:"Story — DLC1",
+     desc:"Earn the second Brushes with Death DLC ending.",
+     how:"Complete Unveiling via the second ending path in God Disposes.",
+     tip:""},
+    {id:"b16",name:"Rest in One Piece",icon:"🥉",rarity:"bronze",missable:false,cat:"Story — DLC1",
+     desc:"Earn the third Brushes with Death DLC ending.",
+     how:"Complete Unveiling via the third ending path in God Disposes.",
+     tip:"All three DLC endings are needed for full completion. Use chapter select on God Disposes after your first completion."},
+
+    // ── BRONZE — ACTIVITIES & MISC ──
+    {id:"b17",name:"Home Sweet Home!",icon:"🥉",rarity:"bronze",missable:false,cat:"Story — DLC2",
+     desc:"Establish the forge as your base in Legacy of the Forge.",
+     how:"Complete Adept — the first quest of the DLC.",
+     tip:"Story-locked, cannot be missed."},
+    {id:"b18",name:"Riddler",icon:"🥉",rarity:"bronze",missable:false,cat:"Activities",
+     desc:"Answer all of Riddler Barley's riddles correctly.",
+     how:"Encounter Riddler Barley all four times during Kuttenberg fast travel and answer every riddle correctly.",
+     tip:"See the Riddler Barley tab for all answers. Choose skill buffs for riddles 1–2 and Groschen for riddles 3–4 for best value. He only appears in the Kuttenberg region."},
+    {id:"b19",name:"Sharp Shooter",icon:"🥉",rarity:"bronze",missable:false,cat:"Activities",
+     desc:"Win the Popinjay Shoot archery competition in Kuttenberg.",
+     how:"Complete the Popinjay Shoot task and win the competition.",
+     tip:"Archery skill helps significantly. Practise at shooting ranges before entering if your aim is poor."},
+    {id:"b20",name:"Champion of Kuttenberg",icon:"🥉",rarity:"bronze",missable:false,cat:"Activities",
+     desc:"Win the Kuttenberg Tournament.",
+     how:"Complete Ars Dimicatoria first, then win all bouts in the Kuttenberg Tournament side quest.",
+     tip:"Have your best weapons fully repaired. The tournament has multiple combat disciplines — sword, unarmed, and mounted. Prepare for all three."},
+    {id:"b21",name:"Legendary Hunter",icon:"🥉",rarity:"bronze",missable:false,cat:"Exploration",
+     desc:"Track and hunt the white roebuck.",
+     how:"Complete The White Roebuck task in the Kuttenberg region near Suchdol.",
+     tip:"Mutt is invaluable for tracking. Approach quietly and upwind."},
+    {id:"b22",name:"Absolved",icon:"🥉",rarity:"bronze",missable:false,cat:"Activities",
+     desc:"Complete a Pilgrimage.",
+     how:"Break the law, then speak to Father Nicodemus in Trosky and undertake a Pilgrimage.",
+     tip:"Easiest to trigger by picking a pocket or committing a minor crime early in Trosky. The Pilgrimage task is repeatable but only the first completion earns the trophy."},
+    {id:"b23",name:"Combat Veteran",icon:"🥉",rarity:"bronze",missable:false,cat:"Activities",
+     desc:"Complete both Combat Training quests.",
+     how:"Finish Combat Training 1 and Combat Training 2 at the Nomad's Camp in Trosky.",
+     tip:"Do these early — the skill bonuses make a meaningful difference throughout the game."},
+    {id:"b24",name:"Treasure Hunter",icon:"🥉",rarity:"bronze",missable:false,cat:"Exploration",
+     desc:"Find and dig up a buried treasure from a treasure map.",
+     how:"Obtain any treasure map and follow it to the buried chest.",
+     tip:"See the Notable Loot tab for all treasure map locations. The earliest map is Treasure Map I near Tachov in Trosky."},
+    {id:"b25",name:"Master Lockpick",icon:"🥉",rarity:"bronze",missable:false,cat:"Skills",
+     desc:"Successfully pick a Very Hard lock (difficulty 9).",
+     how:"Open any lock rated as Very Hard — for example, the Mine Supervisor's Office in Kuttenberg or Adam's Safe Room.",
+     tip:"Practise on Easy and Medium locks first. Lockpicking in KCD2 is skill-based — your Lockpicking stat determines the wobble speed. The Mine Supervisor's Office is the most accessible Very Hard lock with a purpose."},
+    {id:"b26",name:"Smooth Talker",icon:"🥉",rarity:"bronze",missable:false,cat:"Skills",
+     desc:"Pass a Speech check of difficulty 10 or higher.",
+     how:"Successfully persuade an NPC with a Speech 10+ dialogue option.",
+     tip:"Katherine's questline and several Kuttenberg political quests have high Speech checks. Level Speech by using persuasion options in every conversation."},
+    {id:"b27",name:"Ghost",icon:"🥉",rarity:"bronze",missable:false,cat:"Skills",
+     desc:"Complete a quest entirely in stealth without being detected.",
+     how:"Complete any stealth-optional quest (a heist, infiltration, or retrieval) without triggering detection.",
+     tip:"The Kuttenberg criminal underworld quests (Yackers 'n' Fash, Thieves' Code) offer clean stealth opportunities. Wear dark clothing, crouch constantly, and use Mutt as a distraction."},
+    {id:"b28",name:"Herbalist",icon:"🥉",rarity:"bronze",missable:false,cat:"Skills",
+     desc:"Brew 10 different potions.",
+     how:"Use an alchemist's bench to brew 10 distinct potion recipes.",
+     tip:"Recipes are sold by apothecaries and found in books. Brewing improves Henry's Alchemy skill. Basic recipes: Saviour Schnapps (saves your game), Digestive Potion, Witch Potion."},
+    {id:"b29",name:"Horse Whisperer",icon:"🥉",rarity:"bronze",missable:false,cat:"Skills",
+     desc:"Max out your horse's bond.",
+     how:"Ride, feed, and care for your horse consistently. Bond increases by riding, winning races, and keeping the horse healthy.",
+     tip:"Groom your horse regularly at stables. The bond metre fills faster when you ride for long distances rather than fast-travelling everywhere."},
+    {id:"b30",name:"Fashionista",icon:"🥉",rarity:"bronze",missable:false,cat:"Misc",
+     desc:"Acquire a full set of plate armour.",
+     how:"Equip a complete set of plate armour simultaneously — helmet, body, arms, legs, hands.",
+     tip:"Full plate is expensive. Tournament rewards and Legacy of the Forge crafting are good sources. Check armourers in Kuttenberg for the best stock."},
+    {id:"b31",name:"Richer Than God",icon:"🥉",rarity:"bronze",missable:false,cat:"Misc",
+     desc:"Accumulate 10,000 Groschen.",
+     how:"Have 10,000 Groschen in your purse at one time.",
+     tip:"Sell loot consistently, complete guild commissions in Legacy of the Forge, and avoid spending on fast travel if possible. Merchant selling prices improve with Speech."},
+    {id:"b32",name:"Surgeon",icon:"🥉",rarity:"bronze",missable:false,cat:"Skills",
+     desc:"Use a bandage to treat a wound while in combat.",
+     how:"During an active fight, open the inventory and apply a bandage to a wound status effect.",
+     tip:"Pause-menu bandaging counts. Having wounds debuffs your stats — treating them mid-combat is good practice regardless."},
+    {id:"b33",name:"Dog's Best Friend",icon:"🥉",rarity:"bronze",missable:false,cat:"Side Quests",
+     desc:"Complete all of Mutt's training challenges.",
+     how:"After getting Mutt in the Mutt side quest, complete all his training mini-objectives (sit, stay, search, attack commands).",
+     tip:"Training options appear in the command wheel after Mutt is acquired. Do them as soon as they unlock — each improves Mutt's usefulness in combat and stealth."},
+    {id:"b34",name:"Nomad's Welcome",icon:"🥉",rarity:"bronze",missable:false,cat:"Side Quests",
+     desc:"Gain full trust with the Nomad's Camp in Trosky.",
+     how:"Complete Miri Fajta and associated camp tasks to max out your standing with Aranka's people.",
+     tip:"The Nomad's Camp trust level unlocks unique items and services. Klára's romance arc is part of this."},
+    {id:"b35",name:"By the Book",icon:"🥉",rarity:"bronze",missable:false,cat:"Skills",
+     desc:"Read 20 books.",
+     how:"Open and fully read 20 different books or manuscripts from the world.",
+     tip:"Books are everywhere — bookshelves in noble houses, monasteries, and merchants. Reading improves Literacy which unlocks further reading speed. Illuminated Manuscripts from Sedletz count."},
+    {id:"b36",name:"Mine's Bigger",icon:"🥉",rarity:"bronze",missable:false,cat:"Misc",
+     desc:"Collect all weapons sketches in Legacy of the Forge.",
+     how:"Find and acquire all craftable weapon sketches in the DLC, including the rare camp-spawn ones.",
+     tip:"The Lingua Belli Longsword sketch is the rarest — it spawns in a random bandit camp chest. If it doesn't appear, try different camps. The Longsword of the Four Evangelists sketch comes from a mysterious vendor commission."},
+    {id:"b37",name:"Sinners of Kuttenberg",icon:"🥉",rarity:"bronze",missable:false,cat:"Story — DLC2",
+     desc:"Complete the Sinners of Kuttenberg questline within Legacy of the Forge.",
+     how:"Finish all quests in the Sinners of Kuttenberg sub-questline.",
+     tip:"Rewards the Lion's Roar Kilij — one of the best-looking sabres in the game."},
+
+    // ── MISSABLE-HEAVY ──
+    {id:"b38",name:"The Shepherd's Champion",icon:"🥉",rarity:"bronze",missable:false,cat:"Side Quests",
+     desc:"Complete all four Shepherd questline tasks.",
+     how:"Finish Sheep among Wolves, The Lost Sheep, Carrot on a Stick, and Hunting the Werewolf in sequence.",
+     tip:"All four tasks must be done. The questline is easy to overlook since it's spread across several named NPCs in different parts of Trosky."},
+    {id:"b39",name:"Honourable Duel",icon:"🥉",rarity:"silver",missable:true,cat:"Story",
+     desc:"Defeat Istvan Toth in honourable single combat.",
+     how:"When confronting Istvan, offer him a fair duel rather than attacking with allies or using tricks. Win the fight cleanly.",
+     tip:"⚠️ MISSABLE — and affects The Perfect Knight. Istvan is a hard fight. Prepare your best weapon, full health, and at least Sword level 15. If you kill him dishonourably, you lose Honour and cannot get the best ending."},
+    {id:"b40",name:"Confessor of Semine",icon:"🥉",rarity:"bronze",missable:true,cat:"Side Quests",
+     desc:"Complete A Sinful Soul.",
+     how:"Unlock A Sinful Soul by completing every optional step in The Hermit, then resolve the quest before Necessary Evil.",
+     tip:"⚠️ MISSABLE: Requires every optional step in The Hermit. Cannot be done after Necessary Evil locks out Trosky."},
+  ];
+
+  const state=JSON.parse(localStorage.getItem("kcd2_trophies")||"{}");
+  const rarityMeta={
+    platinum:{label:"Platinum",col:"#e8d0f8",bg:"rgba(180,100,255,0.15)",border:"rgba(180,100,255,0.35)",icon:"💎"},
+    gold:    {label:"Gold",   col:"#f8d860",bg:"rgba(220,180,20,0.15)", border:"rgba(220,180,20,0.35)", icon:"🥇"},
+    silver:  {label:"Silver", col:"#c8d8e8",bg:"rgba(160,200,230,0.15)",border:"rgba(160,200,230,0.3)", icon:"🥈"},
+    bronze:  {label:"Bronze", col:"#d09060",bg:"rgba(180,120,60,0.15)", border:"rgba(180,120,60,0.3)",  icon:"🥉"},
+  };
+
+  const cats=[
+    "Platinum","Story","Story — DLC1","Story — DLC2","Side Quests","Activities","Exploration","Skills","Misc","Completion","Endings",
+  ];
+
+  const done=TROPHIES.filter(t=>state[t.id]).length;
+  const total=TROPHIES.length;
+  const pct=Math.round(done/total*100);
+
+  // count by rarity
+  const rc={};
+  TROPHIES.forEach(t=>{rc[t.rarity]=(rc[t.rarity]||0)+1;});
+  const drc={};
+  TROPHIES.filter(t=>state[t.id]).forEach(t=>{drc[t.rarity]=(drc[t.rarity]||0)+1;});
+
+  let h=`<div style="margin-bottom:20px">
+    <div style="font-family:'Cinzel',serif;font-size:18px;color:var(--amber2);margin-bottom:4px">🏆 Trophies &amp; Achievements</div>
+    <div style="font-size:12px;font-family:monospace;color:var(--text3);line-height:1.7;margin-bottom:14px">Full checklist with unlock conditions and tips. Works for both PlayStation trophies and Steam achievements — all names match. Tick trophies as you earn them.</div>
+
+    <div style="background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius2);padding:14px;margin-bottom:14px">
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:10px">
+        <div style="flex:1">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px">
+            <span style="font-family:'Cinzel',serif;font-size:13px;color:var(--amber2)">Overall Progress</span>
+            <span style="font-family:monospace;font-size:12px;color:var(--amber2)">${done} / ${total} &nbsp;(${pct}%)</span>
+          </div>
+          <div style="height:6px;background:var(--bg4);border-radius:3px;overflow:hidden">
+            <div style="height:100%;width:${pct}%;background:linear-gradient(90deg,var(--amber),var(--amber2));border-radius:3px;transition:width .5s"></div>
+          </div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
+        ${["platinum","gold","silver","bronze"].map(r=>`<div style="background:${rarityMeta[r].bg};border:1px solid ${rarityMeta[r].border};border-radius:var(--radius);padding:8px;text-align:center">
+          <div style="font-size:16px">${rarityMeta[r].icon}</div>
+          <div style="font-family:'Cinzel',serif;font-size:14px;color:${rarityMeta[r].col}">${drc[r]||0}/${rc[r]||0}</div>
+          <div style="font-size:9px;font-family:monospace;color:var(--text3);text-transform:uppercase;margin-top:1px">${rarityMeta[r].label}</div>
+        </div>`).join("")}
+      </div>
+    </div>
+
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:4px" id="trophy-filters">
+      <button onclick="filterTrophies('')" id="tf-all" style="font-size:10px;font-family:monospace;padding:4px 10px;border-radius:4px;border:1px solid var(--amber);background:var(--amber);color:var(--bg);cursor:pointer">All</button>
+      <button onclick="filterTrophies('missable')" id="tf-miss" style="font-size:10px;font-family:monospace;padding:4px 10px;border-radius:4px;border:1px solid rgba(168,56,48,0.5);background:rgba(168,56,48,0.15);color:var(--red2);cursor:pointer">⚠ Missable</button>
+      <button onclick="filterTrophies('undone')" id="tf-undone" style="font-size:10px;font-family:monospace;padding:4px 10px;border-radius:4px;border:1px solid rgba(82,184,114,0.4);background:rgba(82,184,114,0.1);color:var(--green2);cursor:pointer">Not Yet Earned</button>
+      ${["platinum","gold","silver","bronze"].map(r=>`<button onclick="filterTrophies('${r}')" id="tf-${r}" style="font-size:10px;font-family:monospace;padding:4px 10px;border-radius:4px;border:1px solid ${rarityMeta[r].border};background:${rarityMeta[r].bg};color:${rarityMeta[r].col};cursor:pointer">${rarityMeta[r].icon} ${rarityMeta[r].label}</button>`).join("")}
+    </div>
+  </div>
+  <div id="trophy-list-wrap"></div>`;
+
+  document.getElementById("trophies-content").innerHTML=h;
+
+  window._trophyFilter="";
+  window._trophyState=state;
+  window._TROPHIES=TROPHIES;
+  window._rarityMeta=rarityMeta;
+  window._cats=cats;
+  renderTrophyList();
+}
+
+function filterTrophies(f){
+  window._trophyFilter=f;
+  renderTrophyList();
+}
+
+function toggleTrophy(id,val){
+  const state=JSON.parse(localStorage.getItem("kcd2_trophies")||"{}");
+  state[id]=val;
+  localStorage.setItem("kcd2_trophies",JSON.stringify(state));
+  window._trophyState=state;
+  renderTrophyList();
+  // recount header stats
+  const done=window._TROPHIES.filter(t=>state[t.id]).length;
+  const total=window._TROPHIES.length;
+  const pct=Math.round(done/total*100);
+  const bar=document.querySelector("#trophies-content .progress-fill, #trophies-content [style*='width:"+Math.round((done-1)/total*100)+"'");
+  // simpler: just re-render the whole tab
+  renderTrophies();
+  window._trophyFilter=window._trophyFilter||"";
+  renderTrophyList();
+}
+
+function renderTrophyList(){
+  const TROPHIES=window._TROPHIES;
+  const state=window._trophyState||JSON.parse(localStorage.getItem("kcd2_trophies")||"{}");
+  const rarityMeta=window._rarityMeta;
+  const cats=window._cats;
+  const f=window._trophyFilter||"";
+
+  let filtered=TROPHIES;
+  if(f==="missable") filtered=TROPHIES.filter(t=>t.missable);
+  else if(f==="undone") filtered=TROPHIES.filter(t=>!state[t.id]);
+  else if(["platinum","gold","silver","bronze"].includes(f)) filtered=TROPHIES.filter(t=>t.rarity===f);
+
+  let h="";
+  // group by cat
+  cats.forEach(cat=>{
+    const items=filtered.filter(t=>t.cat===cat);
+    if(!items.length) return;
+    const catDone=items.filter(t=>state[t.id]).length;
+    h+=`<div style="margin-bottom:4px;padding:6px 10px;background:var(--bg3);border-radius:var(--radius);display:flex;align-items:center;gap:8px;margin-top:14px">
+      <span style="font-size:10px;font-family:monospace;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--amber2)">${cat}</span>
+      <span style="font-size:10px;font-family:monospace;color:var(--text3);margin-left:auto">${catDone}/${items.length}</span>
+    </div>`;
+    items.forEach(trophy=>{
+      const isDone=state[trophy.id]||false;
+      const rm=rarityMeta[trophy.rarity];
+      h+=`<div style="background:var(--bg2);border:1px solid ${isDone?"rgba(82,184,114,0.3)":rm.border};border-radius:var(--radius2);padding:12px 14px;margin-bottom:7px;opacity:${isDone?0.55:1};transition:opacity .2s">
+        <div style="display:flex;align-items:flex-start;gap:11px">
+          <div style="font-size:22px;width:38px;height:38px;flex-shrink:0;background:${rm.bg};border-radius:8px;display:flex;align-items:center;justify-content:center;border:1px solid ${rm.border}">${trophy.icon}</div>
+          <div style="flex:1;min-width:0">
+            <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:4px">
+              <span style="font-family:'Cinzel',serif;font-size:13px;color:${isDone?"var(--text3)":rm.col};${isDone?"text-decoration:line-through":""}">${trophy.name}</span>
+              <span style="font-size:9px;font-family:monospace;padding:1px 5px;border-radius:3px;background:${rm.bg};color:${rm.col};border:1px solid ${rm.border};font-weight:700">${rm.icon} ${rm.label}</span>
+              ${trophy.missable?`<span style="font-size:9px;font-family:monospace;padding:1px 5px;border-radius:3px;background:rgba(168,56,48,0.2);color:var(--red2);border:1px solid rgba(168,56,48,0.35);font-weight:700">⚠ missable</span>`:""}
+            </div>
+            <div style="font-size:12px;font-family:monospace;color:var(--text2);line-height:1.55;margin-bottom:6px">${trophy.desc}</div>
+            <div style="font-size:11px;font-family:monospace;color:var(--text3);line-height:1.55;margin-bottom:${trophy.tip?"6px":"0"}"><b style="color:var(--text2)">How:</b> ${trophy.how}</div>
+            ${trophy.tip?`<div style="font-size:11px;font-family:monospace;color:${trophy.missable?"var(--red2)":"var(--amber2)"};line-height:1.55;padding:5px 8px;background:${trophy.missable?"rgba(168,56,48,0.1)":"var(--bg3)"};border-radius:var(--radius);border-left:2px solid ${trophy.missable?"var(--red)":"var(--amber)"}">💡 ${trophy.tip}</div>`:""}
+          </div>
+          <label style="cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;flex-shrink:0;padding-top:2px">
+            <input type="checkbox" ${isDone?"checked":""} onchange="toggleTrophy('${trophy.id}',this.checked)" style="width:16px;height:16px;cursor:pointer;accent-color:var(--amber)">
+            <span style="font-size:9px;font-family:monospace;color:var(--text3)">${isDone?"Earned":"Track"}</span>
+          </label>
+        </div>
+      </div>`;
+    });
+  });
+  if(!h) h=`<div style="padding:30px;text-align:center;font-family:monospace;font-size:12px;color:var(--text3)">No trophies match this filter.</div>`;
+  document.getElementById("trophy-list-wrap").innerHTML=h;
 }
 
 renderList();renderDetail();updateStats();
