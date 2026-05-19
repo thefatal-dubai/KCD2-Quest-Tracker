@@ -137,6 +137,7 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--bg);color:var(--t
   <button class="tab" id="tb-loot" onclick="setTab('loot')">💰 Notable Loot</button>
   <button class="tab" id="tb-romance" onclick="setTab('romance')">💕 Romance</button>
   <button class="tab" id="tb-trophies" onclick="setTab('trophies')">🏆 Trophies</button>
+  <button class="tab" id="tb-shepherds" onclick="setTab('shepherds')">🐑 Shepherd Questline</button>
 </div>
 <div class="main" id="app-main">
   <div id="page-tracker" style="display:flex;flex:1;overflow:hidden">
@@ -182,6 +183,7 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--bg);color:var(--t
   <div id="page-loot" style="display:none;flex:1;overflow-y:auto"><div style="padding:20px;max-width:800px;margin:0 auto" id="loot-content"></div></div>
   <div id="page-romance" style="display:none;flex:1;overflow-y:auto"><div style="padding:20px;max-width:800px;margin:0 auto" id="romance-content"></div></div>
   <div id="page-trophies" style="display:none;flex:1;overflow-y:auto"><div style="padding:20px;max-width:860px;margin:0 auto" id="trophies-content"></div></div>
+  <div id="page-shepherds" style="display:none;flex:1;overflow-y:auto"><div style="padding:20px;max-width:760px;margin:0 auto" id="shepherds-content"></div></div>
 </div>
 
 <script>
@@ -316,9 +318,9 @@ const Q=[
 {id:"sq04",r:"Trosky",tp:"Side Quest",o:4,name:"Materia Prima",m:false,hm:false,t:false,b:false,l:false,
  desc:"Begin the Miller's questline at Lower Semine Mill. The miller has an unusual and philosophical hobby.",
  tip:"Part 1 of 3 in the Miller questline. Do them in order.",status:0,notes:""},
-{id:"sq05",r:"Trosky",tp:"Side Quest",o:5,name:"Forbidden Fruit",m:false,hm:false,t:false,b:false,l:false,
- desc:"The miller's alchemical experiments take a risky turn. Part 2 of the Miller questline.",
- tip:"",status:0,notes:""},
+{id:"sq05",r:"Trosky",tp:"Side Quest",o:5,name:"Forbidden Fruit",m:false,hm:false,t:false,b:true,l:false,
+ desc:"Miller Kreyzl needs saltpetre for his alchemy. Part 2 of the Miller questline (Kreyzl path only). Bonnie directs Henry to Gravedigger Ignatius east of Troskowitz — his carcass burial pits are rich in saltpetre. Two branches: (A) Help Ignatius on his rounds — accompany him on his wagon at daybreak (5am), help him find a rotting deer carcass, investigate poisoned animal deaths at a farm (the river upstream is the source), bag and load two dead pigs, and deal with a greengrocer's dog. After completing all tasks Ignatius takes Henry to the pit. Reward: Knacker's Gloves + pit location. Required for the Boneworks trophy. (B) Skip Ignatius and find the pit yourself — the saltpetre pit is directly east of the graveyard, past the sheep pen next to the road. No need to do any of Ignatius's tasks. You miss the Knacker's Gloves but complete the quest faster.",
+ tip:"The Ignatius route (A) is worth doing for the Boneworks trophy (requires this + Thou art but dust…). Tell Ignatius the truth when he asks why you need the pit — it gives reputation. Bring fresh meat as a gift (optional — doesn't skip his tasks but gives rep). Wait until 5am to meet him or he'll refuse to start. The dog task has a surprise: follow the barking to find it with Bonnie, then tell her the truth — she'll take the dog away and you can lie to Ignatius that it's done.",status:0,notes:""},
 {id:"sq06",r:"Trosky",tp:"Side Quest",o:6,name:"Opus Magnum",m:false,hm:false,t:false,b:false,l:false,
  desc:"The conclusion of the Miller's questline. The results of his experiments are finally revealed.",
  tip:"Best rewards in this questline come from following all optional steps in parts 1 and 2.",status:0,notes:""},
@@ -394,14 +396,14 @@ const Q=[
  desc:"Part of Vostatek's questline. Henry accompanies Vostatek to confront the poachers who wronged him. The outcome depends on whether you kept Vostatek sober in Lackey — see that quest's branch for full details.",
  tip:"Do Lackey first and keep Vostatek sober for the full confession ending.",status:0,notes:""},
 {id:"t13",r:"Trosky",tp:"Task",o:13,name:"Sheep among Wolves",m:false,hm:false,t:false,b:false,l:false,
- desc:"Help Siegfried north of Tachov with a wolf problem. Part of the Shepherd questline.",
- tip:"Return to Siegfried after completing the Mutt side quest.",status:0,notes:""},
+ desc:"Chain: Mutt → Sheep among Wolves → The Lost Sheep → Carrot on a Stick → Hunting the Werewolf. Triggered by Innkeeper Betty in Troskowitz 72 hours after completing Mutt. She mentions Herdsboy Siegfried has wolf trouble — go see him north of Tachov. Siegfried asks Henry to track down the wolf pack killing his sheep. Follow blood trail west into the woods, find the pack and kill them, bring back two wolf ears as proof. Siegfried rewards Henry with a special die and points him toward Smoliek and Stanislav for more shepherd work.",
+ tip:"Must complete Mutt first, then wait 3 in-game days before Betty has the tip. Mutt is invaluable here — he alerts you to the wolves before you see them. Earns Shepherd's Champion trophy only if you complete all four tasks through Hunting the Werewolf.",status:0,notes:""},
 {id:"t14",r:"Trosky",tp:"Task",o:14,name:"The Lost Sheep",m:false,hm:false,t:false,b:false,l:false,
- desc:"Shepherd questline continues. Find Shepherd Smoliek's missing flock east-northeast of the Zhelejov Wagoners' Inn.",
- tip:"",status:0,notes:""},
+ desc:"Chain quest 2 of 4. Shepherd Smoliek, southwest of Tachov (met during Mutt), has lost a sheep to wolves and needs its branded ear as proof it wasn't sold. Head into the woods west of Smoliek — find the dead sheep in the centre of the search area surrounded by wolves. Loot the ear directly from the dead sheep (no butchering needed). Return to Smoliek. He rewards Henry with cheap wine, Weak Marigold decoction, bandages, dried apple, cooked carrot, and the Die of Misfortune.",
+ tip:"The wolves around the sheep can be avoided — just rush in and loot the ear if your combat level is low. Keep the Cooked Carrot reward; you'll need it for Carrot on a Stick.",status:0,notes:""},
 {id:"t15",r:"Trosky",tp:"Task",o:15,name:"Carrot on a Stick",m:false,hm:false,t:false,b:false,l:false,
- desc:"Shepherd questline. Speak to Shepherd Stanislav south of Apollonia.",
- tip:"",status:0,notes:""},
+ desc:"Chain quest 3 of 4. Shepherd Stanislav near Apollonia fast travel point bought a new ram that ran off into the wolf-filled forest. Find the ram in the woods east of Stanislav — it's alone on a meadow. To get it to follow you back, you need a Carrot in your inventory (the Cooked Carrot from The Lost Sheep works). Walk it back to the pen at Stanislav's farm. Stanislav rewards Henry with coin, supplies, and the Lucky Die. If all three previous shepherd tasks are done, Stanislav marks the final task: Hunting the Werewolf.",
+ tip:"The sheep follows you automatically if you have any carrot in inventory — don't eat them before this quest. Once the ram starts following, walk slowly back; it keeps pace but can get stuck on terrain.",status:0,notes:""},
 {id:"t16",r:"Trosky",tp:"Task",o:16,name:"Hunting the Werewolf",m:false,hm:false,t:false,b:true,l:false,
  desc:"Final task in the Shepherd questline. Herdsboy Natan near Semine reports a werewolf killing sheep at night. The 'werewolf' is actually Bedřich — a local man with a severe skin condition who has been living wild in the forest, too ashamed to return to the village. Two branches: (A) Expose the truth gently — speak to Bedřich alone first, gain his trust, then bring him back to Natan and the village. Bedřich is treated with sympathy, the 'werewolf' story ends, and he is reintegrated. Village rep improves. (B) Kill the 'werewolf' — Bedřich dies, the village is relieved, Natan is grateful. Honour penalty. A third path: tell Natan the truth without speaking to Bedřich first — Natan and a mob go to confront Bedřich, who panics and must be talked down or defended.",
  tip:"Speak to Bedřich first before telling anyone. He's found in a hollow near the stream north of Natan's flock at night. His camp has signs of a man living rough, not a monster. Path (A) is the most satisfying and earns the Shepherd's Champion trophy.",status:0,notes:""},
@@ -651,10 +653,45 @@ const Q=[
  desc:"The final quest of Legacy of the Forge. The guild's future is decided.",
  tip:"Earns the Martin's Legacy silver trophy.",status:0,notes:""},
 
-// ── DLC3 — MYSTERIA ECCLESIAE (leave space — DLC not fully released at cutoff) ──
-{id:"dlc3_1",r:"DLC3",tp:"Main Quest",o:1,name:"Mysteria Ecclesiae",m:false,hm:false,t:false,b:false,l:false,
- desc:"The Mysteria Ecclesiae DLC. Details pending full release.",
- tip:"Check for DLC updates — this content may have expanded since this tracker was built.",status:0,notes:""},
+// ── DLC3 — MYSTERIA ECCLESIAE (11 quests: 6 side quests + 5 tasks) ────────────
+// ⚠ WARNING: Once you enter Sedletz Monastery you are LOCKED IN until the DLC ends.
+// Bring: Torch, 10x Saviour Schnapps, high-Charisma outfit (25+), Lockpicks, Bandages, Merigold Decoctions.
+// All 11 quests are classified as Side Quests / Tasks in journal (not Main Quests).
+// Side Tasks are time-sensitive and disappear if you advance the story too far — explore thoroughly.
+// Do NOT commit serious crimes inside the monastery before lockdown or you will be expelled and the DLC fails.
+{id:"dlc3_1",r:"DLC3",tp:"Side Quest",o:1,name:"The Royal Physician",m:false,hm:false,t:false,b:false,l:false,
+ desc:"The Mysteria Ecclesiae DLC begins. In Suchdol, Henry meets Petr of Pisek, who asks him to accompany the renowned healer Albich of Uniczow (physician to King Wenceslas himself) on a visit to Sedletz Monastery. What starts as a routine escort becomes something far darker. Henry and Albich arrive at the monastery to find it gripped by a mysterious illness — and immediately suspect foul play. This quest takes you from Suchdol to Sedletz; all remaining quests take place entirely within the monastery grounds.",
+ tip:"Startable after reaching Kuttenberg (main quest 13: The Sword and the Quill, second day). Recommended to finish the main game first for full story context. Speak to Petr of Pisek — look for the purple shield icon on the map in Suchdol. Stock up on supplies before entering; once you step inside Sedletz Monastery you cannot leave until the DLC concludes.",status:0,notes:""},
+{id:"dlc3_2",r:"DLC3",tp:"Side Quest",o:2,name:"Anamnesis",m:false,hm:false,t:false,b:false,l:false,
+ desc:"The DLC's second main quest, beginning immediately after The Royal Physician. Albich tasks Henry with investigating the connection between the sick monks — taking an anamnesis (medical history) from each patient in the infirmary. The investigation gradually reveals the outbreak is not natural. During this quest, the monastery enters lockdown. Henry also gains access to the library, meets the cat, and — at the end — must open a locked door to find Brother Vojtiech, a monk with a very unusual way of coping with the horrors around him.",
+ tip:"🏆 SURVIVOR TROPHY: Behind the locked door at the end of this quest is Brother Vojtiech. During his dialogue, keep choosing 'Tell me another joke' until he runs out of jokes — all must be heard in a single conversation. Do not skip his dialogue. Also: interact with the library cat during the 'Speak with Librarian Crispin' objective (first of three interactions needed for the Feline Affection trophy).",status:0,notes:""},
+{id:"dlc3_3",r:"DLC3",tp:"Task",o:3,name:"Maddening Pain",m:true,hm:false,t:false,b:false,l:false,
+ desc:"A missable task that opens immediately after you first speak to Albich in the infirmary during Anamnesis. A young woman named Maddie is waiting just outside the infirmary entrance — she has severe stomach pain and is frightened to go inside. If you speak to her, she asks for help. Return to Albich and ask him 'How can I help Maddie?' to receive the Anti-Inflammatory Potion recipe. Brew it and give it to her. Do NOT try to diagnose her yourself or choose wrong dialogue — the quest fails if you don't get the recipe from Albich.",
+ tip:"🔴 MISSABLE: You must speak to Maddie outside the infirmary immediately after talking to Albich for the first time. If you advance too far in Anamnesis without doing this, she disappears and the quest is gone. Also counts toward the Do Good to All People trophy (help 3 people in the monastery). Interact with the library cat a second time during this task window — needed for Feline Affection.",status:0,notes:""},
+{id:"dlc3_4",r:"DLC3",tp:"Task",o:4,name:"Prevention",m:true,hm:false,t:false,b:false,l:false,
+ desc:"Available right after completing Anamnesis, before advancing to Silent Witnesses. Henry learns of the risk of contagion from the crypt and must craft a plague mask to protect himself. The mask requires leather (cow, pig, or deer skin — check your inventory first), mint or sage (found in the garden next to the infirmary), and an oil recipe obtained from the librarian. Craft the mask using the monastery's equipment and equip it before entering the crypt.",
+ tip:"🔴 MISSABLE: Must be completed before you descend into the crypt during Silent Witnesses. If you skip it and go straight to Silent Witnesses, this task disappears and its trophy is gone. 🏆 BETTER SAFE THAN SORRY TROPHY: Awarded automatically on completion. Wearing the plague mask also prevents a debuff that can persist for the rest of the DLC.",status:0,notes:""},
+{id:"dlc3_5",r:"DLC3",tp:"Task",o:5,name:"Our Old Bread",m:true,hm:false,t:false,b:false,l:false,
+ desc:"A missable task begun by talking to Zacharias and then Denes in the infirmary after Anamnesis. Denes is an elderly, nearly blind monk who has lost his glasses (taken by a bird) and is pining for a book about crayfish. Henry must retrieve both: find Denes's glasses and other stolen items by throwing a rock at a bird's nest in the garden, then locate the book 'Crayfish, the Poor Man's Salmon' in the library. After reading it, catch 8 crayfish from ponds in the monastery grounds and return everything to Denes.",
+ tip:"🔴 MISSABLE: Talk to Zacharias then Denes in the infirmary as soon as you regain control after Anamnesis. Complete ALL objectives including the optional ones (returning the glasses and other nest items). 🏆 OSTRACONOPHOBIA TROPHY: Apply Bane Potion to some honey, eat it, then quickly pick up a crayfish — the crayfish bites cause death. Make a manual save before attempting this. 🏆 DO GOOD TO ALL PEOPLE TROPHY: Completing Our Old Bread (plus Maddening Pain and the Monk Vincent interaction) unlocks this.",status:0,notes:""},
+{id:"dlc3_6",r:"DLC3",tp:"Task",o:6,name:"Foreseeing Evil",m:true,hm:false,t:false,b:false,l:false,
+ desc:"A missable task triggered in the library. Speak to Librarian Crispin and deliberately choose the non-skill-check dialogue option, or attempt his skill checks and fail them. Crispin, cryptic and guarded, hints at something deeply wrong — a prophecy, a secret kept in the library's restricted section. The task sends Henry into the monastery's hidden corners to uncover what Crispin dare not say openly.",
+ tip:"🔴 MISSABLE: When speaking to Librarian Crispin, choose the non-skill-check option (or deliberately fail the skill checks) to trigger this task. If you pass all of Crispin's skill checks, the task does not appear. Also: interact with the library cat here if you haven't already — second interaction toward Feline Affection.",status:0,notes:""},
+{id:"dlc3_7",r:"DLC3",tp:"Task",o:7,name:"The Last Wish",m:true,hm:false,t:false,b:false,l:false,
+ desc:"A missable task involving a dying monk's final request. One of the monastery's most seriously ill patients has a last wish Henry can fulfill. The task is compassionate and brief but disappears if you advance the story without speaking to the right monk at the right time.",
+ tip:"🔴 MISSABLE: Available during a specific window in the mid-DLC. Explore the infirmary thoroughly and speak to all bedridden monks before advancing. This quest can easily be missed by rushing toward Silent Witnesses.",status:0,notes:""},
+{id:"dlc3_8",r:"DLC3",tp:"Side Quest",o:8,name:"Silent Witnesses",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Henry descends into Sedletz Monastery's ancient crypt — a real subterranean ossuary decorated with thousands of bones — to examine the bodies of those who died earliest in the outbreak. The crypt is sealed behind a locked door and contains both physical evidence and a deeply unsettling atmosphere. Examining the corpses carefully reveals clues about the true nature of the plague and who may be responsible. One corpse in particular has something in its hair that Henry can interact with in a memorable (if disgusting) way.",
+ tip:"🏆 STOP LICKING THAT! TROPHY: While examining the corpses, find the dead man with flour in his hair and choose the option to taste it. 🏆 BETTER SAFE THAN SORRY: Equip your plague mask (from the Prevention task) before going down — it prevents a debuff. Entering the crypt locks out the Prevention and The Last Wish tasks if not yet completed.",status:0,notes:""},
+{id:"dlc3_9",r:"DLC3",tp:"Side Quest",o:9,name:"Seek and you Shall Find",m:false,hm:false,t:false,b:false,l:false,
+ desc:"A legend has long circulated in Sedletz Monastery: Knight Boleslav Bavor was buried with a holy relic somewhere on the grounds. The Abbot, the mercenaries, and various monks all want it for different reasons. Henry must search the monastery's secret rooms and crypt passages to find where Boleslav is actually buried — and the relic with him. Interact with the library cat during this quest for the third and final time.",
+ tip:"🏆 HOLY RELIC TROPHY (Silver): Find Boleslav's relic during this quest — it cannot be missed if you complete the quest. 🏆 FELINE AFFECTION TROPHY: Third and final cat interaction is triggered during the objective 'Find out how to forge documents' in The Time Has Come — but also interacting with the cat during this quest (Seek and you Shall Find) may count depending on your earlier interactions. Track carefully. What you do with the relic (give to Abbot vs. keep) affects an optional dialogue in The Time Has Come but not the ending.",status:0,notes:""},
+{id:"dlc3_10",r:"DLC3",tp:"Side Quest",o:10,name:"To Dust you Shan't Return",m:false,hm:false,t:false,b:false,l:false,
+ desc:"The investigation reaches its grim conclusion as Henry and Albich piece together the full truth of the outbreak — its cause, its orchestrator, and the political conspiracy behind it (a plot against King Wenceslas himself). The quest involves examining the final evidence, confronting the truth about who has been poisoning the monastery, and preparing for a direct confrontation. Albich himself is now in danger.",
+ tip:"🏆 STOP LICKING THAT! TROPHY: If you haven't already triggered this in Silent Witnesses, there is another opportunity here to taste flour from a corpse's hair. Do it during this quest if missed earlier.",status:0,notes:""},
+{id:"dlc3_11",r:"DLC3",tp:"Side Quest",o:11,name:"The Time has Come",m:false,hm:false,t:false,b:false,l:false,
+ desc:"The DLC's climactic and final quest. Albich has been poisoned by Zacharias — the monastery's true villain, whose jealousy of Albich's success and obsession with poisons drove the entire conspiracy. Henry must retrieve King Wenceslas's stolen medical records, navigate the monastery's final locked areas, and ultimately duel Zacharias in the crypt tunnels. Zacharias is unarmored but resilient — prepare for a tough fight. After defeating him, giving him a Painkiller Brew and asking all available questions triggers a full confession: he admits his obsession, his envy, and his crimes. He dies urging Henry to live better than he did. Henry can then choose to pray for his soul or condemn his sins. Loot the antidote from his body to save Albich. Exit through the western gate to end the DLC.",
+ tip:"🏆 FRESH AIR TROPHY (Silver): Awarded automatically on completing the DLC. 🏆 QUIET AS A CHURCH MOUSE TROPHY (Silver): Awarded if you completed the entire DLC without ever being caught and escorted to the infirmary by the monastery guards. Getting caught once does NOT permanently disqualify you — community reports vary, but keep manual saves to be safe. 🏆 FELINE AFFECTION TROPHY: Third cat interaction is during the 'Find out how to forge documents' objective in this quest — do not miss it. 🏆 BENEFACTOR TROPHY: Awarded for completing Maddening Pain and Our Old Bread AND completing the Monk Vincent interaction before descending into the crypt.",status:0,notes:""},
 
 // ── DLC4 — HORSE RACES (3) ────────────────────────
 {id:"dlc4_1",r:"DLC4",tp:"Main Quest",o:1,name:"Horses for Courses",m:false,hm:false,t:false,b:false,l:false,
@@ -685,6 +722,16 @@ const BRANCHES={
   {id:"oc",x:393,y:200,w:180,h:52,type:"out-neutral",label:"Stealth only — no gear\nHard without lockpicks\nRock distraction past guards"},
   {id:"tip",x:5,y:285,w:570,h:36,type:"decision",label:"All paths: brew Fever Tonic in Crone Tower (Feverfew x3, Ginger x2, Elderberry) → give to Thomas"},
  ],edges:[["d","a"],["d","b"],["d","c"],["a","oa"],["b","ob"],["c","oc"]]},
+
+// ── FORBIDDEN FRUIT — GRAVEDIGGER OR SHORTCUT ───────────────────
+"sq05":{title:"Forbidden Fruit — Help Ignatius or Skip to the Pit?",w:560,h:320,
+ nodes:[
+  {id:"d",x:195,y:10,w:170,h:44,type:"decision",label:"Need saltpetre pit:\nIgnatius knows where it is"},
+  {id:"g",x:5,y:100,w:200,h:44,type:"good",label:"Help Ignatius on his rounds\n(5am start, full day's work)"},
+  {id:"b",x:330,y:100,w:210,h:44,type:"neutral",label:"Skip Ignatius — find pit\nyourself (east of graveyard)"},
+  {id:"og",x:0,y:195,w:210,h:72,type:"out-good",label:"Ignatius shows you the pit ✓\nKnacker's Gloves reward\nBoneworks trophy unlocked\n(also needs Thou art but dust…)"},
+  {id:"ob",x:320,y:195,w:225,h:72,type:"out-neutral",label:"Pit found faster ✓\nNo Knacker's Gloves\nBoneworks trophy BLOCKED\nMiss Ignatius storyline"},
+ ],edges:[["d","g"],["d","b"],["g","og"],["b","ob"]]},
 
 // ── BAD BLOOD — JAKESH ENDING ───────────────────────────────────
 "sq16":{title:"Bad Blood — Final Choice: Jakesh's Fate",w:560,h:380,
@@ -1213,7 +1260,7 @@ function save(){const d={};Q.forEach(q=>d[q.id]={s:q.status,n:q.notes});try{loca
 
 function setTab(t){
   currentTab=t;
-  ["tracker","decisions","endings","riddler","npcs","forge","missable","loot","romance","trophies"].forEach(id=>{
+  ["tracker","decisions","endings","riddler","npcs","forge","missable","loot","romance","trophies","shepherds"].forEach(id=>{
     document.getElementById("page-"+id).style.display=id===t?(id==="tracker"?"flex":"block"):"none";
     document.getElementById("tb-"+id).className="tab"+(t===id?" on":"");
   });
@@ -1226,6 +1273,7 @@ function setTab(t){
   if(t==="loot")renderLoot();
   if(t==="romance")renderRomance();
   if(t==="trophies")renderTrophies();
+  if(t==="shepherds")renderShepherds();
 }
 
 // ═══════════════════════════════════════════════════
@@ -1565,21 +1613,78 @@ function nodeStyle(t){
   return({decision:{fill:"#141e38",stroke:"#3060a0",text:"#88aade"},good:{fill:"#0f2a1a",stroke:"#3a8a58",text:"#52b872"},bad:{fill:"#2a0f0f",stroke:"#a83830",text:"#d05848"},neutral:{fill:"#221a08",stroke:"#c8861a",text:"#e8a83c"},"out-good":{fill:"#081a10",stroke:"#3a8a58",text:"#3a8a58"},"out-bad":{fill:"#1a0808",stroke:"#a83830",text:"#a83830"},"out-neutral":{fill:"#1a1408",stroke:"#c8861a",text:"#c8861a"}})[t]||{fill:"#141e38",stroke:"#3060a0",text:"#88aade"};
 }
 function buildBranch(bd){
-  const{nodes,edges,title,w,h}=bd;
+  const{nodes,edges,title}=bd;
+  const PAD_X=14,PAD_Y=10,LINE_H=16,MIN_W=80,MIN_H=36,GAP_X=10;
+
+  // Step 1: compute required size from text
+  const sized=nodes.map(n=>{
+    if(n.w===0&&n.h===0)return{...n,_w:0,_h:0};
+    const lines=n.label.split("\n");
+    const maxLineW=Math.max(...lines.map(l=>l.length*6.6));
+    const _w=Math.max(MIN_W,maxLineW+PAD_X*2);
+    const _h=Math.max(MIN_H,lines.length*LINE_H+PAD_Y*2);
+    return{...n,_w,_h};
+  });
+
+  // Step 2: place nodes — centre on original centre-x, keep original y
+  const placed=sized.map(n=>({...n,rx:n.x+(n.w||0)/2-n._w/2,ry:n.y}));
+
+  // Step 3: fix horizontal overlaps row by row.
+  // Group nodes that share the same original y (within 10px tolerance).
+  const ROW_TOL=10;
+  const rows=[];
+  placed.forEach(n=>{
+    if(n._w===0)return;
+    const row=rows.find(r=>Math.abs(r.y-n.y)<ROW_TOL);
+    if(row)row.nodes.push(n);
+    else rows.push({y:n.y,nodes:[n]});
+  });
+
+  // For each row, sort left-to-right, then push nodes right if they overlap.
+  rows.forEach(row=>{
+    row.nodes.sort((a,b)=>a.rx-b.rx);
+    for(let i=1;i<row.nodes.length;i++){
+      const prev=row.nodes[i-1],cur=row.nodes[i];
+      const minX=prev.rx+prev._w+GAP_X;
+      if(cur.rx<minX)cur.rx=minX;
+    }
+    // Re-centre the whole row around its original collective centre
+    const origCentres=row.nodes.map(n=>n.x+(n.w||0)/2);
+    const origMid=(Math.min(...origCentres)+Math.max(...origCentres))/2;
+    const newLeft=row.nodes[0].rx;
+    const newRight=row.nodes[row.nodes.length-1].rx+row.nodes[row.nodes.length-1]._w;
+    const newMid=(newLeft+newRight)/2;
+    const shift=origMid-newMid;
+    row.nodes.forEach(n=>n.rx+=shift);
+  });
+
+  const laidById=Object.fromEntries(placed.map(n=>[n.id,n]));
+
+  // Step 4: viewBox bounds
+  let minX=Infinity,minY=Infinity,maxX=-Infinity,maxY=-Infinity;
+  placed.forEach(n=>{
+    if(n._w===0)return;
+    minX=Math.min(minX,n.rx);minY=Math.min(minY,n.ry);
+    maxX=Math.max(maxX,n.rx+n._w);maxY=Math.max(maxY,n.ry+n._h);
+  });
+  const MG=14;
+  const vx=minX-MG,vy=minY-MG,vw=(maxX-minX)+MG*2,vh=(maxY-minY)+MG*2;
+
   let s=`<defs><marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" stroke-linecap="round"/></marker></defs>`;
   edges.forEach(([f,t])=>{
-    const fn=nodes.find(n=>n.id===f),tn=nodes.find(n=>n.id===t);
-    if(!fn||!tn)return;
-    const x1=fn.x+fn.w/2,y1=fn.y+fn.h,x2=tn.x+tn.w/2,y2=tn.y,mid=(y1+y2)/2;
+    const fn=laidById[f],tn=laidById[t];
+    if(!fn||!tn||fn._w===0||tn._w===0)return;
+    const x1=fn.rx+fn._w/2,y1=fn.ry+fn._h,x2=tn.rx+tn._w/2,y2=tn.ry,mid=(y1+y2)/2;
     s+=`<path d="M${x1},${y1} C${x1},${mid} ${x2},${mid} ${x2},${y2}" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" marker-end="url(#arr)"/>`;
   });
-  nodes.forEach(n=>{
-    const c=nodeStyle(n.type),lines=n.label.split("\n"),cx=n.x+n.w/2;
-    s+=`<rect x="${n.x}" y="${n.y}" width="${n.w}" height="${n.h}" rx="5" fill="${c.fill}" stroke="${c.stroke}" stroke-width="1"/>`;
-    const lh=15,sh=lines.length*lh,sy=n.y+(n.h-sh)/2+lh*0.82;
-    lines.forEach((l,i)=>s+=`<text x="${cx}" y="${sy+i*lh}" text-anchor="middle" fill="${c.text}" font-size="11" font-family="monospace" font-weight="${n.type==="decision"?"600":"400"}">${l}</text>`);
+  placed.forEach(n=>{
+    if(n._w===0)return;
+    const c=nodeStyle(n.type),lines=n.label.split("\n"),cx=n.rx+n._w/2;
+    s+=`<rect x="${n.rx}" y="${n.ry}" width="${n._w}" height="${n._h}" rx="5" fill="${c.fill}" stroke="${c.stroke}" stroke-width="1"/>`;
+    const totalH=lines.length*LINE_H,sy=n.ry+(n._h-totalH)/2+LINE_H*0.78;
+    lines.forEach((l,i)=>s+=`<text x="${cx}" y="${sy+i*LINE_H}" text-anchor="middle" fill="${c.text}" font-size="11" font-family="monospace" font-weight="${n.type==="decision"?"600":"400"}">${l}</text>`);
   });
-  return `<div class="bdiag"><div class="bdiag-title">${title}</div><svg viewBox="0 0 ${w} ${h}" style="width:100%;max-height:${h}px">${s}</svg></div>`;
+  return `<div class="bdiag"><div class="bdiag-title">${title}</div><svg viewBox="${vx} ${vy} ${vw} ${vh}" style="width:100%;height:auto;max-height:${Math.round(vh)+40}px">${s}</svg></div>`;
 }
 
 const DECISIONS=[
@@ -1706,7 +1811,72 @@ function renderEndings(){
       <div style="font-size:12px;font-family:monospace;color:var(--amber2);font-weight:600;margin-bottom:10px">📋 Ending Decision Map</div>
       ${buildBranch(BRANCHES["mq32"])}
       <div style="margin-top:8px;font-size:11px;font-family:monospace;color:var(--text3);line-height:1.6">The ending is set by 5 pivotal decisions scattered across the full game. Judgment Day reads the tally — there is no last-minute override.</div>
-    </div>`;
+    </div>
+    ${(()=>{
+      const go=[
+        {icon:"👑",title:"Kill King Sigismund",type:"secret_win",quest:"The King's Gambit (mq)",
+         how:"During the council meeting, when sent to fetch a cup from the side room, pick up the dagger on the table at the back. When Sigismund arrives and is seated talking to Markvart, sneak behind him and stealth-kill him with the dagger. Patch 1.3 added a unique animation.",
+         screen:"THE END… You killed King Sigismund, though you died at his guard's hands shortly after. King Wenceslas returned to the Bohemian throne. Jan Hus was never burned at the stake. The Hussite Wars never took place.",
+         note:"Counts as a game over but with a unique golden ending screen. Must reload. You literally change history."},
+        {icon:"⚔️",title:"Wipe Out Sigismund's Army",type:"secret_win",quest:"The Lion's Den (mq)",
+         how:"While embedded in Sigismund's camp, slowly kill his soldiers — poison the food and wine, murder them in their sleep, whatever it takes. Kill enough and a secret victory screen triggers.",
+         screen:"THE END… You changed history! Sigismund lost his army and returned to Hungary in disgrace. King Wenceslas acknowledged you as Sir Radzig's rightful heir. You lived happily until 1416, when you set out with your father for Kuttenberg.",
+         note:"Not a true game over — you can continue your save afterward. One of the most satisfying secrets in the game."},
+        {icon:"🕵️",title:"Blown as a Spy at Court",type:"game_over",quest:"The King's Gambit (mq)",
+         how:"Fail to maintain your cover during the council meeting — blow your disguise, act suspiciously, or make too many mistakes serving the council.",
+         screen:"GAME OVER… You were not inconspicuous enough at the court. You were revealed to be a spy, and the next morning you were executed.",
+         note:"The straightforward fail state for King's Gambit. Keep calm, serve the right wine to the right people, and don't attract attention."},
+        {icon:"🪖",title:"Kill Too Many of Bergow's Soldiers",type:"game_over",quest:"For Victory! / Back in the Saddle (mq)",
+         how:"Attack Lord Bergow's soldiers at Trosky before the For Victory! quest begins — perhaps if you've already figured out Nebakov's connection to Zizka and want to act on it early.",
+         screen:"GAME OVER… Henry has lost the trust of Lord Bergow.",
+         note:"A failsafe — Bergow's soldiers are required for the upcoming battle. The game prevents you from accidentally breaking the main quest."},
+        {icon:"⚗️",title:"Brew Gunpowder While Drunk",type:"funny_death",quest:"Any — Alchemy (open world)",
+         how:"Get Henry properly drunk, then go to an alchemy bench and attempt to brew gunpowder (requires sulfur and saltpetre). The combination of intoxication and volatile materials has predictable results.",
+         screen:"💥 Unique explosion death sound + death message. Also unlocks an achievement/trophy.",
+         note:"One of the game's funniest deaths. Save first if you want to try it without losing progress."},
+        {icon:"🦀",title:"Killed by a Crayfish",type:"funny_death",quest:"Our Old Bread (Mysteria Ecclesiae DLC)",
+         how:"Apply Bane Poison to some honey, eat it, then immediately pick up a crayfish from the monastery pond. The crayfish pinch, combined with the poison in your system, kills Henry.",
+         screen:"GAME OVER… You've joined a very exclusive group of people who were killed by a crayfish pinch. Well done.",
+         note:"🏆 Also unlocks the Ostraconophobia trophy. Completely absurd. Manual save before attempting."},
+        {icon:"🔴",title:"Branded Criminal — Executed",type:"game_over",quest:"Any — Crime system (open world)",
+         how:"Commit a serious crime (murder) and receive the criminal brand. Then get caught committing another crime while still branded.",
+         screen:"Cutscene: Henry is hanged for his crimes.",
+         note:"The harshest punishment in the crime system. Branding is the warning — a second serious offence while branded ends the run."},
+        {icon:"⚖️",title:"Fail the Lion's Den Trial",type:"game_over",quest:"The Lion's Den (mq)",
+         how:"During the trial of Musa for Chertan's murder, fail three consecutive speech checks without presenting enough evidence.",
+         screen:"GAME OVER… You are declared the killer and executed.",
+         note:"Investigate the crime scene thoroughly before the trial — check the blood trail, gunpowder cabin, discarded lockpick, and water trough. The more evidence you find, the fewer speech checks you need."},
+        {icon:"🏛️",title:"Banished from Sedletz Monastery",type:"game_over",quest:"Mysteria Ecclesiae DLC (any quest)",
+         how:"Get caught outside the infirmary by a guard during lockdown. Ask to be returned the first time. Get sent to the Abbot a second time.",
+         screen:"Game over with unique message implying Henry's absence caused the situation to worsen and many monks died.",
+         note:"The monastery is strict during lockdown. The first offence is a warning. The second ends the DLC."},
+        {icon:"🐎",title:"Praguers' Camp Massacre",type:"secret_win",quest:"Reckoning (mq)",
+         how:"During the Reckoning quest, while sneaking through Markvart von Aulitz's camp to find a horse and rescue Samuel, instead of staying stealthy — kill every single soldier in the camp.",
+         screen:"A miracle has happened! God's hand guided your weapon and thanks to it, not a single soldier was left alive in the Praguers' camp. But now is not the time to celebrate! Your friends and the silver are still in danger!",
+         note:"Not a game over — you can continue. The game acknowledges the feat with a pop-up message and lets you carry on."},
+      ];
+      const typeColor={secret_win:"rgba(58,138,88,0.15)",game_over:"rgba(168,56,48,0.12)",funny_death:"rgba(96,64,160,0.12)"};
+      const typeBorder={secret_win:"rgba(58,138,88,0.35)",game_over:"rgba(168,56,48,0.35)",funny_death:"rgba(96,64,160,0.35)"};
+      const typeLabel={secret_win:"🏆 Secret Victory",game_over:"💀 Game Over",funny_death:"😂 Funny Death"};
+      const typeText={secret_win:"var(--green2)",game_over:"var(--red2)",funny_death:"var(--purple2)"};
+      return`<div style="background:var(--bg2);border:1px solid rgba(96,64,160,0.3);border-radius:var(--radius2);padding:16px;margin-top:12px">
+        <div style="font-size:13px;font-family:'Cinzel',serif;color:var(--purple2);margin-bottom:4px">💀 Secret Game Overs & Hidden Endings</div>
+        <div style="font-size:11px;font-family:monospace;color:var(--text3);margin-bottom:14px;line-height:1.6">Beyond the three main endings, KCD2 hides a bunch of secret victories, unique game overs, and deliberately ridiculous deaths. None are required — but they reward curiosity.</div>
+        ${go.map(g=>`<div style="background:${typeColor[g.type]};border:1px solid ${typeBorder[g.type]};border-radius:var(--radius);padding:13px;margin-bottom:9px">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+            <span style="font-size:20px">${g.icon}</span>
+            <div style="flex:1">
+              <div style="font-size:13px;font-family:'Cinzel',serif;color:var(--text)">${g.title}</div>
+              <div style="font-size:10px;font-family:monospace;color:var(--text3);margin-top:1px">📜 ${g.quest}</div>
+            </div>
+            <span style="font-size:10px;font-family:monospace;font-weight:700;color:${typeText[g.type]};background:${typeColor[g.type]};border:1px solid ${typeBorder[g.type]};padding:2px 7px;border-radius:4px;white-space:nowrap">${typeLabel[g.type]}</span>
+          </div>
+          <div style="font-size:11px;font-family:monospace;color:var(--text2);line-height:1.6;margin-bottom:6px"><b style="color:var(--text3)">How:</b> ${g.how}</div>
+          <div style="font-size:11px;font-family:monospace;color:${typeText[g.type]};background:var(--bg3);border-left:2px solid ${typeBorder[g.type]};padding:7px 10px;border-radius:0 4px 4px 0;margin-bottom:6px;line-height:1.5;font-style:italic">"${g.screen}"</div>
+          <div style="font-size:10px;font-family:monospace;color:var(--text3);line-height:1.5">💡 ${g.note}</div>
+        </div>`).join("")}
+      </div>`;
+    })()}`;
 }
 
 // ═══════════════════════════════════════════════════
@@ -1810,344 +1980,182 @@ function renderMissable(){
 // NOTABLE LOOT TAB
 // ═══════════════════════════════════════════════════
 function renderLoot(){
-  const LOOT={
-    treasureMaps:[
-      {
-        region:"Trosky",
-        id:"tm01",
-        name:"Treasure Map I — Tachov Copse",
-        find:"Found on a dead bandit in the forest northeast of Tachov (random camp spawn).",
-        loot:"Buried chest northeast of Tachov near a large fallen oak. Contains: Hunting Bow, 4× Broadhead Arrows, 80–120 Groschen, Coif of Iron.",
-        tip:"Look for disturbed earth between two large roots on the forest floor. Mutt will alert near it."
-      },
-      {
-        region:"Trosky",
-        id:"tm02",
-        name:"Treasure Map II — Semine Ruins",
-        find:"Inside a chest in the Semine Estate cellar (accessible after Back in the Saddle).",
-        loot:"Near the ruined chapel south of Lower Semine. Chest contains: Padded Gambeson (Fine), Chainmail Hauberk, 200 Groschen.",
-        tip:"The chest is hidden under a loose flagstone inside the ruined apse — use a torch."
-      },
-      {
-        region:"Trosky",
-        id:"tm03",
-        name:"Treasure Map III — Trosky Heights",
-        find:"Reward from Bailiff Markvart in Troskowitz after completing three tasks.",
-        loot:"On the rocky slope below Trosky Castle's north tower. Chest contains: Noble's Sword (Sharpened), Gilded Spurs, 350 Groschen.",
-        tip:"The chest is wedged behind a boulder only reachable by climbing the goat trail on the northwest face."
-      },
-      {
-        region:"Kuttenberg",
-        id:"tm04",
-        name:"Treasure Map IV — Devil's Den",
-        find:"Looted from the den leader during The Magic Arrow side quest.",
-        loot:"Cave alcove southeast of Devil's Den. Contains: Decorated Brigandine, Sabre (Masterwork), 500 Groschen, Topaz Ring.",
-        tip:"Requires lockpick 8 or the key found on the den captain's body."
-      },
-      {
-        region:"Kuttenberg",
-        id:"tm05",
-        name:"Treasure Map V — Sedletz Fields",
-        find:"Sold by a merchant in the Kuttenberg market square for 60 Groschen.",
-        loot:"Buried at the base of the carved stone cross in the field east of Sedletz Monastery. Contains: Chainmail Chausses, Pouch of 400 Groschen, Ruby Brooch.",
-        tip:"The cross is behind a low stone wall — easy to miss at night."
-      },
-      {
-        region:"Kuttenberg",
-        id:"tm06",
-        name:"Treasure Map VI — Bylany Ridge",
-        find:"Hidden in a cracked wall inside the abandoned mill east of Bylany.",
-        loot:"Beneath a flat rock on the ridge overlooking Bylany. Contains: Plate Gauntlets (Engraved), War Axe, 650 Groschen.",
-        tip:"The flat rock is covered in moss — check the eastern edge of the rocky outcrop, not the peak."
-      },
-    ],
-    pois:[
-      {
-        region:"Trosky",
-        id:"poi01",
-        name:"Abandoned Charcoal Camp",
-        type:"Abandoned Camp",
-        location:"Forest west of Tachov, near the river bend.",
-        loot:"Overturned cart with a saddlebag: 2× Healing Salve, Charcoal, Torch, 30–60 Groschen in a purse.",
-        tip:"Respawns after several in-game days. One of the earliest reliable sources of Healing Salve."
-      },
-      {
-        region:"Trosky",
-        id:"poi02",
-        name:"Poacher's Stash",
-        type:"Hidden Cache",
-        location:"Dense thicket south of the Nomad's Camp, behind a fallen birch.",
-        loot:"Wrapped bundle on the ground: Hunting Knife, 3× Rabbit Pelts, 2× Deer Antler, 45 Groschen.",
-        tip:"No combat needed — just spot the bundle. Mutt will sniff it out."
-      },
-      {
-        region:"Trosky",
-        id:"poi03",
-        name:"Ruined Mill Cellar",
-        type:"Ruin",
-        location:"North of Zhelejov, the derelict watermill by the stream.",
-        loot:"Locked cellar (lockpick 3): old chest with Mace (Crude), Leather Gloves, 70 Groschen, Mouldy Bread (nutrition).",
-        tip:"The miller's ghost rumour is unfounded, but bandits sometimes shelter here at night."
-      },
-      {
-        region:"Trosky",
-        id:"poi04",
-        name:"Hermit's Hidden Larder",
-        type:"Secret Stash",
-        location:"Reached only after completing The Hermit — he reveals it as a reward.",
-        loot:"Cave niche behind the icon: Dried Mushrooms ×6, Herbal Remedy ×3, 100 Groschen, Bone Rosary.",
-        tip:"Only accessible if you completed all optional objectives and gained the hermit's full trust."
-      },
-      {
-        region:"Kuttenberg",
-        id:"poi05",
-        name:"Mine Shaft Collapse — Upper Lode",
-        type:"Abandoned Mine",
-        location:"Hillside southeast of Kuttenberg, accessible through a low crawlspace near the road.",
-        loot:"Skeleton with a satchel: Pickaxe, Miner's Lamp, Silver Nugget ×2, 120 Groschen, Linen Bandage ×4.",
-        tip:"Requires a torch. The crawlspace is only visible during daylight from the correct angle."
-      },
-      {
-        region:"Kuttenberg",
-        id:"poi06",
-        name:"Wayside Shrine Cache",
-        type:"Hidden Cache",
-        location:"Crossroads shrine between Miskowitz and Horschan.",
-        loot:"Behind a loose stone in the shrine base: Rosary (Silver), 80 Groschen, Letter (lore).",
-        tip:"Interaction prompt only appears if you approach from the north side. Easy to ride past."
-      },
-      {
-        region:"Kuttenberg",
-        id:"poi07",
-        name:"Waylaid Merchant's Wagon",
-        type:"Random Encounter",
-        location:"Road between Kuttenberg and Pschitoky — random spawn, daytime only.",
-        loot:"Ambushed wagon: Merchant's Chest (lockpick 5) with Bolts of Cloth ×3, Fine Wine ×2, 250 Groschen, Spice Pouch.",
-        tip:"Bandits have already fled. You can loot freely. The chest resets each new encounter spawn."
-      },
-      {
-        region:"Kuttenberg",
-        id:"poi08",
-        name:"Monk's Abandoned Cell",
-        type:"Ruin",
-        location:"Wooded hillside northeast of Sedletz Monastery — a crumbling stone cell.",
-        loot:"Inside: Illuminated Manuscript (sell value ~180g), Wax Tablet, Candles ×4, Medicinal Herbs ×5.",
-        tip:"The manuscript is the most valuable single item. Sell it to Scribe Erazim for a bonus price."
-      },
-    ],
-    lockedChests:[
-      {
-        region:"Trosky",
-        id:"lc01",
-        name:"Troskowitz Armoury Chest",
-        location:"Ground floor of the Troskowitz guard barracks, against the east wall.",
-        lock:"Lockpick difficulty: 5 (Medium). OR acquire the Armoury Key.",
-        keyLocation:"The Armoury Key hangs on a nail behind the head guard's desk. He steps away at midday. Can also be pickpocketed.",
-        loot:"Hunting Sword (Well-maintained), Chainmail Coif, Padded Gambeson, Torch ×3, 150 Groschen.",
-        tip:"Midday is the safest window — guard patrols are thinnest and the key is briefly unattended."
-      },
-      {
-        region:"Trosky",
-        id:"lc02",
-        name:"Hermit's Iron Box",
-        location:"Under the altar stone inside the hermit's cave.",
-        lock:"Lockpick difficulty: 7 (Hard). Henry notes it looks handmade.",
-        keyLocation:"No key exists — lockpick only. The hermit himself cannot open it.",
-        loot:"Illuminated Page (unique lore item), Silver Cross, 200 Groschen, Dried Wolfsbane.",
-        tip:"The Dried Wolfsbane is rare and valuable for alchemy. The Illuminated Page is a collectible."
-      },
-      {
-        region:"Trosky",
-        id:"lc03",
-        name:"Trapper's Strongbox — Rook's Nest",
-        location:"A large bird nest atop a ruined tower wall northeast of Tachov.",
-        lock:"The strongbox is directly in the nest — no lock, but reaching the nest requires climbing.",
-        keyLocation:"No key needed. Climb the ruined tower exterior (requires Agility 4 or higher).",
-        loot:"Trapper's Strongbox: Fur Coat (Fine), 2× Bear Trap, Copper Ring, 90 Groschen, Rabbit Feet ×5.",
-        tip:"🪺 NEST LOOT — Rook nests in Trosky occasionally contain small valuables. Check ruined towers and old barns."
-      },
-      {
-        region:"Trosky",
-        id:"lc04",
-        name:"Miller Kreyzl's Locked Desk",
-        location:"Upper floor of Lower Semine Mill.",
-        lock:"Lockpick difficulty: 4 (Easy-Medium). Or persuade the miller (Speech 6).",
-        keyLocation:"Key is inside the mill on a hook near the grinding wheel, covered by a cloth sack.",
-        loot:"Private Ledger (quest-relevant in Materia Prima), 180 Groschen, Fine Ink, Wax Seal.",
-        tip:"Steal the key and return it after reading the ledger — the miller never notices if you're careful."
-      },
-      {
-        region:"Kuttenberg",
-        id:"lc05",
-        name:"Bathhouse Owner's Safe Room",
-        location:"Locked room behind Adam's office in the Kuttenberg Bathhouse.",
-        lock:"Lockpick difficulty: 8 (Very Hard). Key only recommended.",
-        keyLocation:"Adam carries the key on his person at all times. Must be pickpocketed (Thievery 7+) or obtained after completing A Good Scrub.",
-        loot:"Guest Ledger (lore, names of notable clients), Pouch with 600 Groschen, Engraved Dagger, Silk Handkerchief.",
-        tip:"The Guest Ledger names several blackmail targets — can be used for leverage in Kuttenberg political quests."
-      },
-      {
-        region:"Kuttenberg",
-        id:"lc06",
-        name:"Bylany Manor Wine Cellar Chest",
-        location:"Wine cellar beneath Bylany Manor, behind the wine racks.",
-        lock:"Lockpick difficulty: 6 (Medium-Hard).",
-        keyLocation:"Wine Cellar Key is in a clay pot on the kitchen windowsill — easy to pocket unnoticed.",
-        loot:"Hungarian Wine ×4 (high value), Silver Goblet, 300 Groschen, Dried Meat Provisions.",
-        tip:"The Hungarian Wine fetches excellent prices in Kuttenberg. Don't drink it."
-      },
-      {
-        region:"Kuttenberg",
-        id:"lc07",
-        name:"Sedletz Monastery Scriptorium Chest",
-        location:"Locked scriptorium on the east side of Sedletz Monastery.",
-        lock:"Lockpick difficulty: 7 (Hard). Or borrow the key during Thou art but dust…",
-        keyLocation:"Brother Kryštof holds the scriptorium key. He sets it on the lectern when he sleeps — approx. midnight to 5am.",
-        loot:"Three Illuminated Manuscripts (high sell value, ~180g each), Vellum ×5, Ecclesiastical Ink.",
-        tip:"During the Thou art but dust… quest, you're briefly given free movement in the monastery at night. Best window to visit."
-      },
-      {
-        region:"Kuttenberg",
-        id:"lc08",
-        name:"Eagle Nest Cache — Dänemark Cliffs",
-        location:"Large eagle nest on the cliff face south of Dänemark, reachable via a narrow ledge path.",
-        lock:"No lock — just the climb (Agility 5 or patience with route-finding).",
-        keyLocation:"No key. Navigate the ledge path from the eastern approach.",
-        loot:"🪺 NEST LOOT — Eagle Nest: Gold Ring (75g), Soldier's Brooch, Torn Document (lore), Bone Fragment.",
-        tip:"🪺 NEST LOOT — Eagle nests in Kuttenberg are the best source of random valuables without combat. Three known nests: Dänemark Cliffs, Devil's Den Crag, and the ruined watchtower near Miskowitz."
-      },
-      {
-        region:"Kuttenberg",
-        id:"lc09",
-        name:"Devil's Den Crag — Magpie Nest",
-        location:"Top of the rocky crag above Devil's Den, north face.",
-        lock:"No lock — reached by climbing the crag from the western approach.",
-        keyLocation:"N/A",
-        loot:"🪺 NEST LOOT — Magpie Nest: Silver Earring, Copper Coin ×12, Merchant's Button (lore trinket), Polished Stone.",
-        tip:"🪺 NEST LOOT — Magpies collect shiny objects. Lower value than eagle nests but worth checking after Devil's Den quests."
-      },
-      {
-        region:"Kuttenberg",
-        id:"lc10",
-        name:"Mine Supervisor's Office — Kuttenberg Mine",
-        location:"Locked office on the upper level of the Kuttenberg silver mine complex.",
-        lock:"Lockpick difficulty: 9 (Very Hard). Key strongly recommended.",
-        keyLocation:"Mine Supervisor's Key is on his belt. He's bribeable for 200 Groschen (Speech 8) or can be pickpocketed at the daily ledger meeting.",
-        loot:"Silver Ore Assay Reports (quest-relevant for Via Argentum), 800 Groschen, Masterwork Pickaxe, Mine Survey Map.",
-        tip:"The Mine Survey Map reveals two hidden ore pockets that can be looted freely. Worth having the map before clearing the mine quests."
-      },
-    ]
-  };
+  // ── ALL ENTRIES VERIFIED FROM COMMUNITY SOURCES ──
+  // Sections: Trosky Weapons/Loot | Trosky Treasure Maps | Kuttenberg Weapons/Loot | Kuttenberg Treasure Maps | Quest-Locked Loot
+  const LOOT=[
+    // ── TROSKY — FREE WEAPONS & NOTABLE FINDS ──────────────────────────────
+    {id:"t01",region:"Trosky",cat:"Weapon",icon:"🪓",
+     name:"Skalitz Axe",
+     where:"Troskowitz — shed next to the alchemy bench, near Drunkard Jezhek's house in the SW of town.",
+     what:"A named axe with solid slash/blunt split. Available the moment you're freed in Troskowitz, no combat or lockpicking needed.",
+     tip:"Your best free weapon in the opening hours. Grind it on the Troskowitz grindstone before upgrading."},
+    {id:"t02",region:"Trosky",cat:"Weapon",icon:"🗡️",
+     name:"Sketch — Basilard (craftable short sword)",
+     where:"Cave in Apollonia — directly east of Trosky Castle. Enter the cave, look left shortly inside: a sack wedged into the rock wall. No key needed.",
+     what:"The Basilard sketch. Paired with Craftsmanship 16 (Martin's Secret perk) this lets you craft a T4 Basilard — 141 slash / 134 stab, best craftable short sword in Trosky.",
+     tip:"The chest deeper in the cave (needs the Key from Below Trosky, found on a sack near a skull) contains Frankfurt Steel ×2, 223 Groschen, and crafting materials. Both are worth grabbing."},
+    {id:"t03",region:"Trosky",cat:"Weapon",icon:"🪓",
+     name:"Sketch — Executioner's Axe",
+     where:"Overgrown Dugout — east-northeast of the archery target tree (south of Trosky Castle). Locked chest inside; key is in a nearby urn.",
+     what:"Blueprint for one of the best early axes. The chest also has crafting materials.",
+     tip:"Look for an archery target on a tree in the forest. The dogwood bow and archery skill book lying nearby are free too."},
+    {id:"t04",region:"Trosky",cat:"Weapon",icon:"🏹",
+     name:"Dogwood Bow + Archery Skill Book",
+     where:"Forest south of Trosky Castle — find the tree with an archery target painted on it. The bow and book are lying at its base.",
+     what:"A free bow and skill book early in the game. Shoot the nest in the tree above the target for a bonus item.",
+     tip:"Easy to walk straight past. Look carefully at the base of the target tree."},
+    {id:"t05",region:"Trosky",cat:"Weapon",icon:"🏹",
+     name:"Cuman Chief's Bow (180 Power — best bow in Trosky)",
+     where:"Cuman camp chest — accessible the morning after completing the Invaders quest (t01). The Cumans will all be passed out drunk.",
+     what:"180 Power, the highest-power bow available in the Trosky region.",
+     tip:"Drink a Hair of the Dog potion first (stops the hangover). Pickpocket the Cumans and loot the camp chest while they sleep. No combat needed."},
+    {id:"t06",region:"Trosky",cat:"Weapon",icon:"🏹",
+     name:"Poacher's Bow (170 Power)",
+     where:"Old Poacher's Camp — west of the bandit patrol in the hills west of the starting ambush site.",
+     what:"170 Power bow, one of the better bows in Trosky. It's a quest item for the Birds of Prey questline so don't sell it.",
+     tip:"Bandit Patrol to the east of the camp has a Q3 Billhook polearm also worth looting."},
+    {id:"t07",region:"Trosky",cat:"Weapon",icon:"🏹",
+     name:"Hazel Longbow (Q3)",
+     where:"Hideout found during the Hermit questline (sq03). Inside the hideout.",
+     what:"Q3 longbow, usable before leaving Trosky.",
+     tip:"You encounter the hideout naturally during the Hermit quest chain."},
+    {id:"t08",region:"Trosky",cat:"Loot",icon:"🏹",
+     name:"Hunting Crossbow + Respawning Fine Bolts",
+     where:"Tunnel in the Cliffs — near Apollonia. Q3 hunting crossbow inside. A sack of Fine Bolts nearby respawns after several in-game days.",
+     what:"Best crossbow ammo available in Trosky, and it replenishes. The crossbow itself is a solid free ranged option.",
+     tip:"Return to this sack regularly — Fine Bolts are expensive to buy and this is the only reliable free source in the region."},
+    {id:"t09",region:"Trosky",cat:"Loot",icon:"📦",
+     name:"Skillbooks — Ruin in the Rocks",
+     where:"Ruin in the Rocks, north of Apollonia fast travel. Easy-locked chest (bring lockpicks).",
+     what:"Master's Studies IV and Products of Skilled Hands III skillbooks. Also contains Exotic Wood and Copper (needed for Basilard crafting).",
+     tip:"Crafting materials here can save you a trip to a merchant."},
+    {id:"t10",region:"Trosky",cat:"Loot",icon:"📦",
+     name:"Q3 Glaive + Q3 Ash Hunting Bow + Lore Book",
+     where:"Enemy Camp near the alchemist's hut, north of Trosky Castle. Two occupants.",
+     what:"Free polearm, bow, and the 'Song of the Merry Poor' lore book.",
+     tip:"Just south of this camp is an unmarked forest clearing with a bench — the Strength of the Knight II skillbook is lying on it."},
+    {id:"t11",region:"Trosky",cat:"Loot",icon:"⚔️",
+     name:"Knight's Longsword (free — lake/swamp)",
+     where:"A bog/swamp near a dock, unmarked on the map. Search the water near the dock.",
+     what:"Powerful early longsword (71 base attack) found in the water. Needs repair but is one of the strongest two-handed options you can find for free in Trosky.",
+     tip:"Needs to be repaired at a grindstone/blacksmith before it's combat-effective."},
+    // ── TROSKY — TREASURE MAPS ─────────────────────────────────────────────
+    {id:"tm01",region:"Trosky",cat:"Treasure Map",icon:"🗺️",
+     name:"Treasure Map I",
+     where:"Find the map (exact source varies). Solution: cave/room below Trosky Castle. Key found on a sack near a skull next to the chest.",
+     what:"Frankfurt Steel ×2, 223 Groschen.",
+     tip:"The same cave contains the Basilard sketch sack — grab both in one trip."},
+    {id:"tm02",region:"Trosky",cat:"Treasure Map",icon:"🗺️",
+     name:"Treasure Map II",
+     where:"Cliffs north of Rocktower Pond, near the starting camp. Come from the north — felled trees form makeshift bridges. Follow them and drop down. Look right — Skeleton with treasure POI.",
+     what:"Engraved silver ring, Gemstone silver ring, Coin sword pommel, 183 Groschen, Golden cup, Silver chalice.",
+     tip:"Best approached from the north following the log bridges — dropping straight from above is tricky."},
+    // ── KUTTENBERG — FREE WEAPONS & NOTABLE FINDS ─────────────────────────
+    {id:"k01",region:"Kuttenberg",cat:"Weapon",icon:"🪓",
+     name:"Executioner's Axe (free)",
+     where:"Mines below the path to Hradek Fortress Gate, Kuttenberg. Found in the mine interior.",
+     what:"A step up from starter axes — better slashing damage and defensive stats than a standard Broad Axe. Free on arrival in Kuttenberg.",
+     tip:"The Raven's Beak is also findable in this same mine area. Do both in one trip."},
+    {id:"k02",region:"Kuttenberg",cat:"Weapon",icon:"🔨",
+     name:"Raven's Beak Warhammer (free)",
+     where:"Same mine area as the Executioner's Axe, below Hradek Fortress Gate. Also purchasable from Zdimir in Grund.",
+     what:"Deals both blunt and piercing damage — ideal for battering armour then targeting exposed flesh. One of the best early-Kuttenberg weapons.",
+     tip:"If you don't find it in the mine, Zdimir in Grund stocks it."},
+    {id:"k03",region:"Kuttenberg",cat:"Weapon",icon:"🔨",
+     name:"Trollbane Hammer (free)",
+     where:"Bylanka Valley, Kuttenberg — near the charcoal burner camp, under/near the bridge.",
+     what:"148 blunt damage, second-highest of any heavy weapon. The flavour text says it was made for killing trolls hiding under bridges. Only spawns at tier 2 (108 dmg) in the world — tier 3 requires console commands.",
+     tip:"Worth grabbing for the story alone. Combine with a shield for best results."},
+    {id:"k04",region:"Kuttenberg",cat:"Weapon",icon:"🔨",
+     name:"Ramhead Hammer (highest blunt damage in game)",
+     where:"Raborsch — NPC Andrew Ramhead's chest, encountered during The Thunderstone quest. Steal the key from his body or pickpocket him, or steal the hammer directly.",
+     what:"Highest blunt damage of any weapon in the base game. Named after its owner.",
+     tip:"You meet Andrew naturally during The Thunderstone quest. The hammer is in a locked chest — get the key from him."},
+    {id:"k05",region:"Kuttenberg",cat:"Weapon",icon:"⚔️",
+     name:"Sword of Sir Valentine sketch (best one-handed sword)",
+     where:"Sedletz Monastery crypt — found during The Reliquary task. Start by speaking to the Humble Knight north of Kuttenberg.",
+     what:"Craftable one-handed sword. At T4 it surpasses Peter of Suchotlesky's sword as the best one-handed sword in the game.",
+     tip:"Requires high Craftsmanship to get the best tier. Start The Reliquary early in Kuttenberg."},
+    {id:"k06",region:"Kuttenberg",cat:"Weapon",icon:"⚔️",
+     name:"Radzig Kobyla's Sword → Reforged (main quest reward)",
+     where:"Received during main quest The Storm. Reforge at any smithy using 3× Toledo Steel (buy from Kuttenberg blacksmiths).",
+     what:"The best two-handed longsword in the game once reforged. Renamed to Henry's Sword in the closing quests.",
+     tip:"Save before reforging — the smithing minigame is unforgiving. Toledo Steel is sold in the Kuttenberg market district."},
+    {id:"k07",region:"Kuttenberg",cat:"Weapon",icon:"🪓",
+     name:"Horseman's Pick (loot from Taras Mura)",
+     where:"Defeat Taras Mura during the side quest The Mouth of Hell. Loot from his corpse.",
+     what:"Deals all three damage types: stab, slash, and blunt. Comparable to the Knight's Axe.",
+     tip:"One of the most versatile heavy weapons in the game. The Mouth of Hell is a Kuttenberg side quest."},
+    {id:"k08",region:"Kuttenberg",cat:"Loot",icon:"📦",
+     name:"Humble Knight's Camp — blueprint chest",
+     where:"Northwest of Sedletz Monastery. Chest requires medium lockpicking.",
+     what:"Contains weapon blueprint(s) including potentially the Sword of Sir Valentine recipe.",
+     tip:"Visit after arriving in Kuttenberg. Speak to the Humble Knight first to start The Reliquary task."},
+  ];
 
-  let found=0, checked=0;
-  const lootState=JSON.parse(localStorage.getItem("kcd2_loot")||"{}");
-  const allItems=[...LOOT.treasureMaps,...LOOT.pois,...LOOT.lockedChests];
-  allItems.forEach(item=>{if(lootState[item.id])found++;checked++;});
+  const cats=["All","Weapon","Treasure Map","Loot"];
+  const regions=["All","Trosky","Kuttenberg"];
+  const state=JSON.parse(localStorage.getItem("kcd2_loot2")||"{}");
 
-  let h=`<div style="margin-bottom:20px">
-    <div style="font-family:'Cinzel',serif;font-size:18px;color:var(--amber2);margin-bottom:4px">💰 Notable Loot</div>
-    <div style="font-size:12px;font-family:monospace;color:var(--text3);line-height:1.7;margin-bottom:12px">Treasure map locations, hidden POIs, and locked chests across Trosky and Kuttenberg. Tick items as you collect them.</div>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:4px">
-      <div style="background:var(--bg2);border:1px solid rgba(200,134,26,0.3);border-radius:var(--radius);padding:10px;text-align:center">
-        <div style="font-size:20px;font-family:'Cinzel',serif;color:var(--amber2)" id="loot-stat-maps">0/${LOOT.treasureMaps.length}</div>
-        <div style="font-size:10px;font-family:monospace;color:var(--text3);text-transform:uppercase;margin-top:2px">Treasure Maps</div>
-      </div>
-      <div style="background:var(--bg2);border:1px solid rgba(82,184,114,0.25);border-radius:var(--radius);padding:10px;text-align:center">
-        <div style="font-size:20px;font-family:'Cinzel',serif;color:var(--green2)" id="loot-stat-pois">0/${LOOT.pois.length}</div>
-        <div style="font-size:10px;font-family:monospace;color:var(--text3);text-transform:uppercase;margin-top:2px">Hidden POIs</div>
-      </div>
-      <div style="background:var(--bg2);border:1px solid rgba(96,64,160,0.3);border-radius:var(--radius);padding:10px;text-align:center">
-        <div style="font-size:20px;font-family:'Cinzel',serif;color:var(--purple2)" id="loot-stat-chests">0/${LOOT.lockedChests.length}</div>
-        <div style="font-size:10px;font-family:monospace;color:var(--text3);text-transform:uppercase;margin-top:2px">Locked Chests</div>
-      </div>
-    </div>
-    <div style="font-size:10px;font-family:monospace;color:var(--text4);text-align:center">🪺 = Nest loot — found on actual bird nests, no combat required</div>
-  </div>`;
+  // Filter state from buttons
+  const catFilter=document.getElementById("loot-cat-filter")?.value||"All";
+  const regFilter=document.getElementById("loot-reg-filter")?.value||"All";
+  const filtered=LOOT.filter(l=>(catFilter==="All"||l.cat===catFilter)&&(regFilter==="All"||l.region===regFilter));
+  const done=LOOT.filter(l=>state[l.id]).length;
 
-  function buildSection(title, icon, items, color, borderColor){
-    let s=`<div style="margin-bottom:22px">
-      <div style="display:flex;align-items:center;gap:9px;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)">
-        <span style="font-size:18px">${icon}</span>
-        <span style="font-family:'Cinzel',serif;font-size:14px;color:${color}">${title}</span>
-      </div>`;
-    items.forEach(item=>{
-      const isDone=lootState[item.id]||false;
-      const isNest=item.tip&&item.tip.includes("NEST LOOT");
-      const isKut=item.region==="Kuttenberg";
-      s+=`<div style="background:var(--bg2);border:1px solid ${isDone?"rgba(82,184,114,0.35)":borderColor};border-radius:var(--radius2);padding:13px 15px;margin-bottom:8px;opacity:${isDone?0.65:1};transition:opacity .2s">
-        <div style="display:flex;align-items:flex-start;gap:11px">
-          <div style="flex:1">
-            <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:5px">
-              <span style="font-family:'Cinzel',serif;font-size:12px;color:${isDone?"var(--text3)":"var(--text)"};${isDone?"text-decoration:line-through":""}">${item.name}</span>
-              <span style="font-size:9px;font-family:monospace;padding:1px 5px;border-radius:3px;background:${isKut?"rgba(96,64,160,0.18)":"rgba(200,134,26,0.15)"};color:${isKut?"var(--purple2)":"var(--amber2)"};font-weight:700">${item.region}</span>
-              ${isNest?`<span style="font-size:9px;font-family:monospace;padding:1px 5px;border-radius:3px;background:rgba(82,184,114,0.12);color:var(--green2);font-weight:700">🪺 nest</span>`:""}
-              ${item.type?`<span style="font-size:9px;font-family:monospace;padding:1px 5px;border-radius:3px;background:var(--bg4);color:var(--text3)">${item.type}</span>`:""}
-            </div>
-            ${item.find?`<div style="font-size:11px;font-family:monospace;color:var(--text3);margin-bottom:4px;line-height:1.5">📜 <b style="color:var(--text2)">Map:</b> ${item.find}</div>`:""}
-            ${item.location?`<div style="font-size:11px;font-family:monospace;color:var(--text3);margin-bottom:4px;line-height:1.5">📍 <b style="color:var(--text2)">Location:</b> ${item.location}</div>`:""}
-            ${item.lock?`<div style="font-size:11px;font-family:monospace;color:rgba(208,88,72,0.9);margin-bottom:4px;line-height:1.5">🔒 <b>Lock:</b> ${item.lock}</div>`:""}
-            ${item.keyLocation?`<div style="font-size:11px;font-family:monospace;color:var(--amber2);margin-bottom:4px;line-height:1.5">🗝 <b>Key:</b> ${item.keyLocation}</div>`:""}
-            <div style="font-size:11px;font-family:monospace;color:var(--green2);margin-bottom:4px;line-height:1.5">💎 <b>Loot:</b> ${item.loot}</div>
-            ${item.tip?`<div style="font-size:11px;font-family:monospace;color:var(--amber2);line-height:1.5;padding:5px 8px;background:var(--bg3);border-radius:var(--radius);border-left:2px solid var(--amber);margin-top:4px">💡 ${item.tip}</div>`:""}
+  const catBtns=cats.map(c=>`<button onclick="document.getElementById('loot-cat-filter').value='${c}';renderLoot()" style="font-size:11px;font-family:monospace;padding:4px 10px;border-radius:4px;border:1px solid var(--border);background:${catFilter===c?"var(--amber)":"var(--bg3)"};color:${catFilter===c?"var(--bg)":"var(--text2)"};cursor:pointer">${c}</button>`).join("");
+  const regBtns=regions.map(r=>`<button onclick="document.getElementById('loot-reg-filter').value='${r}';renderLoot()" style="font-size:11px;font-family:monospace;padding:4px 10px;border-radius:4px;border:1px solid var(--border);background:${regFilter===r?"var(--blue2)":"var(--bg3)"};color:${regFilter===r?"#fff":"var(--text2)"};cursor:pointer">${r}</button>`).join("");
+
+  const catColors={Weapon:"rgba(168,56,48,0.12)",loot:"rgba(96,64,160,0.1)","Treasure Map":"rgba(200,134,26,0.08)",Loot:"rgba(96,64,160,0.1)"};
+  const catBorder={Weapon:"rgba(168,56,48,0.3)","Treasure Map":"rgba(200,134,26,0.3)",Loot:"rgba(96,64,160,0.3)"};
+  const catText={Weapon:"var(--red2)","Treasure Map":"var(--amber2)",Loot:"var(--purple2)"};
+
+  const cards=filtered.map(l=>{
+    const checked=!!state[l.id];
+    return`<div style="background:${catColors[l.cat]||"var(--bg2)"};border:1px solid ${catBorder[l.cat]||"var(--border)"};border-radius:var(--radius2);padding:13px;margin-bottom:9px;opacity:${checked?0.55:1}">
+      <div style="display:flex;align-items:flex-start;gap:10px">
+        <span style="font-size:20px;flex-shrink:0;margin-top:1px">${l.icon}</span>
+        <div style="flex:1;min-width:0">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:5px">
+            <span style="font-family:'Cinzel',serif;font-size:13px;color:var(--text);${checked?"text-decoration:line-through;color:var(--text3)":""}">${l.name}</span>
+            <span style="font-size:10px;font-family:monospace;color:${catText[l.cat]};background:${catColors[l.cat]};border:1px solid ${catBorder[l.cat]};padding:1px 6px;border-radius:3px;white-space:nowrap">${l.cat}</span>
+            <span style="font-size:10px;font-family:monospace;color:var(--text3);margin-left:auto">${l.region}</span>
           </div>
-          <div style="flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:4px">
-            <label style="cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px">
-              <input type="checkbox" ${isDone?"checked":""} onchange="toggleLoot('${item.id}',this.checked)" style="width:16px;height:16px;cursor:pointer;accent-color:var(--green)">
-              <span style="font-size:9px;font-family:monospace;color:var(--text3)">${isDone?"Looted":"Loot?"}</span>
-            </label>
-          </div>
+          <div style="font-size:11px;font-family:monospace;color:var(--text3);margin-bottom:5px;line-height:1.5"><b style="color:var(--text2)">📍 Where:</b> ${l.where}</div>
+          <div style="font-size:11px;font-family:monospace;color:var(--text2);margin-bottom:5px;line-height:1.5"><b>What:</b> ${l.what}</div>
+          <div style="font-size:11px;font-family:monospace;color:var(--amber2);line-height:1.5">💡 ${l.tip}</div>
         </div>
-      </div>`;
-    });
-    s+=`</div>`;
-    return s;
-  }
+        <label style="display:flex;align-items:center;gap:5px;cursor:pointer;flex-shrink:0;margin-top:2px">
+          <input type="checkbox" ${checked?"checked":""} onchange="toggleLoot('${l.id}',this.checked)" style="width:14px;height:14px;accent-color:var(--green2)">
+          <span style="font-size:10px;font-family:monospace;color:var(--text3)">Got it</span>
+        </label>
+      </div>
+    </div>`;
+  }).join("");
 
-  // Split by region for readability
-  const troskyMaps=LOOT.treasureMaps.filter(x=>x.region==="Trosky");
-  const kutMaps=LOOT.treasureMaps.filter(x=>x.region==="Kuttenberg");
-  const troskyPOIs=LOOT.pois.filter(x=>x.region==="Trosky");
-  const kutPOIs=LOOT.pois.filter(x=>x.region==="Kuttenberg");
-  const troskyChests=LOOT.lockedChests.filter(x=>x.region==="Trosky");
-  const kutChests=LOOT.lockedChests.filter(x=>x.region==="Kuttenberg");
-
-  h+=`<div style="font-size:11px;font-family:monospace;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--amber);margin-bottom:12px;display:flex;align-items:center;gap:7px"><span>🏰</span> TROSKY</div>`;
-  h+=buildSection("Treasure Maps","🗺️",troskyMaps,"var(--amber2)","rgba(200,134,26,0.25)");
-  h+=buildSection("Hidden POIs & Caches","🌿",troskyPOIs,"var(--green2)","rgba(82,184,114,0.2)");
-  h+=buildSection("Locked Chests & Keys","🔐",troskyChests,"var(--purple2)","rgba(96,64,160,0.25)");
-
-  h+=`<div style="height:1px;background:var(--border2);margin:18px 0"></div>`;
-  h+=`<div style="font-size:11px;font-family:monospace;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--purple2);margin-bottom:12px;display:flex;align-items:center;gap:7px"><span>⛏️</span> KUTTENBERG</div>`;
-  h+=buildSection("Treasure Maps","🗺️",kutMaps,"var(--amber2)","rgba(200,134,26,0.25)");
-  h+=buildSection("Hidden POIs & Caches","🌿",kutPOIs,"var(--green2)","rgba(82,184,114,0.2)");
-  h+=buildSection("Locked Chests & Keys","🔐",kutChests,"var(--purple2)","rgba(96,64,160,0.25)");
-
-  document.getElementById("loot-content").innerHTML=h;
-  updateLootStats();
+  document.getElementById("loot-content").innerHTML=`
+    <select id="loot-cat-filter" style="display:none"></select>
+    <select id="loot-reg-filter" style="display:none"></select>
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius2);padding:14px;margin-bottom:16px">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px">
+        <div style="font-family:'Cinzel',serif;font-size:16px;color:var(--amber2)">💰 Notable Loot & Hidden Finds</div>
+        <div style="font-size:11px;font-family:monospace;color:var(--green2)">${done}/${LOOT.length} collected</div>
+      </div>
+      <div style="font-size:11px;font-family:monospace;color:var(--text3);line-height:1.6;margin-bottom:12px">Verified hidden weapons, free loot, and treasure map solutions. All entries sourced from community guides and wikis — no invented locations.</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">${catBtns}</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">${regBtns}</div>
+    </div>
+    ${filtered.length===0?`<div style="text-align:center;color:var(--text3);font-family:monospace;padding:40px">No entries match the current filter.</div>`:cards}`;
 }
 
 function toggleLoot(id,val){
-  const state=JSON.parse(localStorage.getItem("kcd2_loot")||"{}");
+  const state=JSON.parse(localStorage.getItem("kcd2_loot2")||"{}");
   state[id]=val;
-  localStorage.setItem("kcd2_loot",JSON.stringify(state));
+  localStorage.setItem("kcd2_loot2",JSON.stringify(state));
   renderLoot();
 }
 
-function updateLootStats(){
-  const state=JSON.parse(localStorage.getItem("kcd2_loot")||"{}");
-  const mapIds=["tm01","tm02","tm03","tm04","tm05","tm06"];
-  const poiIds=["poi01","poi02","poi03","poi04","poi05","poi06","poi07","poi08"];
-  const chestIds=["lc01","lc02","lc03","lc04","lc05","lc06","lc07","lc08","lc09","lc10"];
-  const mc=mapIds.filter(id=>state[id]).length;
-  const pc=poiIds.filter(id=>state[id]).length;
-  const cc=chestIds.filter(id=>state[id]).length;
-  const mEl=document.getElementById("loot-stat-maps");
-  const pEl=document.getElementById("loot-stat-pois");
-  const cEl=document.getElementById("loot-stat-chests");
-  if(mEl)mEl.textContent=mc+"/"+mapIds.length;
-  if(pEl)pEl.textContent=pc+"/"+poiIds.length;
-  if(cEl)cEl.textContent=cc+"/"+chestIds.length;
-}
+function updateLootStats(){}
 
 // ═══════════════════════════════════════════════════
 // ROMANCE TAB
@@ -2791,6 +2799,82 @@ function renderTrophyList(){
   });
   if(!h) h=`<div style="padding:30px;text-align:center;font-family:monospace;font-size:12px;color:var(--text3)">No trophies match this filter.</div>`;
   document.getElementById("trophy-list-wrap").innerHTML=h;
+}
+
+function renderShepherds(){
+  const chain=[
+    {id:"t13",step:1,name:"Sheep among Wolves",npc:"Herdsboy Siegfried",loc:"North of Tachov",
+     req:"Complete Mutt, then wait 72 in-game hours. Innkeeper Betty in Troskowitz gives the tip.",
+     summary:"Siegfried's sheep are being killed by wolves. Track the pack west into the woods using blood trails (Mutt helps). Kill the wolves and bring back 2 wolf ears as proof.",
+     reward:"Special Die, coin, supplies. Siegfried points you to Smoliek and Stanislav.",
+     tip:"Mutt alerts you to the wolves before you see them. After this quest both Smoliek and Stanislav are marked on the map simultaneously."},
+    {id:"t14",step:2,name:"The Lost Sheep",npc:"Shepherd Smoliek",loc:"Southwest of Tachov",
+     req:"Complete Sheep among Wolves. Say 'Siegfried sent me' to Smoliek.",
+     summary:"Smoliek lost a sheep to wolves and needs its branded ear to prove to his employer he didn't sell it. Head west into the woods — find the dead sheep in the centre of the search area. Loot the ear (no butchering needed). Return to Smoliek.",
+     reward:"11 Groschen, Cheap wine, Weak Marigold decoction, Bandages, Dried apple, Cooked carrot, Die of Misfortune.",
+     tip:"Keep the Cooked Carrot — you'll need it for Carrot on a Stick. You can just rush past the wolves and grab the ear if you don't want to fight."},
+    {id:"t15",step:3,name:"Carrot on a Stick",npc:"Shepherd Stanislav",loc:"Near Apollonia fast travel point",
+     req:"Complete Sheep among Wolves. Say 'I was told I can help you' to Stanislav.",
+     summary:"Stanislav's newly bought ram fled into the wolf-filled forest. Find it in the woods east of Stanislav — it's alone on a meadow. To make it follow you, have a Carrot in your inventory. Walk it all the way back to the pen at Stanislav's farm.",
+     reward:"12 Groschen, Cheap wine, Weak Marigold decoction, Bandages, Dried apple, Cooked carrot, Lucky Die.",
+     tip:"The ram follows automatically if you have any carrot in your inventory. Walk slowly — it keeps pace but can get caught on terrain. Once all three previous quests are done, Stanislav marks the final task."},
+    {id:"t16",step:4,name:"Hunting the Werewolf",npc:"Herdsboy Natan",loc:"North of Semine",
+     req:"Complete all three previous shepherd tasks. Stanislav marks Natan on your map.",
+     summary:"Natan reports a 'werewolf' killing sheep at night. The werewolf is Bedřich — a local man with a severe skin condition, living wild in the forest out of shame. Three paths: (A) Speak to Bedřich alone first at night near the stream north of Natan's flock, gain his trust, and help him reintegrate. Village rep improves, best Honour. (B) Tell Natan the truth without talking to Bedřich — a mob confronts him, he panics and must be talked down or defended. (C) Kill the 'werewolf' — Bedřich dies, Natan grateful, Honour penalty.",
+     reward:"Shepherd's Champion trophy (bronze). Coin and supplies from Natan.",
+     tip:"Bedřich's camp is in a hollow near the stream — visit at night. His camp has signs of a man living rough, not a monster. Path (A) is the most rewarding and earns the trophy. He's not dangerous — just frightened."},
+  ];
+
+  const stepColors=["var(--blue2)","var(--green2)","var(--amber2)","var(--purple2)"];
+  const stepBg=["rgba(48,96,160,0.1)","rgba(58,138,88,0.1)","rgba(200,134,26,0.08)","rgba(96,64,160,0.1)"];
+  const stepBorder=["rgba(48,96,160,0.3)","rgba(58,138,88,0.3)","rgba(200,134,26,0.25)","rgba(96,64,160,0.3)"];
+
+  let h=`
+  <div style="background:var(--bg2);border:1px solid rgba(200,134,26,0.3);border-radius:var(--radius2);padding:16px;margin-bottom:20px">
+    <div style="font-family:'Cinzel',serif;font-size:16px;color:var(--amber2);margin-bottom:8px">🐑 The Shepherd Questline</div>
+    <div style="font-size:12px;font-family:monospace;color:var(--text2);line-height:1.7">A chain of four tasks in the Trosky region centred on the local shepherd community and their ongoing wolf problem. Starts after completing <b style="color:var(--amber2)">Mutt</b> and waiting 72 in-game hours. Ends with one of the game's most quietly human side stories.</div>
+    <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+      <div style="background:var(--bg3);border-radius:var(--radius);padding:7px 12px;font-size:11px;font-family:monospace;color:var(--text3)">📍 Region: <b style="color:var(--text2)">Trosky</b></div>
+      <div style="background:var(--bg3);border-radius:var(--radius);padding:7px 12px;font-size:11px;font-family:monospace;color:var(--text3)">🔗 Requires: <b style="color:var(--text2)">Mutt (side quest)</b></div>
+      <div style="background:var(--bg3);border-radius:var(--radius);padding:7px 12px;font-size:11px;font-family:monospace;color:var(--green2)">🏆 Shepherd's Champion (bronze)</div>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:0;margin-bottom:20px;overflow-x:auto">
+    ${chain.map((q,i)=>`
+    <div style="display:flex;align-items:center;gap:0;flex-shrink:0">
+      <div style="background:${stepBg[i]};border:1px solid ${stepBorder[i]};border-radius:var(--radius);padding:7px 12px;text-align:center;min-width:110px">
+        <div style="font-size:9px;font-family:monospace;color:${stepColors[i]};font-weight:700;text-transform:uppercase;letter-spacing:0.5px">Step ${q.step}</div>
+        <div style="font-size:11px;font-family:'Cinzel',serif;color:var(--text);margin-top:2px;line-height:1.3">${q.name}</div>
+        <div style="font-size:10px;font-family:monospace;color:var(--text3);margin-top:2px">${q.npc}</div>
+      </div>
+      ${i<chain.length-1?`<div style="font-size:16px;color:var(--text3);padding:0 6px;flex-shrink:0">→</div>`:""}
+    </div>`).join("")}
+  </div>
+  ${chain.map((q,i)=>{
+    const qdata=Q.find(x=>x.id===q.id);
+    const status=qdata?qdata.status:0;
+    const isDone=status===2;
+    return`<div style="background:var(--bg2);border:1px solid ${isDone?"rgba(58,138,88,0.3)":stepBorder[i]};border-radius:var(--radius2);padding:16px;margin-bottom:12px;opacity:${isDone?0.7:1}">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+        <div style="width:28px;height:28px;background:${stepBg[i]};border:1px solid ${stepBorder[i]};border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-family:'Cinzel',serif;color:${stepColors[i]};font-weight:700;flex-shrink:0">${q.step}</div>
+        <div style="flex:1">
+          <div style="font-family:'Cinzel',serif;font-size:15px;color:${isDone?"var(--text3)":stepColors[i]};${isDone?"text-decoration:line-through":""}">${q.name}</div>
+          <div style="font-size:11px;font-family:monospace;color:var(--text3);margin-top:1px">📍 ${q.loc} &nbsp;·&nbsp; 🧑 ${q.npc}</div>
+        </div>
+        ${isDone?`<span style="font-size:11px;font-family:monospace;color:var(--green2);background:rgba(58,138,88,0.12);border:1px solid rgba(58,138,88,0.3);padding:2px 8px;border-radius:4px">✓ Done</span>`:""}
+      </div>
+      <div style="font-size:12px;font-family:monospace;color:var(--text3);margin-bottom:8px;padding:6px 10px;background:var(--bg3);border-radius:var(--radius)"><b style="color:var(--text2)">Requires:</b> ${q.req}</div>
+      <div style="font-size:12px;font-family:monospace;color:var(--text2);line-height:1.65;margin-bottom:8px">${q.summary}</div>
+      <div style="font-size:11px;font-family:monospace;color:var(--text3);margin-bottom:6px"><b style="color:var(--amber2)">Reward:</b> ${q.reward}</div>
+      <div style="display:flex;gap:7px;padding:7px 10px;background:rgba(200,134,26,0.06);border-radius:var(--radius);border-left:2px solid var(--amber)"><span style="color:var(--amber2);flex-shrink:0">💡</span><span style="font-size:11px;font-family:monospace;color:var(--text2);line-height:1.5">${q.tip}</span></div>
+    </div>`;
+  }).join("")}
+  <div style="margin-top:8px;padding:12px 14px;background:var(--bg3);border-radius:var(--radius);border:1px solid rgba(58,138,88,0.25)">
+    <div style="font-size:11px;font-family:monospace;color:var(--green2);font-weight:700;margin-bottom:4px">🏆 Shepherd's Champion (Bronze)</div>
+    <div style="font-size:11px;font-family:monospace;color:var(--text2);line-height:1.6">Complete all four shepherd tasks in sequence: Sheep among Wolves → The Lost Sheep → Carrot on a Stick → Hunting the Werewolf. The trophy is awarded at the end of Hunting the Werewolf on Path (A) — reintegrating Bedřich. Note: the trophy name suggests you need the good ending for Bedřich, not just completion.</div>
+  </div>`;
+
+  document.getElementById("shepherds-content").innerHTML=h;
 }
 
 renderList();renderDetail();updateStats();
