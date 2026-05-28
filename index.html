@@ -138,6 +138,7 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--bg);color:var(--t
   <button class="tab" id="tb-romance" onclick="setTab('romance')">💕 Romance</button>
   <button class="tab" id="tb-trophies" onclick="setTab('trophies')">🏆 Trophies</button>
   <button class="tab" id="tb-shepherds" onclick="setTab('shepherds')">🐑 Shepherd Questline</button>
+  <button class="tab" id="tb-secrets" onclick="setTab('secrets')">🥚 Secrets & Easter Eggs</button>
 </div>
 <div class="main" id="app-main">
   <div id="page-tracker" style="display:flex;flex:1;overflow:hidden">
@@ -184,6 +185,7 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--bg);color:var(--t
   <div id="page-romance" style="display:none;flex:1;overflow-y:auto"><div style="padding:20px;max-width:800px;margin:0 auto" id="romance-content"></div></div>
   <div id="page-trophies" style="display:none;flex:1;overflow-y:auto"><div style="padding:20px;max-width:860px;margin:0 auto" id="trophies-content"></div></div>
   <div id="page-shepherds" style="display:none;flex:1;overflow-y:auto"><div style="padding:20px;max-width:760px;margin:0 auto" id="shepherds-content"></div></div>
+  <div id="page-secrets" style="display:none;flex:1;overflow-y:auto"><div style="padding:20px;max-width:860px;margin:0 auto" id="secrets-content"></div></div>
 </div>
 
 <script>
@@ -248,61 +250,61 @@ const Q=[
  desc:"Henry arrives in the silver city of Kuttenberg — wealthier, more dangerous, and more politically complex than Trosky.",
  tip:"Talk to the bathhouse owner Adam early — he's a major quest hub for Kuttenberg.",status:0,notes:""},
 {id:"mq14",r:"Kuttenberg",tp:"Main Quest",o:2,name:"Speak of the Devil",m:false,hm:false,t:false,b:false,l:false,
- desc:"Henry begins navigating the dangerous web of factions operating in and around Kuttenberg.",
- tip:"",status:0,notes:""},
+ desc:"Henry begins navigating the dangerous web of factions operating in and around Kuttenberg. Several major side quest chains open here — this is the best moment to branch out before pushing the main story.",
+ tip:"In Vino Veritas, A Good Scrub, Yackers 'n' Fash, and the Kuttenberg Tournament all become available around this quest. Prioritise them before advancing.",status:0,notes:""},
 {id:"mq15",r:"Kuttenberg",tp:"Main Quest",o:3,name:"Into the Underworld",m:false,hm:false,t:false,b:false,l:false,
  desc:"Henry goes deeper into Kuttenberg's criminal underworld to find the information he needs.",
  tip:"Master Schindel's Toys task and Rosa's Book task unlock during this quest — don't miss them.",status:0,notes:""},
 {id:"mq16",r:"Kuttenberg",tp:"Main Quest",o:4,name:"Via Argentum",m:false,hm:false,t:false,b:false,l:false,
  desc:"Henry follows the trail of silver — and corruption — deeper into the mines and the city's power structures.",
  tip:"The Fifth Commandment and Post Scriptum side quests unlock after this.",status:0,notes:""},
-{id:"mq17",r:"Kuttenberg",tp:"Main Quest",o:5,name:"The Word and the Flesh",m:false,hm:false,t:false,b:false,l:false,
- desc:"Religious and political tensions boil over as Henry gets closer to the truth.",
- tip:"",status:0,notes:""},
-{id:"mq18",r:"Kuttenberg",tp:"Main Quest",o:6,name:"Prey",m:false,hm:false,t:false,b:false,l:false,
- desc:"Henry becomes the hunted. Stealth and awareness are critical.",
+{id:"mq17",r:"Kuttenberg",tp:"Main Quest",o:5,name:"The Devil's Pack",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Henry and Zizka work to reunite their scattered band of fighters. The quest focuses on tracking down and recruiting Dry Devil's former companions who have dispersed across the Kuttenberg region.",
+ tip:"The Collector task becomes available from Bailiff Crux during this quest — it's missable if you skip it and advance. Do it immediately.",status:0,notes:""},
+{id:"mq18",r:"Kuttenberg",tp:"Main Quest",o:6,name:"Taking French Leave",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Henry must navigate a delicate situation requiring stealth and discretion to slip away from a dangerous location without arousing suspicion. A tense quest that rewards careful preparation.",
  tip:"Keep Mutt with you — his alert behaviour can save your life in this quest.",status:0,notes:""},
-{id:"mq19",r:"Kuttenberg",tp:"Main Quest",o:7,name:"A Dark Corner",m:false,hm:false,t:false,b:false,l:false,
- desc:"Henry uncovers a disturbing secret hidden in the darkest corner of Kuttenberg.",
- tip:"",status:0,notes:""},
-{id:"mq20",r:"Kuttenberg",tp:"Main Quest",o:8,name:"Sins of the Father",m:false,hm:false,t:false,b:false,l:false,
- desc:"Henry grapples with truths about his own past that surface alongside the main conspiracy.",
- tip:"",status:0,notes:""},
-{id:"mq21",r:"Kuttenberg",tp:"Main Quest",o:9,name:"Family Silver",m:false,hm:false,t:false,b:false,l:false,
- desc:"The silver conspiracy comes into clearer focus. Powerful men are exposed.",
- tip:"",status:0,notes:""},
-{id:"mq22",r:"Kuttenberg",tp:"Main Quest",o:10,name:"The Hussite Wedding",m:false,hm:false,t:false,b:false,l:false,
- desc:"A tense social event that serves as cover for a dangerous intelligence operation.",
+{id:"mq19",r:"Kuttenberg",tp:"Main Quest",o:7,name:"The King's Gambit",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Henry is drawn into a web of political intrigue as the factions around Kuttenberg manoeuvre for power. Careful dialogue choices matter here — who you side with shapes the alliances available in the final act.",
+ tip:"Speech skill above 10 opens several extra dialogue paths.",status:0,notes:""},
+{id:"mq20",r:"Kuttenberg",tp:"Main Quest",o:8,name:"The Feast",m:false,hm:false,t:false,b:false,l:false,
+ desc:"A high-stakes social event that serves as cover for a dangerous intelligence operation. Henry must attend and navigate the gathering while pursuing a hidden objective. Dress appropriately — the right clothes give bonuses in conversation.",
  tip:"Dress appropriately — wearing the right clothes gives bonuses in conversation.",status:0,notes:""},
-{id:"mq23",r:"Kuttenberg",tp:"Main Quest",o:11,name:"A Needle in a Haystack",m:false,hm:false,t:false,b:true,l:false,
- desc:"Henry must infiltrate Sedletz Monastery to expose a conspirator hiding among the clergy. Three branches: (A) Full stealth — slip in at night, gather evidence by searching cells and eavesdropping on confessions, identify the conspirator without alerting anyone. Cleanest outcome, no monks harmed, Sedletz remains friendly. (B) Persuasion — befriend the abbot and get access through dialogue (Speech 9+), then use the evidence to confront the conspirator publicly. (C) Force — enter openly, threaten monks for information, culminating in a brawl. The conspirator is caught but Sedletz turns hostile and the monastery NPCs remain unfriendly for the rest of the game.",
- tip:"Stealth path is strongly recommended — Sedletz has unique loot and quest content (Thou art but dust…) that requires good standing with the monks. Force locks you out of significant content. Approach at night, wear dark clothing, and bring lockpicks.",status:0,notes:""},
+{id:"mq21",r:"Kuttenberg",tp:"Main Quest",o:9,name:"Exodus",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Henry and his allies are forced to make a rapid departure from a dangerous situation. A quest of urgency and consequence as the Kuttenberg situation escalates.",
+ tip:"Stock up on healing supplies and repair your gear before this quest — combat encounters can be sudden.",status:0,notes:""},
+{id:"mq22",r:"Kuttenberg",tp:"Main Quest",o:10,name:"The Lion's Den",m:false,hm:false,t:false,b:false,l:false,
+ desc:"Henry must infiltrate Sigismund's camp. During this quest you can unlock the highly missable task The Stalker by examining Chertan's body in the infirmary tent and choosing the right dialogue option.",
+ tip:"⚠️ TRIGGER THE STALKER TASK HERE: When examining Chertan's body in the infirmary, say 'A girl from the baths will help' — this opens the optional objective to ask Katherine for help, which starts The Stalker side task.",status:0,notes:""},
+{id:"mq23",r:"Kuttenberg",tp:"Main Quest",o:11,name:"Dancing with the Devil",m:false,hm:false,t:false,b:true,l:true,
+ desc:"Henry faces the most important moral choice in the game — Dry Devil demands an act of atrocity to prove loyalty. This decision has permanent ending consequences. Also unlocks the Thou art but dust… side quest at Sedletz Monastery.",
+ tip:"⚠️ REFUSE to burn Maleshov. Agreement permanently blocks the good ending. No redemption exists. Complete ALL Kuttenberg side quests before this quest — it is very close to the point of no return.",status:0,notes:""},
 {id:"mq24",r:"Kuttenberg",tp:"Main Quest",o:12,name:"Oratores",m:false,hm:false,t:false,b:false,l:false,
  desc:"A critical story advancement. Henry's actions here set the stage for the final act.",
  tip:"⚠️ KUTTENBERG POINT OF NO RETURN. Complete ALL Kuttenberg side quests before this.",status:0,notes:""},
-{id:"mq25",r:"Kuttenberg",tp:"Main Quest",o:13,name:"The Prodigal Son",m:false,hm:false,t:false,b:false,l:false,
- desc:"Henry confronts aspects of his identity and history that he can no longer avoid.",
- tip:"",status:0,notes:""},
-{id:"mq26",r:"Kuttenberg",tp:"Main Quest",o:14,name:"All that Glitters",m:false,hm:false,t:false,b:false,l:false,
- desc:"The silver conspiracy fully unravels. Henry is at the centre of a dangerous unravelling of power.",
- tip:"",status:0,notes:""},
-{id:"mq27",r:"Kuttenberg",tp:"Main Quest",o:15,name:"Thou shalt not kill",m:false,hm:false,t:false,b:true,l:true,
- desc:"Henry faces the Dancing with the Devil decision — Dry Devil demands an act of atrocity. This is the most important moral choice in the game with permanent ending consequences.",
- tip:"⚠️ REFUSE to burn Maleshov. Agreement permanently blocks the good ending. No redemption exists.",status:0,notes:""},
-{id:"mq28",r:"Kuttenberg",tp:"Main Quest",o:16,name:"Come What May",m:false,hm:false,t:false,b:true,l:true,
- desc:"The crisis in Kuttenberg reaches its peak. This quest contains the Istvan Toth confrontation — the most consequential single choice in the game for the ending. Two branches: (A) Offer Istvan a honourable duel and win — honourable kill, positive ending score, parents approve, Honourable Duel trophy. (B) Kill Istvan without a duel (overwhelm him, use allies, or defenestrate him during the prior Storm confrontation if that was your choice) — dishonourable kill, negative ending score, parents disapprove. Istvan must die either way; only the method matters.",
- tip:"⚠️ This is your last chance to handle Istvan correctly if you didn't duel him in Storm. Sword skill 15+ and a fully repaired weapon are strongly recommended. Don't bring companions into the fight — it may auto-flag as dishonourable even if you meant to duel.",status:0,notes:""},
-{id:"mq29",r:"Kuttenberg",tp:"Main Quest",o:17,name:"For the Greater Good",m:false,hm:false,t:false,b:true,l:false,
- desc:"Henry is asked to betray someone he trusts to protect a larger cause — the details shift depending on your alliances, but the core choice is the same. Two branches: (A) Comply willingly — go through with the betrayal, accept the moral weight of it. The people asking remember Henry as someone who made the hard choice. Unlocks a specific late-game dialogue. (B) Refuse and find an alternative — requires prior quest flags (high Honour, specific earlier choices) to have a viable third path. If no alternative exists, you are forced into compliance anyway. Either way the main story advances — the branch is about how Henry and those around him feel about it.",
- tip:"Whether a genuine choice exists here depends on your Honour score and earlier decisions. Play with high Honour and don't cut corners in prior quests to keep the alternative open.",status:0,notes:""},
+{id:"mq25",r:"Kuttenberg",tp:"Main Quest",o:13,name:"The Italian Job",m:false,hm:false,t:false,b:false,l:false,
+ desc:"A daring heist involving the royal silver. Henry and his companions plan and execute an elaborate operation that puts everything at risk for a massive payoff.",
+ tip:"Preparation pays off here — gather all intel from previous quests before committing to the plan.",status:0,notes:""},
+{id:"mq26",r:"Kuttenberg",tp:"Main Quest",o:14,name:"Civitas Pragensis",m:false,hm:false,t:false,b:true,l:false,
+ desc:"The second quest after the point of no return. Henry faces a 1v1 duel against Erik. Choices made here have consequences for the ending. A victory celebration opens the quest before the duel.",
+ tip:"Talk to Janosh, Dry Devil, Katherine, and Samuel at the celebration — toast 'To the fallen' for a reputation boost. Then prepare for the Erik duel: keep your weapon in top repair.",status:0,notes:""},
+{id:"mq27",r:"Kuttenberg",tp:"Main Quest",o:15,name:"So it begins...",m:false,hm:false,t:false,b:true,l:true,
+ desc:"Henry and his allies defend Suchdol against an enemy assault. Two waves of intense combat. Gather supplies from Janosh (food), Katherine and Musa (medical), and Frenzl (ammunition) before the siege begins.",
+ tip:"⚠️ Two tough back-to-back battles. Repair all gear beforehand. Use the Voulge available in the fortress to knock down enemy ladders during the second wave — five ladders destroyed ends the assault.",status:0,notes:""},
+{id:"mq28",r:"Kuttenberg",tp:"Main Quest",o:16,name:"Besieged",m:false,hm:false,t:false,b:false,l:false,
+ desc:"The siege of Suchdol continues. Henry must hold out as the pressure mounts. A critical juncture in the final act.",
+ tip:"Stock up on healing supplies. This is deep in the endgame — no more side questing after this.",status:0,notes:""},
+{id:"mq29",r:"Kuttenberg",tp:"Main Quest",o:17,name:"Hunger and Despair",m:false,hm:false,t:false,b:false,l:false,
+ desc:"The siege of Suchdol takes its toll. Henry must manage dire conditions — morale, supplies, and the growing desperation of defenders all become critical factors.",
+ tip:"Keep resources stocked heading into this quest. Companions' states affect how the quest resolves.",status:0,notes:""},
 {id:"mq30",r:"Kuttenberg",tp:"Main Quest",o:18,name:"Reckoning",m:false,hm:false,t:false,b:true,l:true,
  desc:"Three pivotal choices in quick succession: spare or kill Brabant after the duel, let Markvart von Aulitz die naturally or kill him yourself, and whether to save Samuel. These three choices together determine the ending.",
  tip:"⚠️ Spare Brabant. Let Markvart die naturally. Save Samuel. All three = good ending path.",status:0,notes:""},
-{id:"mq31",r:"Kuttenberg",tp:"Main Quest",o:19,name:"To Dust you Shan't Return",m:false,hm:false,t:false,b:false,l:false,
- desc:"The penultimate chapter. The consequences of Henry's entire journey crystallise.",
- tip:"",status:0,notes:""},
-{id:"mq32",r:"Kuttenberg",tp:"Main Quest",o:20,name:"Last Rites",m:false,hm:false,t:false,b:true,l:false,
- desc:"The final quest. Henry faces judgment — but the ending is already sealed by every choice made before this moment.",
+{id:"mq31",r:"Kuttenberg",tp:"Main Quest",o:19,name:"Last Rites (Godwin)",m:false,hm:false,t:false,b:false,l:false,
+ desc:"A companion's story reaches its conclusion. A quieter, character-driven chapter before the final battle.",
+ tip:"No combat. Take your time with the dialogue — Godwin's arc gets a meaningful send-off here.",status:0,notes:""},
+{id:"mq32",r:"Kuttenberg",tp:"Main Quest",o:20,name:"Judgement Day",m:false,hm:false,t:false,b:true,l:false,
+ desc:"The final quest. The siege of Suchdol reaches its conclusion and Henry faces the ultimate reckoning — but the ending is already sealed by every choice made before this moment.",
  tip:"There is no last-minute choice that changes your ending. It is determined by prior decisions.",status:0,notes:""},
 
 // ── TROSKY SIDE QUESTS (17) ──────────────────────
@@ -360,8 +362,8 @@ const Q=[
 
 // ── TROSKY TASKS (19) ────────────────────────────
 {id:"t01",r:"Trosky",tp:"Task",o:1,name:"A Sinful Soul",m:true,hm:true,t:false,b:false,l:false,
- desc:"A task unlocked only by completing all optional objectives in 'The Hermit'. A deeply personal story of guilt and redemption.",
- tip:"🔴 HIGHLY MISSABLE: Only available if you complete every optional step in The Hermit. Speak to Margaret in the graveyard afterwards.",status:0,notes:""},
+ desc:"Only unlocked by completing every optional objective in The Hermit — including exhausting all dialogues with Innkeeper Betty, speaking to all witnesses, and investigating the black horse in Apollonia. The Hermit (whose real name is revealed through this investigation) then confesses a sin of his past and gives Henry a task: bring a conciliatory cross to Widow Margaret in Troskowitz in exchange for his sword. Margaret, it turns out, has been waiting years for acknowledgement of her deceased husband Jan — a man with no grave. Henry must escort her to the graveyard at night to lay Jan to rest.",
+ tip:"🔴 HIGHLY MISSABLE: This task only unlocks if you do ALL optional steps in The Hermit in order. Speak to Betty first, complete every witness, investigate the horse, THEN confront the Hermit with 'I learned some strange things about you…' and exhaust his dialogue fully. Margaret is in Troskowitz in the evenings, usually across from the tailor. The graveyard scene is one of the quietest and most moving moments in the game.",status:0,notes:""},
 {id:"t02",r:"Trosky",tp:"Task",o:2,name:"Canker",m:true,hm:false,t:false,b:false,l:false,
  desc:"First task in the Gules questline (Semine). Gules — a former bandit turned guard — needs Henry's help tracking a criminal called Canker.",
  tip:"⛔ BLOCKED if Semine family was destroyed in Necessary Evil (Hashek path). Gules only exists if the family survived. Complete before Necessary Evil.",status:0,notes:""},
@@ -427,18 +429,18 @@ const Q=[
 {id:"sq20",r:"Kuttenberg",tp:"Side Quest",o:3,name:"A Good Scrub",m:false,hm:false,t:false,b:true,l:false,
  desc:"The Kuttenberg bathhouse is at the centre of a web of secrets — owner Adam is running a blackmail operation using private conversations overheard in the baths, and several important Kuttenberg citizens are compromised. Two branches: (A) Expose Adam — gather evidence of the blackmail scheme (his ledger is in the locked safe room, lockpick 8 or pickpocket the key), bring it to the magistrate. Adam is arrested, his victims are freed, and his operation ends. Henry gets access to the Guest Ledger (useful in other Kuttenberg quests) and improved relations with several NPCs. (B) Blackmail Adam yourself — use the evidence to extract money and favours from Adam rather than turning him in. Adam becomes a nervous ally, you gain coin and discounts, but Honour drops and Adam's victims remain compromised.",
  tip:"Path (A) is the better long-term play — several Kuttenberg side quests benefit from the freed NPCs being friendly. Adam's key is most safely obtained during the lunch hour when he leaves his office briefly. The Guest Ledger has named clients that cross-reference with other quests.",status:0,notes:""},
-{id:"sq21",r:"Kuttenberg",tp:"Side Quest",o:4,name:"Ill Repute",m:false,hm:false,t:false,b:false,l:false,
- desc:"Henry's reputation in Kuttenberg is under attack. Track down the source of damaging rumours.",
- tip:"",status:0,notes:""},
+{id:"sq21",r:"Kuttenberg",tp:"Side Quest",o:4,name:"Ill Repute",m:false,hm:false,t:false,b:true,l:false,
+ desc:"A bathhouse worker in Kuttenberg named Žofie has been the subject of damaging rumours that have cost her regular clients and put her livelihood at risk. She asks Henry to find out who is spreading them and why. The culprit turns out to be a jealous rival worker, Klářka, acting on orders from a Kuttenberg merchant whose private indiscretion Žofie witnessed. Two branches: (A) Expose both Klářka and the merchant — confront the merchant with the evidence of his complicity (his letter to Klářka is in her room at the bathhouse, lockpick 4). He backs down and pays Žofie compensation. Klářka is dismissed. (B) Only confront Klářka — the rumours stop, but the merchant faces no consequences and Žofie receives only a partial resolution.",
+ tip:"Go for full exposure (A) — the merchant's letter is the key, and it only takes a few minutes to find it. Žofie's reward for the full resolution includes a permanent discount at the bathhouse, which is useful for stat boosts throughout Kuttenberg.",status:0,notes:""},
 {id:"sq22",r:"Kuttenberg",tp:"Side Quest",o:5,name:"Feast for the Poor",m:false,hm:false,t:false,b:true,l:false,
  desc:"The local parish wants to hold a feast for the poor quarters of Kuttenberg but lacks funds and food. Henry is asked to help organise it. Three branches: (A) Full effort — source quality food (buy from the market or hunt), secure donations from two wealthy Kuttenberg merchants (Speech 6+ or favour-completion), and help set up the feast. The meal is generous, the poor remember Henry's name, and parish reputation increases significantly. (B) Cut corners — use cheap provisions and skip the merchant donations. The feast happens but is sparse; the parish is disappointed and the poor receive little. Honour is neutral. (C) Pocket the donation money — collect funds from willing donors and keep some (or all) for Henry. The feast is scaled back, the parish notices the shortfall, and Honour drops.",
  tip:"Full effort (A) unlocks a follow-on interaction where the parish priest gives Henry a unique blessed item. The two merchants to approach are the cloth merchant near the town square and the spice merchant in the lower market — both have optional favours that make the Speech check easier.",status:0,notes:""},
 {id:"sq23",r:"Kuttenberg",tp:"Side Quest",o:6,name:"The Spark",m:false,hm:false,t:false,b:true,l:false,
  desc:"A printer named Kryšpín is producing incendiary pamphlets that are inflaming tensions between Hussite and Catholic factions in the city. Three branches: (A) Destroy the pamphlets and protect Kryšpín — the tension subsides, both sides calm down, Kryšpín survives and offers a printing discount. Best Honour outcome. (B) Let the pamphlets circulate — riots break out in one district, two named NPCs are killed, and a follow-on task (Smothering the Flame) unlocks to contain the damage. (C) Turn Kryšpín in to the Catholic overseer — he is arrested and tortured, the pamphlets are suppressed brutally, and Honour drops significantly.",
  tip:"⚠️ Letting the pamphlets spread locks in Smothering the Flame as a forced task and kills two named NPCs permanently. Option (A) is cleanest for both Honour and quest completion. Speech 9 lets you convince both faction leaders to stand down without burning the pamphlets.",status:0,notes:""},
-{id:"sq24",r:"Kuttenberg",tp:"Side Quest",o:7,name:"In Vino Veritas",m:false,hm:false,t:false,b:false,l:false,
- desc:"Wine, secrets, and a social gathering where what is said in confidence rarely stays that way.",
- tip:"",status:0,notes:""},
+{id:"sq24",r:"Kuttenberg",tp:"Side Quest",o:7,name:"In Vino Veritas",m:false,hm:false,t:false,b:true,l:false,
+ desc:"Wine merchant Casper Rudolf in Kuttenberg City is losing business to the monks of Sedletz Monastery, whose wine has a mysterious edge he can't replicate. He asks Henry to pose as a wine connoisseur and extract the secret from Innkeeper Havel, who sells the monastery wine. Two branches and optional steps: (A) Get Casper's vintner book first — it's held by Adleta Mannlicher (Casper's ex-lover's daughter). Persuade her or gift her 5 marigolds from the garden to borrow it. Reading it gives you correct answers at Havel's tasting, making impressing him much easier. After learning the monks' secret ingredient (incense burned in the barrels), Casper sends you to steal seedlings from the restricted monastery garden — can be done by sneaking through the adjacent building or picking a lock. (B) Skip the book and wing the tasting — harder Speech checks with Havel, but still completable.",
+ tip:"Getting the book (Path A) is worth it even if your Speech is high — reading it first gives you guaranteed correct answers at the tasting. The monastery garden can also be accessed legitimately if you've completed Under the Straw Hat and gotten hired as a monastery worker. Reward: 205–630 Groschen depending on how much of the optional content you complete.",status:0,notes:""},
 {id:"sq25",r:"Kuttenberg",tp:"Side Quest",o:8,name:"Ars Dimicatoria",m:false,hm:false,t:false,b:false,l:false,act:"once",
  desc:"A formal combat questline involving the art of swordsmanship and a challenging instructor.",
  tip:"Leads into the Kuttenberg Tournament. Complete this first.",status:0,notes:""},
@@ -453,7 +455,7 @@ const Q=[
  tip:"You may need to complete a Pilgrimage task first.",status:0,notes:""},
 {id:"sq29",r:"Kuttenberg",tp:"Side Quest",o:12,name:"Thou art but dust…",m:false,hm:false,t:false,b:true,l:false,
  desc:"A dying monk at Sedletz Monastery, Brother Vintíř, is tormented by a terrible secret — he witnessed a murder years ago and said nothing. He asks Henry to help him die in peace. Three branches: (A) Hear his full confession and promise to act on it — investigate the old murder, find the evidence buried in the monastery garden, and confront the still-living perpetrator (a respected Kuttenberg merchant). Best outcome: justice is served, Vintíř dies peacefully, Sedletz rewards Henry. (B) Offer absolution without investigating — Vintíř is comforted but the murderer goes free. Vintíř dies with some peace. (C) Refuse or report Vintíř's confession to the abbot — the abbot suppresses it, Vintíř dies in anguish, and Henry takes an Honour penalty.",
- tip:"One of the best quests in the game. Path (A) requires thorough investigation — the buried evidence is under the east garden's apple tree (Mutt finds it). Confronting the merchant requires Speech 8+ or the physical evidence. Only accessible if you used stealth or persuasion in A Needle in a Haystack — Force approach blocks entry.",status:0,notes:""},
+ tip:"One of the best quests in the game. Path (A) requires thorough investigation — the buried evidence is under the east garden's apple tree (Mutt finds it). Confronting the merchant requires Speech 8+ or the physical evidence. Only accessible if you used stealth or persuasion during the Sedletz infiltration in Dancing with the Devil — Force approach blocks entry.",status:0,notes:""},
 {id:"sq30",r:"Kuttenberg",tp:"Side Quest",o:13,name:"Spoils of War",m:false,hm:false,t:false,b:true,l:false,
  desc:"At Sigismund's Camp, Henry discovers a cache of looted goods — church silver, family heirlooms, and personal valuables stripped from villages. Three parties claim ownership: the camp's quartermaster (who wants it for the war effort), a local priest (representing the church), and a widow named Anežka (whose family items are in the cache). Three branches: (A) Return everything to its rightful owners — investigate each item, find its origin, split the cache appropriately. Anežka gets her heirlooms, the church silver goes back, the camp gets only the unclaimed military goods. Best Honour. (B) Give everything to the camp quartermaster — fast resolution, camp relations improve, Honour penalty. (C) Keep the most valuable pieces for Henry — Honour drops significantly, both Anežka and the priest become hostile.",
  tip:"Path (A) is time-consuming but the Honour gain and Anežka's follow-on gratitude (she gives Henry a unique family ring) make it worthwhile. The investigation involves reading item markings and cross-referencing a confiscation ledger found in the camp commander's tent.",status:0,notes:""},
@@ -481,104 +483,104 @@ const Q=[
 {id:"sq38",r:"Kuttenberg",tp:"Side Quest",o:21,name:"Ransom",m:false,hm:false,t:false,b:true,l:false,
  desc:"A merchant's son has been taken hostage near Dänemark by a group of desperate outlaws demanding 500 Groschen. Three branches: (A) Pay the ransom — the boy is released immediately, no violence. The merchant reimburses Henry in full plus a reward. The outlaws escape. (B) Negotiate without paying — Speech 8+ lets Henry convince the leader that the boy is more trouble than he's worth, and exposes a fault line between the outlaws (some don't want to hurt anyone). They release the boy and scatter. (C) Assault the outlaw camp — rescue the boy by force. Riskiest option; the boy may be harmed if you don't take out the guard near him first. On success: the merchant's reward is the same but you keep any money already offered.",
  tip:"Negotiation (B) is the most rewarding: no cost, Honour gain, and you learn the outlaw leader's backstory (he's a former miller ruined by the same merchant). Assault is viable with good combat stats — priority target is the guard near the boy in the barn. Paying is fastest if you're low on time.",status:0,notes:""},
-{id:"sq39",r:"Kuttenberg",tp:"Side Quest",o:22,name:"Post Scriptum",m:false,hm:false,t:false,b:false,l:false,
- desc:"Unlocks after Via Argentum. An intimate and personal side quest with strong writing.",
- tip:"See Katherine after finishing Into the Underworld.",status:0,notes:""},
+{id:"sq39",r:"Kuttenberg",tp:"Side Quest",o:22,name:"Post Scriptum",m:false,hm:false,t:false,b:true,l:false,
+ desc:"Unlocks after completing Into the Underworld. Henry is approached by Kvyertsolav at the tavern on the road west of Kuttenberg, who asks him to write a letter for some associates. At a house in Kuttenberg, Henry writes the letter — but afterward the miners threaten to kill him to keep him quiet. Three branches: (A) Talk your way out (Speech or Intimidation check) then side with the miners — meet them at the Hloushetz Gate, defeat Markold of Lourny together, get the best reward (150g). (B) Talk your way out then turn the miners over to the bailiff — quest ends quickly, 100g reward. (C) Work with Markold against the miners — attack the miners' camp, 60g from Markold.",
+ tip:"Path (A) with the miners gives the best reward and the most action. The speech/intimidation check to avoid immediate combat is winnable at moderate skill levels. Don't talk to Innkeeper Treadlight to start this — seek out Kvyertsolav at the outdoor tables of the tavern west of Kuttenberg.",status:0,notes:""},
 {id:"sq40",r:"Kuttenberg",tp:"Side Quest",o:23,name:"The Fifth Commandment",m:false,hm:false,t:false,b:true,l:false,
  desc:"Thou shalt not kill. Unlocks after Via Argentum — a man named Bohuslav confesses to Henry that he killed someone years ago and has lived with it ever since. The victim's family never knew the truth. Three branches: (A) Encourage Bohuslav to confess to the family himself — accompany him to their home in Pschitoky. The family's reaction is devastating but they eventually find peace. Bohuslav is not reported to authorities (the killing was accidental). Best Honour outcome. (B) Report Bohuslav to the Kuttenberg magistrate — he is arrested and tried. The family learns the truth through the trial. Justice is served formally. Honour neutral. (C) Tell Bohuslav to keep the secret — he thanks Henry, but is visibly broken. The family never learns. Honour penalty.",
  tip:"Path (A) is the most emotionally complete — Bohuslav's confession scene with the family is one of the most quietly powerful moments in the game. Don't rush past it. Path (B) is more 'lawful' but coldly satisfying. Path (C) is the coward's way out.",status:0,notes:""},
 
 // ── KUTTENBERG TASKS (36) ────────────────────────
 {id:"t20",r:"Kuttenberg",tp:"Task",o:1,name:"Arrow-head",m:true,hm:true,t:true,b:false,l:false,
- desc:"A highly missable task in the wilderness near Kuttenberg. Time-sensitive once encountered.",
- tip:"🔴 HIGHLY MISSABLE: If you pass the trigger point without starting it, it's gone forever.",status:0,notes:""},
+ desc:"On a wilderness road near Kuttenberg, Henry encounters Karel Arrowhead — a man with a crossbow bolt lodged in his skull who is miraculously still alive and in good spirits. He explains the bolt has been there for years and he's learned to live with it. He asks Henry to help him find a barber-surgeon willing to attempt removal. The task is as absurd as it sounds — most surgeons refuse, but the eccentric barber-surgeon in Suchdol will consider it.",
+ tip:"🔴 HIGHLY MISSABLE + TIME SENSITIVE: Karel's location on the road is a scripted one-time encounter that disappears once you pass through the area during a specific main quest window. Once he's gone, he's gone. Also: Karel is a walking Skyrim 'arrow to the knee' reference — the moment is worth stopping for even if you rush the task.",status:0,notes:""},
 {id:"t21",r:"Kuttenberg",tp:"Task",o:2,name:"Popinjay Shoot",m:false,hm:false,t:false,b:false,l:false,act:"rep",
- desc:"A traditional archery competition held in Kuttenberg City.",
- tip:"",status:0,notes:""},
+ desc:"A traditional archery competition held regularly in Kuttenberg City. A wooden 'popinjay' (parrot) is mounted on a tall pole and competitors shoot it down in layers. Good coin reward for consistent wins.",
+ tip:"Archery skill 12+ makes this comfortable. The parrot is stationary — no wind adjustment needed. A good repeatable source of Groschen if your bow game is solid.",status:0,notes:""},
 {id:"t22",r:"Kuttenberg",tp:"Task",o:3,name:"The Thieves' Code",m:false,hm:false,t:false,b:false,l:false,
- desc:"Learn the thieves' code used by Kuttenberg's criminal underworld.",
- tip:"",status:0,notes:""},
+ desc:"Kuttenberg's criminal underworld communicates through a system of chalk symbols marked on walls and doorframes — a secret language that tells thieves which houses are safe to rob, which are guarded, and which belong to fellow criminals. A fence near the lower market offers to teach Henry this code for a fee, or Henry can learn it by completing tasks for the Yackers 'n' Fash questline.",
+ tip:"Learning the code unlocks map annotations when you're near marked buildings — useful for planning thieving runs. If you've already done Yackers 'n' Fash, the fence will recognise you as affiliated and offer a discount.",status:0,notes:""},
 {id:"t23",r:"Kuttenberg",tp:"Task",o:4,name:"Beyond the Grave",m:false,hm:false,t:false,b:false,l:false,
- desc:"A mysterious task involving messages from beyond the grave — or so it seems.",
- tip:"",status:0,notes:""},
+ desc:"A widow in the Kuttenberg lower district has been receiving messages she believes are from her recently deceased husband — notes left in their old meeting spots with intimate details only he could know. She asks Henry to investigate. The source turns out to be a former friend of the husband who is trying to comfort her — but his knowledge of private details has a darker explanation that Henry must uncover.",
+ tip:"A short but atmospheric task. Worth doing for the character writing alone. No combat required — purely investigation and dialogue.",status:0,notes:""},
 {id:"t24",r:"Kuttenberg",tp:"Task",o:5,name:"The German's Treasure",m:false,hm:false,t:false,b:false,l:false,
- desc:"Track down a German merchant's hidden treasure using clues from his journal.",
- tip:"",status:0,notes:""},
+ desc:"A German merchant named Schreiber died in Kuttenberg and left behind a cryptic journal with clues to a hidden stash of valuables buried somewhere outside the city. Henry finds or purchases the journal and must decode its riddles — each clue points to a landmark or location in the Kuttenberg countryside.",
+ tip:"The journal clues reference real in-game landmarks — read them carefully before fast-travelling anywhere. The final dig site requires a spade. Reward scales with how many optional clues you solve: partial completion still pays out but the full cache is significantly larger.",status:0,notes:""},
 {id:"t25",r:"Kuttenberg",tp:"Task",o:6,name:"Teeth in the Bag",m:false,hm:false,t:false,b:false,l:false,
  desc:"A task for a Kuttenberg dentist with more teeth than patience.",
  tip:"Leads into More Teeth in a Bag.",status:0,notes:""},
 {id:"t26",r:"Kuttenberg",tp:"Task",o:7,name:"More Teeth in a Bag",m:false,hm:false,t:false,b:false,l:false,
- desc:"Continuation of the dentist's tasks.",
- tip:"",status:0,notes:""},
+ desc:"Continuation of the Kuttenberg dentist's task. After helping with the initial collection job, the dentist has a new problem: a patient has gone missing before paying, and some of his pulled teeth have also been stolen — apparently by someone who believes powdered human teeth have alchemical properties.",
+ tip:"Track down the missing patient first — he's in the lower market district. The alchemist collecting teeth for potions is nearby. A quick task with a funny resolution.",status:0,notes:""},
 {id:"t27",r:"Kuttenberg",tp:"Task",o:8,name:"High Toll",m:false,hm:false,t:false,b:true,l:false,
  desc:"Tollkeeper Radim on the road between Kuttenberg and Miskowitz is charging extortionate rates and pocketing the difference. Travellers are complaining. Three branches: (A) Gather evidence — find the discrepancy between Radim's official ledger and the actual charter rates (the charter is posted in Kuttenberg's town hall), then report him to the bailiff. Radim is removed from his post and fined. Honour gain. (B) Confront Radim directly — threaten or intimidate him into refunding overcharged travellers. He stops the extortion but stays at his post. (C) Bribe Radim yourself for a personal discount — he continues extorting everyone else. Honour penalty, but you get reduced toll rates for the rest of the game.",
  tip:"Path (A) takes the most legwork but permanently fixes the problem. Path (B) is quick and satisfying with Intimidation 6+. The Kuttenberg town hall charter is easy to miss — it's on a noticeboard inside the main hall entrance, not outside.",status:0,notes:""},
 {id:"t28",r:"Kuttenberg",tp:"Task",o:9,name:"Warding Off Evil",m:false,hm:false,t:false,b:false,l:false,
- desc:"Help a superstitious local ward off perceived evil spirits.",
- tip:"",status:0,notes:""},
+ desc:"An elderly woman in Miskowitz is convinced her neighbour is a witch whose curse has been souring her milk, wilting her garden, and making her chickens stop laying. She asks Henry to perform a ward — or expose the so-called witch. Investigation reveals the neighbour is not a witch at all, but has been using herbs from her garden that are leaching into the shared well. Henry can explain the truth or perform a theatrical 'warding ritual' to satisfy the old woman without embarrassing anyone.",
+ tip:"The theatrical ritual (lie charitably) is actually the funniest and most satisfying option — Henry hams it up, the old woman is delighted, and the neighbour is quietly grateful. No Speech check required for either resolution.",status:0,notes:""},
 {id:"t29",r:"Kuttenberg",tp:"Task",o:10,name:"Under the Straw Hat",m:true,hm:true,t:false,b:false,l:false,
- desc:"A highly missable task. Must be triggered at the right moment during the main story.",
- tip:"🔴 HIGHLY MISSABLE: Start during the main quest 'Into the Underworld'.",status:0,notes:""},
+ desc:"During 'Into the Underworld', bathhouse owner Adam tips Henry that the monks of Sedletz Monastery are hiring day labourers for their gardens and harvest. Henry can get hired by speaking to the Monastery's lay brother at the Kuttenberg market and passing a simple interview. Working at the monastery gives disguised access to its restricted garden areas — critical for In Vino Veritas's monastery infiltration objective and for exploring Sedletz before Dancing with the Devil locks monastery relations.",
+ tip:"🔴 HIGHLY MISSABLE: Only triggered during 'Into the Underworld' via Adam at the bathhouse. Once you advance past this quest window, the hiring opportunity closes permanently. Completing it makes In Vino Veritas's monastery objective trivially easy and gives early access to Sedletz loot.",status:0,notes:""},
 {id:"t30",r:"Kuttenberg",tp:"Task",o:11,name:"Mark of the Brotherhood",m:false,hm:false,t:false,b:false,l:false,
- desc:"Prove yourself to a secretive brotherhood operating in Kuttenberg.",
- tip:"",status:0,notes:""},
+ desc:"Henry is approached by a representative of a secretive guild brotherhood operating beneath Kuttenberg's legitimate trade guilds — an underground fraternity of craftsmen who share knowledge and resources outside official channels. To gain entry, Henry must prove himself through a series of tests: a craft challenge (Craftsmanship 8+ or using a specific technique the representative hints at), a loyalty oath, and recovering a stolen token from a rival brotherhood member.",
+ tip:"The craft challenge is the most demanding part — Craftsmanship 8 is needed unless you ask the representative about 'the old method' (a dialogue option that opens with Speech 6+), which gives an easier alternative test. Joining the brotherhood opens a unique fence and discounted supplies in Kuttenberg.",status:0,notes:""},
 {id:"t31",r:"Kuttenberg",tp:"Task",o:12,name:"Last Will",m:false,hm:false,t:false,b:true,l:false,
  desc:"A dying miner in Kuttenberg's lower quarter has a last request — deliver a sealed letter to his estranged daughter Marta in Pschitoky before he dies. Two branches: (A) Deliver the letter promptly — Marta reads it and reconciles with the memory of her father, rewarding Henry with a family ring. The dying man passes peacefully. (B) Open and read the letter first (requires breaking the seal) — the letter contains a confession of wrongdoing against Marta's late mother. You can choose to deliver it anyway (Marta is devastated but finds closure) or burn it (the miner's secret dies with him, Marta never knows the truth, Henry keeps the ring anyway after the miner dies).",
  tip:"Opening the letter has no quest-fail consequence but changes the emotional ending. The sealed delivery is the 'good' path and earns slightly better Honour. The confession content is some of the best incidental writing in the game — worth reading once.",status:0,notes:""},
 {id:"t32",r:"Kuttenberg",tp:"Task",o:13,name:"Master Schindel's Toys",m:true,hm:true,t:false,b:false,l:false,
- desc:"A task triggered by speaking to bathhouse owner Adam during 'Into the Underworld'. Recover stolen scholar's items.",
- tip:"🔴 HIGHLY MISSABLE: Only available during 'Into the Underworld'. Don't advance until you've started this.",status:0,notes:""},
+ desc:"During 'Into the Underworld', bathhouse owner Adam mentions that a scholar named Master Schindel has been robbed — his collection of precision mechanical instruments (astrolabes, measuring tools, and a rare orrery component) was taken by a thief who frequents the lower bathhouse. Henry must identify the thief from Adam's guest ledger, track him down in the Kuttenberg lower district, and recover the instruments either by purchase, intimidation, or pickpocketing.",
+ tip:"🔴 HIGHLY MISSABLE: Only unlocked by speaking to Adam during 'Into the Underworld'. The thief is identifiable from the ledger — look for the entry dated two days before the robbery. Schindel's reward includes a unique Alchemy recipe that's not available elsewhere.",status:0,notes:""},
 {id:"t33",r:"Kuttenberg",tp:"Task",o:14,name:"Rosa's Book",m:true,hm:true,t:false,b:false,l:false,
- desc:"Another highly missable task tied to the Into the Underworld main quest window.",
- tip:"🔴 HIGHLY MISSABLE: Same window as Master Schindel's Toys. Do both immediately.",status:0,notes:""},
+ desc:"Also triggered during 'Into the Underworld'. A woman named Rosa — a bathhouse regular — left a book behind that belongs to a friend and has been asking Adam to hold it. The book turns out to be a coded ledger belonging to a money-lender operating outside the legal guild system. Several factions want it: the money-lender, a debtor who is named in it, and a Kuttenberg magistrate's clerk. Henry must decide who gets it — or use it as leverage.",
+ tip:"🔴 HIGHLY MISSABLE: Same trigger window as Master Schindel's Toys — speak to Adam during 'Into the Underworld' and do both immediately. Giving the book to the magistrate's clerk is the highest Honour option. Keeping it and selling to the debtor earns the most coin but locks out the magistrate questline.",status:0,notes:""},
 {id:"t34",r:"Kuttenberg",tp:"Task",o:15,name:"The Collector",m:true,hm:false,t:false,b:false,l:false,
- desc:"Help a collector in Miskowitz acquire a specific rare item.",
- tip:"Must complete before the end of Oratores.",status:0,notes:""},
+ desc:"An eccentric collector in Miskowitz — a retired merchant named Václav Zbrojník — is searching for a specific illuminated manuscript page that was torn from a rare book years ago. The page is in the possession of a monastery scribe who doesn't know its value. Henry must acquire it either by trade, theft, or by convincing the scribe of its true owner.",
+ tip:"⚠️ Must complete before the end of Oratores. The scribe is at Sedletz — visiting him while working there (Under the Straw Hat) makes acquisition easiest. The collector's reward includes a unique decorative item that counts toward the Notable Loot tab.",status:0,notes:""},
 {id:"t35",r:"Kuttenberg",tp:"Task",o:16,name:"Enough!",m:false,hm:false,t:false,b:true,l:false,
  desc:"In Miskowitz, a farmer named Prokop has reached breaking point — his neighbour Vít has been letting pigs root through Prokop's vegetable garden for months and refuses to do anything about it. Two branches: (A) Investigate and mediate — speak to both men and discover the root cause: Vít's fence was damaged by Prokop's cart months ago and never repaired, so Vít stopped caring. Arrange for the fence repair (costs 40g or a carpentry favour) and both men settle down. Honour gain. (B) Side with Prokop directly — threaten Vít with the bailiff. Vít fixes the fence under duress but resents it, and Prokop pays Henry a small reward. (C) Tell Prokop the pigs aren't technically violating any ordinance — he gets nothing and is furious with Henry.",
  tip:"Path (A) is the fairest and earns the most goodwill in Miskowitz. The carpentry favour is given by the village carpenter Radek — it only takes a short errand to unlock and saves the 40g.",status:0,notes:""},
 {id:"t36",r:"Kuttenberg",tp:"Task",o:17,name:"Fight Dirty",m:false,hm:false,t:false,b:false,l:false,act:"rep",
- desc:"An underground fighting task in Hroschan. Less rule-bound than the Brawler questline.",
- tip:"",status:0,notes:""},
+ desc:"Underground bare-knuckle fighting in Hroschan, run by a tout named Brůha near the tavern. Less structured than the Brawler questline — no ceremony, smaller crowds, and opponents who genuinely fight dirty (expect grabs, headbutts, and low blows). Better coin per fight than the mill brawls but the opponents are less predictable.",
+ tip:"Repeatable for coin. Grappling skill is far more important here than in the official brawler circuit — opponents grab constantly. Keep your Stamina up and don't let them get you into a clinch.",status:0,notes:""},
 {id:"t37",r:"Kuttenberg",tp:"Task",o:18,name:"A Moment of Fame",m:false,hm:false,t:false,b:true,l:false,
  desc:"Beneš — a local layabout in Hroschan — wants Henry to help him become famous by staging a dramatic 'heroic deed' he can boast about. Two branches: (A) Help Beneš pull off a genuine good deed — Henry engineers a situation where Beneš can actually help someone (a cart stuck in a ditch, a child's lost dog) and is seen doing it. Beneš is genuinely surprised by how it feels. He becomes a slightly better person, and the village thinks more of him. (B) Stage a fake heroic deed — arrange for Beneš to 'rescue' a villager from a staged threat. It works initially, but the ruse unravels when the 'attacker' (a friend of Henry's) drinks too much and tells the story. Beneš is embarrassed, Henry loses a little Honour, and the village is amused.",
  tip:"Path (A) takes slightly more effort to set up but the payoff — Beneš's genuine surprise at doing something real — is a lovely moment. The cart-in-ditch scenario is the easiest to arrange: there's always one stuck near the Hroschan stream crossing.",status:0,notes:""},
 {id:"t38",r:"Kuttenberg",tp:"Task",o:19,name:"X Marks the Spot",m:false,hm:false,t:false,b:false,l:false,
- desc:"A treasure hunt in Pschitoky based on a mysterious map.",
- tip:"",status:0,notes:""},
+ desc:"A mysterious hand-drawn map is found (or purchased from a dealer in Pschitoky) showing a crude X near a recognisable landmark east of Kuttenberg. Henry must decode the map's landmarks — distances are paced out, not to scale — to find a buried cache left by a long-dead bandit. The dig itself requires a spade.",
+ tip:"The map's landmarks correspond to real locations on the Kuttenberg map. The tree with the double trunk is the most distinctive marker — find it northeast of the road between Pschitoky and Grund. Bring your spade before you set out.",status:0,notes:""},
 {id:"t39",r:"Kuttenberg",tp:"Task",o:20,name:"Tragedy in Danemark",m:true,hm:true,t:false,b:false,l:false,
- desc:"A tragic task in Dänemark. Highly missable — must be triggered at exactly the right time.",
- tip:"🔴 HIGHLY MISSABLE: Check Dänemark early in your Kuttenberg exploration.",status:0,notes:""},
+ desc:"During the 'Follow the clues' step of Yackers 'n' Fash, Henry arrives at Danemark Mill to find it occupied by bandits who have slaughtered the hired hands and taken miller Hermann's family captive. Finding and untying Hermann in the northernmost building triggers this task. Kill all the bandits, then return to Hermann for a reward.",
+ tip:"🔴 HIGHLY MISSABLE: Only triggers during the 'Follow the clues' objective of Yackers 'n' Fash. If you clear the mill without first finding the tied-up family, the task never starts. Be careful approaching the barn — if any bandit sees you enter, they may attack the family. Part of the questline: Yackers 'n' Fash → Tragedy in Danemark → Striped Tonies → Popinjay Shoot.",status:0,notes:""},
 {id:"t40",r:"Kuttenberg",tp:"Task",o:21,name:"Hammer and Tongs",m:false,hm:false,t:false,b:false,l:false,
- desc:"A smithing-related task in Grund.",
- tip:"",status:0,notes:""},
+ desc:"A blacksmith in Grund named Bertolt is behind on a large order of horseshoes for the mine carts and is about to lose his contract. He asks Henry to help at the forge — specifically to work the bellows and assist with the hammering while he shapes the metal. Henry can also offer to do the forging himself if his Craftsmanship is high enough.",
+ tip:"Craftsmanship 6+ lets Henry take over the forging, which completes the order faster and earns a better reward. Even at lower Craftsmanship, helping with the bellows completes the task. Also counts toward the Hammerer secret perk (craft 10 items at a smithy).",status:0,notes:""},
 {id:"t41",r:"Kuttenberg",tp:"Task",o:22,name:"The White Roebuck",m:false,hm:false,t:false,b:false,l:false,
- desc:"Track a legendary white roebuck near Suchdol.",
- tip:"",status:0,notes:""},
+ desc:"Local hunters near Suchdol speak of a legendary pure-white roebuck that has been seen at dawn in the forest east of the village. A nobleman's gamekeeper offers a significant reward for proof of the creature — either a fresh kill or a sketch (requires Scholarship to draw). The roebuck appears only at dawn (4–6am) in a specific forest clearing and is extremely alert, fleeing at the slightest noise or scent.",
+ tip:"Approach on foot (horse will spook it), crouch, move slowly into the wind (watch the weather indicator). Archery skill 14+ for a clean kill at range. If you have Scholarship 5+, you can sketch it from a distance and spare it — earning a better Honour outcome and a unique reward from the gamekeeper.",status:0,notes:""},
 {id:"t42",r:"Kuttenberg",tp:"Task",o:23,name:"Primum Nil Nocere",m:false,hm:false,t:false,b:true,l:false,
  desc:"A barber-surgeon in Suchdol, Master Blažej, has a patient — a young woman named Zuzana — with an infected wound that he believes requires amputation. Zuzana and her husband refuse. Blažej asks Henry to convince them. Three branches: (A) Support the amputation — use Speech 7+ or Medicine knowledge to explain the danger. If successful, Zuzana agrees, the operation goes ahead, and she survives. Blažej teaches Henry a Medicine recipe as thanks. (B) Suggest a herbal alternative — if Henry has sufficient Alchemy (level 6+) he can propose a poultice treatment instead of amputation. This also works, Zuzana keeps her arm, and the reward is larger. (C) Side with the family's refusal — Blažej is overruled. Zuzana deteriorates over several in-game days and dies. Her husband blames Henry if he sees him again.",
  tip:"Path (B) is the best outcome if you have Alchemy 6+ — Zuzana keeps her arm and Blažej is impressed. Bring Chamomile and Valerian root; the recipe is in Blažej's own notes on his desk (readable before you choose). Path (A) is the fallback if your Alchemy is too low.",status:0,notes:""},
 {id:"t43",r:"Kuttenberg",tp:"Task",o:24,name:"The Reliquary",m:false,hm:false,t:false,b:false,l:false,
- desc:"Recover a stolen religious reliquary from bandits in the wilderness.",
- tip:"",status:0,notes:""},
+ desc:"A monk from Sedletz Monastery reports that a silver reliquary — a saint's finger bone in a jewelled case — has been stolen during a robbery on the road from Kuttenberg. He believes it was taken by a bandit group camped in the hills north of Suchdol. Henry must infiltrate or assault the camp and retrieve the reliquary. The bandit leader has it as a personal trophy and won't surrender it willingly.",
+ tip:"The camp has 4–5 bandits. Stealth approach at night lets you pickpocket the reliquary from the sleeping leader without fighting anyone. Combat approach works but is significantly harder — the leader wears padded armour and fights with a mace. Return it to the monk for an Honour bonus and a blessed item reward.",status:0,notes:""},
 {id:"t44",r:"Kuttenberg",tp:"Task",o:25,name:"The Stalker",m:true,hm:true,t:false,b:false,l:false,
- desc:"Someone is following Henry. Found at Sigismund's Camp.",
- tip:"🔴 HIGHLY MISSABLE: Available only during a specific window at Sigismund's Camp.",status:0,notes:""},
+ desc:"Only available during Main Quest 22: The Lion's Den. After searching the spot where Chertan was stabbed, Henry goes to the infirmary tent and finds Chertan has died. During the conversation with Grozav, Ditrich, and Musa, Henry must say 'A girl from the baths will help' — this triggers the optional objective to ask Katherine for help with the guard. Katherine is at the camp baths and agrees to help in exchange for Henry dealing with a soldier named Chakan who has been stalking and peeping on her at night. Find out who's stalking her, then confront Chakan to ensure he leaves her in peace.",
+ tip:"🔴 HIGHLY MISSABLE: Must say 'A girl from the baths will help' during The Lion's Den infirmary dialogue. If you pick another option, the task never opens. Katherine is only at the camp baths during this quest window. Reward: reputation gained with Katherine.",status:0,notes:""},
 {id:"t45",r:"Kuttenberg",tp:"Task",o:26,name:"Absolver",m:false,hm:false,t:false,b:false,l:false,
- desc:"A task at Sigismund's Camp involving absolution and past crimes.",
- tip:"",status:0,notes:""},
+ desc:"A soldier at Sigismund's Camp named Radslav is consumed by guilt over a killing he committed during the campaign — a non-combatant he mistakenly struck during a village raid. He has been unable to sleep and is becoming a liability to his unit. He asks Henry, as someone he trusts, to hear his confession and help him find a way to make it right. Henry can direct him to the camp's chaplain, help him send reparations anonymously to the victim's family, or simply listen and offer counsel.",
+ tip:"There's no wrong answer here — all three paths give Honour and resolve the task. But directing him to the chaplain AND sending reparations (both, if you help with both steps) gives the highest Honour gain and leaves Radslav visibly at peace.",status:0,notes:""},
 {id:"t46",r:"Kuttenberg",tp:"Task",o:27,name:"Nail in the Coffin",m:false,hm:false,t:false,b:false,l:false,
- desc:"A task in the Kuttenberg region involving a coffin-maker with a problem.",
- tip:"",status:0,notes:""},
+ desc:"Automatically triggered upon completing the three tasks Enough!, Fight Dirty, and Teeth in the Bag. Henry hears that the strongest unarmed fighter around can be found at the cemetery in Kuttenberg — the gravedigger Frantishek. Search for him, then challenge him to a fight at night in the graveyard. Defeating grandmaster Frantishek earns the Shoulder Throw combo and Unarmed XP.",
+ tip:"Complete Enough!, Fight Dirty, and Teeth in the Bag to trigger this automatically. The fight is at night — wait at the cemetery after sundown. Frantishek is the toughest unarmed opponent in the Kuttenberg questline; high Unarmed skill and the Clinch technique help significantly.",status:0,notes:""},
 {id:"t47",r:"Kuttenberg",tp:"Task",o:28,name:"Skeleton in the Closet",m:false,hm:false,t:false,b:true,l:false,
  desc:"Investigating the ruins of Zimburg, Henry discovers human remains buried under the cellar floor — and evidence they were murdered. A local family, the Hrůzas, owns the land. Two branches: (A) Investigate fully — identify the victim from documents in the ruin and trace the crime to an older member of the Hrůza family who has since died. Present the truth to the family matriarch, who already knew. She reveals the victim was her husband's blackmailer — the killing was self-defence. Henry can report this to the bailiff (the family faces scrutiny but ultimately no charges given the circumstances) or keep the secret (family is grateful, gives Henry a reward and ongoing goodwill). (B) Report to the bailiff without investigating — the Hrůza family is interrogated, the full story comes out messily, and the matriarch resents Henry.",
  tip:"Investigate first — always. The full story turns a seemingly simple crime into a sympathetic portrait. Keeping the secret after learning the truth is the most humane choice and earns the better reward. The documents are in a waterproof chest behind the collapsed east wall — you need a torch and to move some rubble.",status:0,notes:""},
 {id:"t48",r:"Kuttenberg",tp:"Task",o:29,name:"Like Old Times",m:true,hm:true,t:false,b:false,l:false,
- desc:"A nostalgic task at the Devil's Den involving an old acquaintance.",
- tip:"🔴 HIGHLY MISSABLE: Available only during a narrow window.",status:0,notes:""},
+ desc:"At Devil's Den, Henry encounters a former Skalitz villager — someone who knew him as a boy — who has fallen in with the local criminal element after the destruction of their home. They recognise each other and the villager, Ondřej, asks Henry for help getting out of the life he's stumbled into. Henry must help him break a debt obligation to the den's boss and arrange safe passage to a town where he can start again.",
+ tip:"🔴 HIGHLY MISSABLE: Only available during a specific window when Henry is in the Devil's Den area during the main story. The encounter triggers when you walk past the tavern entrance — don't fast-travel straight through. Paying off Ondřej's debt (200g) is the fastest solution; the Speech path (7+) avoids the cost but requires you to have already spoken to the den boss about something else first.",status:0,notes:""},
 {id:"t49",r:"Kuttenberg",tp:"Task",o:30,name:"Civic Duty",m:false,hm:false,t:false,b:false,l:false,
- desc:"Help the city of Kuttenberg with a civic matter that benefits the population.",
- tip:"",status:0,notes:""},
+ desc:"The Kuttenberg town councillor posts a notice seeking volunteers to help repair flood damage to the lower market district's drainage channel. Henry can pitch in with the physical work (Strength contributes — the labour is faster with a higher score), organise other workers, or donate coin to hire labourers instead. Completing it improves Henry's standing with Kuttenberg's civic administration.",
+ tip:"Donating 150g is the fastest completion (hire labourers). Doing the work yourself takes longer but earns more Honour and a personal thank-you from the councillor that opens a follow-on conversation about the city's ongoing problems — useful background for the main quest's political threads.",status:0,notes:""},
 {id:"t50",r:"Kuttenberg",tp:"Task",o:31,name:"Damsel in Distress",m:false,hm:false,t:false,b:true,l:false,
  desc:"Triggered via the Tipster in Bylany after Via Argentum. A noblewoman named Markéta has been waylaid by bandits on the road near Pschitoky and is being held in a farmstead. Three branches: (A) Assault the farmstead — fight or stealth your way in, rescue Markéta by force. She is shaken but unharmed and rewards Henry generously. (B) Negotiate with the bandit leader — he reveals Markéta hired him to fake the kidnapping as a ruse to escape an arranged marriage. With this knowledge, Henry can: (B1) keep the secret and help her truly escape — she flees to family in Moravia, the husband-to-be is told she was rescued but fled in shock. Or (B2) expose the ruse — she is returned to her betrothed, furious. She makes a powerful enemy of Henry. (C) Take the bandit's bribe — keep the secret for payment, Markéta escapes, but Honour drops.",
  tip:"Path (B1) is the most interesting outcome and earns Markéta as a positive contact. To reach it you must speak to the bandit leader before fighting breaks out — approach the farmstead from the back and enter through the barn first to intercept him alone.",status:0,notes:""},
@@ -586,17 +588,17 @@ const Q=[
  desc:"Peasants in Grund have stopped work and are blocking the road in protest over unpaid wages and brutal treatment from their foreman, Havel. Three branches: (A) Mediate — speak to both Havel and the peasant leader Jirka, use Speech 7+ to negotiate back pay and dismiss Havel. The peasants return to work peacefully, Jirka thanks Henry, and the road clears. (B) Side with the foreman — help Havel disperse the peasants by force or threat. The revolt ends violently, two peasants are arrested, and Honour takes a minor penalty. (C) Side fully with the peasants — help them barricade the road and confront the mine overseer directly. Havel is exposed as embezzling wages and dismissed. Higher Honour gain, but the confrontation involves a fight.",
  tip:"Full peasant support (C) gives the best Honour outcome and the most narrative satisfaction. The mediation path (A) is safest if your combat stats are low. Siding with Havel is the fastest resolution but penalises Honour.",status:0,notes:""},
 {id:"t52",r:"Kuttenberg",tp:"Task",o:33,name:"Something rotten…",m:false,hm:false,t:false,b:false,l:false,
- desc:"Something is very wrong in Grund. Track down the source of the problem.",
- tip:"",status:0,notes:""},
-{id:"t53",r:"Kuttenberg",tp:"Task",o:34,name:"Seeking Justice",m:true,hm:true,t:false,b:false,l:false,
- desc:"A highly missable justice-seeking task in Suchdol.",
- tip:"🔴 HIGHLY MISSABLE: Check Suchdol early and thoroughly.",status:0,notes:""},
+ desc:"The mining district of Grund is plagued by a foul smell that has been making workers ill for several weeks. The mine overseer blames a blocked drainage shaft; the local healer suspects something in the water. Henry investigates and discovers a body — a missing mine inspector — has been decomposing in a sealed side shaft. He was murdered to suppress his report about dangerous gas pockets that the overseer knew about and ignored.",
+ tip:"Follow the smell (Mutt makes this faster — he'll pull toward the shaft). The murder weapon is still in the shaft with the body. Exposing the overseer to the Kuttenberg mining guild earns significant Honour and leads to the overseer's dismissal. The gas pocket danger is also a hazard in the main quest's mine sections — noting it now gives useful context.",status:0,notes:""},
+{id:"t53",r:"Kuttenberg",tp:"Task",o:34,name:"Seeking Justice",m:true,hm:false,t:false,b:true,l:false,
+ desc:"Unlocked by completing All's fair… and choosing to give Pavel the stolen items. After a few in-game days, Captain Frenzl in Suchdol is looking for the thief from Wysoka. Henry can help track Pavel down — he's fled to Kuttenberg. Ask around in the city (the Hole in the Wall tavern and the town hall Scribe are key leads) and find him hiding with a cobbler in the north of the city. Henry can then choose whether to turn Pavel in to Frenzl or let him go.",
+ tip:"⚠️ Only available if you gave Pavel the items in All's fair… — other branches of that quest lock this out. Also: do NOT report Pavel to Frenzl early in All's fair… or this task will not appear. Wait until Frenzl's dialogue shifts to 'Do you need anything?' before agreeing to find Pavel. Reward: 100g (turn in) or 60g (let go).",status:0,notes:""},
 {id:"t54",r:"Kuttenberg",tp:"Task",o:35,name:"Attila",m:true,hm:false,t:false,b:false,l:false,
- desc:"A task in Maleshov. Missable depending on story choices.",
- tip:"Only available if Maleshov was NOT burned in the main quest.",status:0,notes:""},
+ desc:"In Maleshov (only accessible if it was not burned during Dancing with the Devil), a child named Tomík has named his cat 'Attila' and the cat has gotten itself stuck high in the rafters of the mill and refuses to come down. Henry must coax it down using food — Tomík suggests dried fish — or find another way. The cat, true to its name, is belligerent and will swipe at Henry if he gets too close without the right approach.",
+ tip:"⚠️ Only available if you refused to burn Maleshov in Dancing with the Devil. Bring dried fish or buy it from the Maleshov cook. Patience is the only skill needed. A short, light-hearted task that serves as a palate cleanser after the weight of the main quest's choices.",status:0,notes:""},
 {id:"t55",r:"Kuttenberg",tp:"Task",o:36,name:"Victimised",m:false,hm:false,t:false,b:false,l:false,
- desc:"Help a victim of crime in Pschitoky get justice.",
- tip:"",status:0,notes:""},
+ desc:"A merchant's widow in Pschitoky named Anna was robbed on the road and her cart of trade goods stolen. The local watch did nothing. Henry can track down the thieves (a pair of brothers who fled to a farm north of town) and recover the goods either through confrontation or by reporting them to the Kuttenberg bailiff with evidence. The brothers claim the goods were payment for a debt the merchant owed — Henry must determine who is telling the truth.",
+ tip:"Investigate before confronting anyone — the debt claim has partial truth to it. The merchant's own ledger (in Anna's possession) shows the debt was paid six months ago. Presenting this to the bailiff is the cleanest path. Recovering the goods by force also works but Anna gets less back (the brothers have already sold some).",status:0,notes:""},
 
 // ── DLC1 — BRUSHES WITH DEATH (10) ───────────────
 {id:"dlc1_1",r:"DLC1",tp:"Main Quest",o:1,name:"A Sketchy Situation",m:false,hm:false,t:false,b:false,l:false,
@@ -804,8 +806,8 @@ const BRANCHES={
   {id:"ob",x:330,y:370,w:200,h:44,type:"out-bad",label:"Negative ending score\nSemine wiped out"},
  ],edges:[["d","g"],["d","b"],["g","g2"],["b","b2"],["g2","g3"],["g3","secret"],["g3","og"],["b2","ob"]]},
 
-// ── THOU SHALT NOT KILL (MALESHOV) ──────────────────────────────
-"mq27":{title:"Thou shalt not kill — Maleshov Village",w:520,h:310,
+// ── DANCING WITH THE DEVIL (MALESHOV) ───────────────────────────
+"mq23":{title:"Dancing with the Devil — Maleshov Village",w:520,h:310,
  nodes:[
   {id:"d",x:180,y:10,w:160,h:44,type:"decision",label:"Dry Devil demands\nyou burn Maleshov"},
   {id:"g",x:30,y:100,w:185,h:44,type:"good",label:"Refuse — fight Dry Devil"},
@@ -814,14 +816,14 @@ const BRANCHES={
   {id:"ob",x:285,y:195,w:220,h:52,type:"out-bad",label:"Village burned to ash\nBeloved Son ending BLOCKED\nNo redemption path exists\nParents disapprove"},
  ],edges:[["d","g"],["d","b"],["g","og"],["b","ob"]]},
 
-// ── ISTVAN TOTH DUEL ────────────────────────────────────────────
-"mq28":{title:"Istvan Toth — How does he die?",w:500,h:255,
+// ── STORM — ISTVAN TOTH DUEL ────────────────────────────────────
+"mq12":{title:"Storm — Istvan Toth: How does he die?",w:500,h:255,
  nodes:[
   {id:"d",x:170,y:10,w:160,h:44,type:"decision",label:"Confront Istvan Toth\n(he must die either way)"},
   {id:"g",x:20,y:100,w:185,h:44,type:"good",label:"Honour him with a fair duel"},
-  {id:"b",x:295,y:100,w:185,h:44,type:"bad",label:"Kill him without a duel"},
-  {id:"og",x:5,y:195,w:200,h:44,type:"out-good",label:"Honourable kill\nParents approve at ending"},
-  {id:"ob",x:280,y:195,w:205,h:44,type:"out-bad",label:"Dishonourable kill\nNegative ending score"},
+  {id:"b",x:295,y:100,w:185,h:44,type:"bad",label:"Kill him without a duel\n(defenestrate or overwhelm)"},
+  {id:"og",x:5,y:195,w:200,h:44,type:"out-good",label:"Honourable kill\nParents approve at ending\nHonourable Duel trophy"},
+  {id:"ob",x:280,y:195,w:205,h:44,type:"out-bad",label:"Dishonourable kill\nNegative ending score\nParents disapprove"},
  ],edges:[["d","g"],["d","b"],["g","og"],["b","ob"]]},
 
 // ── RECKONING — THREE CHOICES ───────────────────────────────────
@@ -841,18 +843,6 @@ const BRANCHES={
   {id:"og3",x:0,y:525,w:185,h:40,type:"out-good",label:"Samuel lives · appears in\nepilogue thanking Henry"},
   {id:"ob3",x:195,y:525,w:200,h:40,type:"out-bad",label:"Samuel executed\nPraguers steal silver faster"},
  ],edges:[["d1","g1"],["d1","b1"],["b1","ob1"],["g1","d2"],["d2","g2"],["d2","b2"],["b2","ob2"],["g2","d3"],["d3","g3"],["d3","b3"],["g3","og3"],["b3","ob3"]]},
-
-// ── LAST RITES (ENDING) ─────────────────────────────────────────
-"mq32":{title:"Last Rites — Final Judgment (Parents' Dream)",w:555,h:310,
- nodes:[
-  {id:"d",x:195,y:10,w:165,h:44,type:"decision",label:"Henry's dream:\nparents judge his life"},
-  {id:"g",x:10,y:100,w:160,h:44,type:"good",label:"Mostly good choices\n+ show remorse"},
-  {id:"n",x:197,y:100,w:160,h:44,type:"neutral",label:"Mixed choices"},
-  {id:"b",x:385,y:100,w:160,h:44,type:"bad",label:"Mostly bad choices\nor no remorse"},
-  {id:"og",x:0,y:200,w:180,h:52,type:"out-good",label:"Beloved Son\nParents proud · full peace\nSamuel appears in epilogue"},
-  {id:"on",x:187,y:200,w:180,h:52,type:"out-neutral",label:"Honourable Son\nBittersweet farewell\nHenry rides into uncertainty"},
-  {id:"ob",x:375,y:200,w:175,h:52,type:"out-bad",label:"Disgraced Son\nParents mourn · dark epilogue\nVillage ash · allies dead"},
- ],edges:[["d","g"],["d","n"],["d","b"],["g","og"],["n","on"],["b","ob"]]},
 
 // ── BRUSHES WITH DEATH — GOD DISPOSES ──────────────────────────
 "dlc1_7":{title:"God Disposes — Voyta's Secrets",w:510,h:255,
@@ -875,15 +865,17 @@ const BRANCHES={
   {id:"ob",x:305,y:190,w:240,h:88,type:"out-bad",label:"Voyta burns his unfinished\nmasterpiece — destroyed\nNo skull reward\nNo Rest in One Piece trophy\nVoyta gets a different closure"},
  ],edges:[["d","g"],["d","b"],["g","og1"],["og1","og2"],["b","ob"]]},
 
-// ── FOR THE GREATER GOOD ────────────────────────────────────────
-"mq29":{title:"For the Greater Good — Comply or Resist?",w:520,h:255,
+// ── JUDGEMENT DAY (ENDING) ──────────────────────────────────────
+"mq32":{title:"Judgement Day — Final Judgment (Parents' Dream)",w:555,h:310,
  nodes:[
-  {id:"d",x:180,y:10,w:160,h:44,type:"decision",label:"Henry is asked to\nbetray someone he trusts"},
-  {id:"g",x:10,y:100,w:205,h:44,type:"good",label:"Resist — find alternative\n(needs high Honour + prior flags)"},
-  {id:"b",x:305,y:100,w:205,h:44,type:"neutral",label:"Comply willingly —\naccept the moral weight"},
-  {id:"og",x:0,y:200,w:215,h:44,type:"out-good",label:"Alternative path taken ✓\nSpecific late-game dialogue unlocked"},
-  {id:"ob",x:295,y:200,w:220,h:44,type:"out-neutral",label:"Story advances\nAllies remember Henry\nmade the hard choice"},
- ],edges:[["d","g"],["d","b"],["g","og"],["b","ob"]]},
+  {id:"d",x:195,y:10,w:165,h:44,type:"decision",label:"Henry's dream:\nparents judge his life"},
+  {id:"g",x:10,y:100,w:160,h:44,type:"good",label:"Mostly good choices\n+ show remorse"},
+  {id:"n",x:197,y:100,w:160,h:44,type:"neutral",label:"Mixed choices"},
+  {id:"b",x:385,y:100,w:160,h:44,type:"bad",label:"Mostly bad choices\nor no remorse"},
+  {id:"og",x:0,y:200,w:180,h:52,type:"out-good",label:"Beloved Son\nParents proud · full peace\nSamuel appears in epilogue"},
+  {id:"on",x:187,y:200,w:180,h:52,type:"out-neutral",label:"Honourable Son\nBittersweet farewell\nHenry rides into uncertainty"},
+  {id:"ob",x:375,y:200,w:175,h:52,type:"out-bad",label:"Disgraced Son\nParents mourn · dark epilogue\nVillage ash · allies dead"},
+ ],edges:[["d","g"],["d","n"],["d","b"],["g","og"],["n","on"],["b","ob"]]},
 
 // ── LACKEY — KEEP VOSTATEK SOBER ───────────────────────────────
 "sq12":{title:"Lackey (Vostatek) — Sober or Drunk?",w:540,h:310,
@@ -1107,8 +1099,9 @@ const BRANCHES={
   {id:"ob",x:285,y:200,w:225,h:56,type:"out-bad",label:"Dishonourable kill ✗\nNegative ending score\nParents disapprove\nGood ending harder to reach"},
  ],edges:[["d","g"],["d","b"],["g","og"],["b","ob"]]},
 
-// ── A NEEDLE IN A HAYSTACK — INFILTRATION METHOD ────────────────
-"mq23":{title:"A Needle in a Haystack — Infiltration Method",w:560,h:320,
+// ── DANCING WITH THE DEVIL — SEDLETZ INFILTRATION ───────────────
+// Note: The Sedletz monastery infiltration is part of Dancing with the Devil
+"mq23_sedletz":{title:"Dancing with the Devil — Sedletz Infiltration",w:560,h:320,
  nodes:[
   {id:"d",x:198,y:10,w:164,h:44,type:"decision",label:"Infiltrate Sedletz\nMonastery"},
   {id:"g",x:0,y:100,w:175,h:44,type:"good",label:"Full stealth\n(night, dark clothes)"},
@@ -1260,7 +1253,7 @@ function save(){const d={};Q.forEach(q=>d[q.id]={s:q.status,n:q.notes});try{loca
 
 function setTab(t){
   currentTab=t;
-  ["tracker","decisions","endings","riddler","npcs","forge","missable","loot","romance","trophies","shepherds"].forEach(id=>{
+  ["tracker","decisions","endings","riddler","npcs","forge","missable","loot","romance","trophies","shepherds","secrets"].forEach(id=>{
     document.getElementById("page-"+id).style.display=id===t?(id==="tracker"?"flex":"block"):"none";
     document.getElementById("tb-"+id).className="tab"+(t===id?" on":"");
   });
@@ -1274,6 +1267,7 @@ function setTab(t){
   if(t==="romance")renderRomance();
   if(t==="trophies")renderTrophies();
   if(t==="shepherds")renderShepherds();
+  if(t==="secrets")renderSecrets();
 }
 
 // ═══════════════════════════════════════════════════
@@ -1720,14 +1714,14 @@ const DECISIONS=[
     {t:"bad",l:"SECRET: Admit killing Hashek to von Bergow",c:"Henry is immediately hanged. Game Over. Load your last save."},
    ]},
   // ── ISTVAN TOTH ─────────────────────────────────────────────
-  {qid:"mq28",q:"When you confront Istvan Toth — how does he die?",
+  {qid:"mq12",q:"When you confront Istvan Toth in Storm — how does he die?",
    lockout:"Istvan Toth must die no matter what. The method is what affects your ending score.",
    choices:[
     {t:"good",l:"Honour him with a fair duel",c:"Honourable kill. Positive mark for the parents' judgment at the ending."},
     {t:"bad",l:"Kill him without giving him a duel",c:"Dishonourable kill. Negative mark for the ending. Faster but costs you."},
    ]},
   // ── MALESHOV ────────────────────────────────────────────────
-  {qid:"mq27",q:"Dry Devil demands you burn Maleshov village — do you comply?",
+  {qid:"mq23",q:"In Dancing with the Devil — Dry Devil demands you burn Maleshov village. Do you comply?",
    lockout:"Agreeing permanently and irrevocably blocks the Beloved Son (good) ending. There is no redemption path.",
    choices:[
     {t:"good",l:"Refuse — fight Dry Devil",c:"Hard fight but villagers live. Good ending path remains open. Parents approve."},
@@ -1788,7 +1782,8 @@ function renderDecisions(){
 
 const CHECKLIST=[
   {label:"Keep Semine secret (don't tell Otto)",qid:"mq07"},
-  {label:"Refuse to burn Maleshov — duel Dry Devil",qid:"mq27"},
+  {label:"Refuse to burn Maleshov — duel Dry Devil",qid:"mq23"},
+  {label:"Duel Istvan Toth honourably in Storm",qid:"mq12"},
   {label:"Spare Brabant after the duel",qid:"mq30"},
   {label:"Let Markvart von Aulitz die naturally",qid:"mq30"},
   {label:"Find and save Samuel",qid:"mq30"},
@@ -1796,13 +1791,13 @@ const CHECKLIST=[
 function renderEndings(){
   const done_ids=new Set(Q.filter(q=>q.status===2).map(q=>q.id));
   const gd=CHECKLIST.filter(c=>done_ids.has(c.qid)).length;
-  const ending=gd>=5?"Beloved Son":gd>=3?"Honourable Son":"Disgraced Son";
+  const ending=gd>=6?"Beloved Son":gd>=4?"Honourable Son":"Disgraced Son";
   const chk=CHECKLIST.map(c=>`<div class="chk-item"><span class="chk-ico">${done_ids.has(c.qid)?"✅":"○"}</span><div><div class="chk-txt${done_ids.has(c.qid)?" done":""}">${c.label}</div><div class="chk-q">${Q.find(q=>q.id===c.qid)?.name||""}</div></div></div>`).join("");
   document.getElementById("end-content").innerHTML=`
-    <p style="font-size:12px;color:var(--text3);margin-bottom:14px;font-family:monospace;line-height:1.6">Three endings determined by 5 key choices. Current projection: <b style="color:var(--amber2)">${ending}</b> (${gd}/5 complete).</p>
-    <div class="end-card end-good"><div class="end-hdr"><div class="end-ico">🏆</div><div><div class="end-title">Beloved Son</div><div class="end-sub" style="color:var(--green2)">Best ending — all 5 key choices correct</div></div></div>
-    <div class="end-desc">Henry's parents are proud. Full peace epilogue. All surviving characters get resolution. Requires all 5 checklist items.</div>
-    <div class="dsec-title" style="margin-bottom:7px">Checklist (${gd}/5)</div><div class="chk-list">${chk}</div></div>
+    <p style="font-size:12px;color:var(--text3);margin-bottom:14px;font-family:monospace;line-height:1.6">Three endings determined by 6 key choices. Current projection: <b style="color:var(--amber2)">${ending}</b> (${gd}/6 complete).</p>
+    <div class="end-card end-good"><div class="end-hdr"><div class="end-ico">🏆</div><div><div class="end-title">Beloved Son</div><div class="end-sub" style="color:var(--green2)">Best ending — all 6 key choices correct</div></div></div>
+    <div class="end-desc">Henry's parents are proud. Full peace epilogue. All surviving characters get resolution. Requires all 6 checklist items.</div>
+    <div class="dsec-title" style="margin-bottom:7px">Checklist (${gd}/6)</div><div class="chk-list">${chk}</div></div>
     <div class="end-card end-mid" style="margin-top:12px"><div class="end-hdr"><div class="end-ico">⚖️</div><div><div class="end-title">Honourable Son</div><div class="end-sub" style="color:var(--amber2)">Middle ending — 3–4 good choices</div></div></div>
     <div class="end-desc">Bittersweet resolution. Parents acknowledge Henry tried his best. Some saved, some lost. Most players get this on a first playthrough.</div></div>
     <div class="end-card end-bad" style="margin-top:12px"><div class="end-hdr"><div class="end-ico">💀</div><div><div class="end-title">Disgraced Son</div><div class="end-sub" style="color:var(--red2)">Bad ending — 2 or fewer good choices</div></div></div>
@@ -2878,6 +2873,339 @@ function renderShepherds(){
 }
 
 renderList();renderDetail();updateStats();
+
+// ═══════════════════════════════════════════════════
+// SECRETS & EASTER EGGS TAB
+// ═══════════════════════════════════════════════════
+function renderSecrets(){
+  const SECRETS_KEY="kcd2_secrets_v1";
+  let checked=JSON.parse(localStorage.getItem(SECRETS_KEY)||"{}");
+
+  function save(){localStorage.setItem(SECRETS_KEY,JSON.stringify(checked));}
+  function tog(id){checked[id]=!checked[id];save();renderSecrets();}
+
+  const categories=[
+    {
+      id:"easter",
+      icon:"🥚",
+      title:"Easter Eggs & World Secrets",
+      color:"var(--amber2)",
+      border:"rgba(200,134,26,0.3)",
+      bg:"rgba(200,134,26,0.06)",
+      intro:"Hidden references, jokes, and world-building secrets scattered across the map. None are quest-linked — they reward pure exploration.",
+      items:[
+        {
+          id:"ee1",
+          name:"Karel Arrowhead — the Skyrim Reference",
+          loc:"Road to Kuttenberg from Devil's Den, before Grund",
+          region:"Kuttenberg",
+          icon:"🏹",
+          missable:true,
+          desc:"On the road between Devil's Den and Kuttenberg you'll encounter Karel Arrowhead — a cheerful traveller with a crossbow bolt lodged directly through his skull, who is somehow alive, talkative, and completely unbothered by it. He explains he took it years ago and learned to live with it. This is a direct reference to the famous Skyrim meme 'I used to be an adventurer like you, then I took an arrow to the knee.' This encounter also starts the highly-missable task Arrow-head (see Quest Tracker).",
+          tip:"Karel's encounter is a one-time scripted event tied to the Arrow-head task window. If you fast-travel past the area without triggering it, he disappears. Walk the road on foot during early Kuttenberg exploration to guarantee the encounter.",
+        },
+        {
+          id:"ee2",
+          name:"\"Let Me Solo Her\" — the Elden Ring Skeleton",
+          loc:"Southwest of Lower Semine Mill, Trosky region",
+          region:"Trosky",
+          icon:"💀",
+          missable:false,
+          desc:"In the woods southwest of Lower Semine Mill in Trosky, a skeleton lies on the ground wearing a clay pot on its head (in place of a helmet) with two swords crossed over its body — one of which resembles a katana. This is a tribute to 'Let Me Solo Her', the legendary Elden Ring community player who became famous for helping thousands of players beat Malenia while wearing only a jar on their head and dual-wielding katanas.",
+          tip:"No interaction beyond finding it — there's no loot of note. Just a love letter from the devs to the Soulsborne community. Worth the detour for the laugh.",
+        },
+        {
+          id:"ee3",
+          name:"Harry Potter Easter Egg — Snitch & Whomping Willow",
+          loc:"Woods west of charcoal burner camp near Vidlak Pond, Trosky",
+          region:"Trosky",
+          icon:"🧹",
+          missable:false,
+          desc:"In the forest near Vidlak Pond, two scenes are staged side by side: a skeleton lying on a broom with a small golden ball in its mouth (Harry catching the Golden Snitch in the first film), and a crashed cart embedded in a large tree nearby (Ron crashing the flying Ford Anglia into the Whomping Willow in Chamber of Secrets). The placement is deliberate — both scenes are visible from the same spot.",
+          tip:"No loot of consequence, but the golden ball is examinable. The tree with the embedded cart is the more visually striking of the two — approach from the east and both scenes come into frame together.",
+        },
+        {
+          id:"ee4",
+          name:"Puss in Boots — the Cat with a Sword",
+          loc:"Behind a wall in Kuttenberg City, lower district",
+          region:"Kuttenberg",
+          icon:"🐱",
+          missable:false,
+          desc:"Tucked behind a wall in the lower district of Kuttenberg City, a cat sits upright holding a tiny wooden sword, with a small leather pouch of coins beside it. The coins cannot be picked up — the cat (presumably) owns them. This is a clear nod to Puss in Boots from the Shrek franchise, particularly the DreamWorks animated film. The cat's posture mirrors the character's signature stance.",
+          tip:"The cat is passive and interactive — you can pet it. Worth finding for the absurdity alone. The sword is a decorative prop and cannot be looted.",
+        },
+        {
+          id:"ee5",
+          name:"Luffy's Straw Hat — One Piece",
+          loc:"Southeast of Bilany/Bylany, Kuttenberg region",
+          region:"Kuttenberg",
+          icon:"🎩",
+          missable:false,
+          desc:"Southeast of the village of Bilany, a distinctive wide-brimmed straw hat is sitting on a post in the middle of a field with no obvious explanation. This is a reference to Monkey D. Luffy's iconic Straw Hat from the manga/anime One Piece — one of the most recognisable objects in the series. Unlike most Easter egg items, this one is fully functional: it can be worn, sold, or kept.",
+          tip:"The hat is wearable and has modest stats. Selling value is low — keep it as a collectible if you're a One Piece fan. It counts as a Hat slot item, so it will show on Henry's head.",
+        },
+        {
+          id:"ee6",
+          name:"Vampire Coffin",
+          loc:"Tunnels beneath Kuttenberg City",
+          region:"Kuttenberg",
+          icon:"🧛",
+          missable:false,
+          desc:"Deep in the tunnels under Kuttenberg — the same network Henry navigates during the main quest — an alcove contains a stone coffin with its lid slightly ajar. Inside is a body with a wooden stake driven through its chest, surrounded by a ring of garlic heads. No quest is attached to it, no NPC mentions it. It is simply there, waiting to be found, as a nod to vampire folklore and the classic horror imagery of Bohemia's own undead legends.",
+          tip:"The garlic is lootable and actually usable in cooking. The stake cannot be removed. Bring a torch — the alcove is very dark and easy to walk past.",
+        },
+        {
+          id:"ee7",
+          name:"UFO / Burning Object",
+          loc:"Southeast of Nebakov Castle, Kuttenberg region",
+          region:"Kuttenberg",
+          icon:"🛸",
+          missable:false,
+          desc:"Southeast of Nebakov Castle, smoke can be seen rising from a forest clearing. Heading toward it reveals a burnt clearing with scorched ground in a circular pattern and some debris — suggesting something crashed or landed from above. An invisible wall prevents full access to the centre of the impact zone. Best viewed from a hill or in photo mode, where the full scope of the scorch pattern is visible.",
+          tip:"You cannot reach the very centre — the invisible wall is deliberate. Use photo mode from a nearby elevated position for the best view. No loot, no quest trigger. Just an unexplained mystery left intentionally open by the devs.",
+        },
+        {
+          id:"ee8",
+          name:"Sword in the Stone",
+          loc:"Northwest of Rocktower Pond, Trosky",
+          region:"Trosky",
+          icon:"⚔️",
+          missable:false,
+          desc:"Northwest of Rocktower Pond in the Trosky region, a sword hilt protrudes from a large mossy rock — an unmistakable Excalibur reference. Unlike the legend, Henry can interact with it and actually pull out the blade, though what emerges is described as a 'Weapon Stub' — a ruined, useless fragment of a sword. Henry's reaction suggests this is not quite the prophecy he was hoping for.",
+          tip:"Worth doing just for Henry's reaction dialogue. The Weapon Stub is vendor trash but keep it as a souvenir if you like. The stone is in a quiet clearing — easy to miss if you don't explore off the road.",
+        },
+      ]
+    },
+    {
+      id:"perks",
+      icon:"⭐",
+      title:"Secret Perks",
+      color:"#7eb8f7",
+      border:"rgba(126,184,247,0.3)",
+      bg:"rgba(126,184,247,0.06)",
+      intro:"These perks are never explained in any menu or tooltip. They unlock silently when hidden conditions are met — most players finish the game without ever knowing they existed.",
+      items:[
+        {
+          id:"sp1",
+          name:"Good Old Pebbles",
+          unlock:"Ride Pebbles 35km total",
+          icon:"🐴",
+          missable:true,
+          category:"Horse",
+          desc:"Pebbles — Henry's starting horse from KCD1 who returns in KCD2 — has noticeably weaker stats than the top-tier horses available in Kuttenberg. But if you stick with her and ride 35km cumulatively, she unlocks this secret perk: her stats improve significantly, bringing her closer to (though not quite matching) the best horses in the game. It's a loyalty reward, and the perk's flavour text makes it clear the bond between Henry and Pebbles is the point.",
+          tip:"⚠️ MUTUALLY EXCLUSIVE with Red Herring — you can only bond-perk one horse. If you plan to use Pebbles long-term, don't rack up km on Herring first. The 35km goes by naturally if Pebbles is your primary mount — no grinding needed.",
+        },
+        {
+          id:"sp2",
+          name:"Red Herring",
+          unlock:"Ride Herring (the DLC horse) 50km total",
+          icon:"🐟",
+          missable:true,
+          category:"Horse",
+          desc:"The horse named Herring — obtainable in the early game from a specific stable — unlocks this perk after 50km of riding. It boosts the horse's stamina regeneration noticeably but reduces its saddlebag storage capacity as a trade-off. The name and the trade-off (a misleading bonus that comes with a hidden cost) are both part of the joke.",
+          tip:"⚠️ MUTUALLY EXCLUSIVE with Good Old Pebbles. You must acquire Herring early — he is not always available at the stable if you miss the window. 50km is a longer grind than Pebbles' 35km; only worth it if you specifically want Herring as your primary mount.",
+        },
+        {
+          id:"sp3",
+          name:"Hammerer",
+          unlock:"Craft 10 items at any smithy forge",
+          icon:"🔨",
+          missable:false,
+          category:"Combat",
+          desc:"Silently unlocks after crafting 10 items at a smithy. Reduces stamina cost on heavy weapon attacks and blocks by 10% permanently. The easiest way to get this early is to craft Farmer's Horseshoes (cheap materials, quick to make) repeatedly at the Trosky blacksmith. The perk stacks with other stamina perks and is particularly valuable for heavy weapon builds.",
+          tip:"Farmer's Horseshoes are the fastest path — each one counts toward the 10. You don't need 10 different items, just 10 total craft actions. The Hammer and Tongs task in Kuttenberg also contributes if you do the forging yourself.",
+        },
+        {
+          id:"sp4",
+          name:"Lab Dweller",
+          unlock:"Brew 20 potions at an alchemy bench",
+          icon:"⚗️",
+          missable:false,
+          category:"Alchemy",
+          desc:"After brewing 20 potions total (any type, any bench), this perk unlocks quietly. All potions and alcoholic items Henry consumes last longer, and hangover duration is reduced. Since alchemy is already one of the game's most efficient money-making routes, this perk tends to unlock naturally for players who engage with it even casually.",
+          tip:"If you're going for this deliberately, brew cheap potions like Lullaby or Digestive first — they use common ingredients and each one counts. The perk is retroactive to your brew count on loading the game after hitting 20.",
+        },
+        {
+          id:"sp5",
+          name:"Resistance",
+          unlock:"Pick 200 poisonous herbs (Belladonna, Henbane, Herb Paris, or Nettle)",
+          icon:"🌿",
+          missable:false,
+          category:"Survival",
+          desc:"Henry permanently gains +2 Vitality after picking 200 of the game's poisonous herb types. The idea is that prolonged exposure to low-level toxins through repeated handling has built up his resistance — medieval homeopathy. The herbs that count are Belladonna, Henbane, Herb Paris, and Nettle. All four are common throughout both regions.",
+          tip:"Nettle is by far the most common of the four — prioritise it. 200 sounds like a lot but goes quickly if you pick whenever you pass herb clusters on horseback. There is no counter shown anywhere in-game — you won't know when you're close until the perk silently appears in your perk list.",
+        },
+        {
+          id:"sp6",
+          name:"Steak Tartare",
+          unlock:"Drink the Strange Potion in the apothecary ruins south of Kuttenberg — but only AFTER drinking a Digestive Potion first",
+          icon:"🥩",
+          missable:true,
+          category:"Survival",
+          desc:"In the ruins of an abandoned apothecary south of Kuttenberg City, a mysterious vial labelled only 'Strange Potion' sits on a bench. Drinking it without preparation kills Henry via poison. But if you drink a Digestive Potion first and then drink the Strange Potion within a short window, Henry survives — and permanently unlocks the ability to eat raw meat without becoming poisoned. The flavour text suggests his stomach is now 'formidable.'",
+          tip:"⚠️ MISSABLE — this is a one-time vial that does not respawn. Drink the Digestive Potion first (it must be active in your system), then immediately drink the Strange Potion. The ruins are easy to miss — they're off the southern road, not marked on the map. Look for a collapsed building with a working fireplace still lit.",
+        },
+        {
+          id:"sp7",
+          name:"Sticky Fingers",
+          unlock:"Steal a cumulative total of 10,000 Groschen worth of items",
+          icon:"🤏",
+          missable:false,
+          category:"Stealth",
+          desc:"After the total value of items stolen by Henry (cumulative across the whole playthrough, including pickpocketing and looting bodies flagged as murder victims) reaches 10,000 Groschen, this perk unlocks. It provides a permanent bonus to coin earned from pickpocketing and looting bodies — effectively rewarding career criminals. The perk name is the game's dry acknowledgement that Henry has made some lifestyle choices.",
+          tip:"10,000g in stolen goods sounds steep but accumulates naturally on a thieving playthrough. High-value merchant stock (jewellery, fine clothing, alchemical supplies) counts the most. Kuttenberg's merchant quarter is the fastest place to grind this if you want it deliberately.",
+        },
+        {
+          id:"sp8",
+          name:"Master Strike",
+          unlock:"Defeat Tomcat at the Nomad's Camp and learn his counter-strike technique",
+          icon:"🗡️",
+          missable:true,
+          category:"Combat",
+          desc:"At the Nomad's Camp east of Kuttenberg, a wandering swordsman named Tomcat can be challenged to a sparring duel. He is significantly more skilled than the game implies — he uses an uncommon counter-strike technique that interrupts master strikes. Defeating him (or surviving long enough for him to respect you) opens a dialogue where he agrees to teach you his method. The resulting perk improves Henry's own counter-strike timing and adds a new combat option.",
+          tip:"⚠️ MISSABLE — Tomcat leaves the camp after the main story advances past a certain point. Fight him as soon as you find the Nomad's Camp. He is genuinely difficult — bring your best sword and be prepared for a patient, technical fight. Don't try to overwhelm him with aggression; he punishes it.",
+        },
+      ]
+    },
+    {
+      id:"mechanics",
+      icon:"⚙️",
+      title:"Hidden Mechanics",
+      color:"var(--green2)",
+      border:"rgba(58,138,88,0.3)",
+      bg:"rgba(58,138,88,0.06)",
+      intro:"Game systems and interactions the game never tells you about. Discovered by the community through experimentation.",
+      items:[
+        {
+          id:"hm1",
+          name:"Stolen Clothes & Naked NPCs",
+          icon:"👕",
+          missable:false,
+          desc:"If you pickpocket an NPC's clothing while they sleep at night, they will wake up the next morning with nothing to wear. They will not materialise new clothes — they will wander their routine in their undergarments (or nothing at all, depending on what you took). The game fully simulates the wardrobe consequence. Guards will react to an inexplicably underdressed merchant. The NPC will eventually acquire replacement clothing over time.",
+          tip:"More than a joke — useful for humiliating specific targets without violence. Also a surprisingly reliable test of how thorough the game's NPC simulation is. Works on most named NPCs in Trosky and Kuttenberg.",
+        },
+        {
+          id:"hm2",
+          name:"Mutt Tracks Herbs",
+          icon:"🐕",
+          missable:false,
+          desc:"Mutt's tracking ability is commonly used for hunting and investigation tasks, but it also works on herbs. If you command Mutt to track near a herb cluster you've already harvested, he will lead you to the nearest unharvested cluster of the same type. This makes farming rare herbs (Belladonna, Valerian, St. John's Wort) significantly faster than manual searching, especially in dense forest areas.",
+          tip:"You need to have the herb type in your inventory for the scent command to work reliably. Works best for Resistance perk grinding (200 poisonous herbs) — command Mutt near a Belladonna patch and he'll chain you from cluster to cluster.",
+        },
+        {
+          id:"hm3",
+          name:"Alcohol Improves Alchemy",
+          icon:"🍺",
+          missable:false,
+          desc:"Consuming alcohol before using an alchemy bench increases the potency of potions brewed during that session — up to a point. A small amount (one cup of wine or ale) gives a mild bonus. Two cups gives the maximum bonus. Three or more cups causes Henry to become visibly unsteady at the bench and introduces a chance of brewing failure. This mechanic is never explained anywhere in-game and contradicts the expectation that impairment is always negative.",
+          tip:"One cup of wine before a long alchemy session is optimal. The bonus affects potion duration and effect strength, not yield. Don't overdo it — the failure chance at three drinks is real and wastes ingredients.",
+        },
+        {
+          id:"hm4",
+          name:"Reputation Affects Prices — Both Ways",
+          icon:"📊",
+          missable:false,
+          desc:"Every merchant in KCD2 has an individual reputation score with Henry that is separate from regional reputation. Being consistently honest (no stolen goods sold to that merchant, no nearby crimes), generous (overpaying occasionally), or completing tasks for their community improves their personal price to Henry. The effect compounds — a merchant who genuinely likes Henry will offer prices 15–20% better than a neutral merchant. Conversely, selling stolen goods to a merchant who knows you does degrade their personal score.",
+          tip:"Kuttenberg's apothecary and the Trosky inn trader are the two most valuable merchants to cultivate personal reputation with early. Pay fairly with them even when you could haggle harder — the long-term price difference pays back significantly.",
+        },
+        {
+          id:"hm5",
+          name:"Sleeping in Owned Beds Regenerates More",
+          icon:"🛏️",
+          missable:false,
+          desc:"Sleeping in a bed that Henry has legitimate access to (rented, owned, or given permission to use) provides a noticeably better stat restoration than sleeping in a stolen bed or on the ground. The game never displays this as a stat — you won't see a 'Well Rested' buff — but the internal recovery values are meaningfully higher. Sleeping in a proper bed also eliminates minor injury debuffs that ground resting only partially clears.",
+          tip:"Always rent a room before a major quest or combat sequence if you can. The Trosky inn and the Kuttenberg bathhouse both offer beds that give full recovery. Ground sleeping is fine for saving time on the road but leaves Henry at ~80% of full restoration.",
+        },
+        {
+          id:"hm6",
+          name:"Dogs Warn of Sneaking",
+          icon:"🐕",
+          missable:false,
+          desc:"Dogs stationed at estates and farms react to Henry's stealth approach before human guards do. A dog beginning to bark will alert nearby guards even if Henry is technically in full stealth and crouched. However, if you have raw meat in your inventory and are spotted by a dog (but not yet by a human), you can immediately toss the meat to distract it and reset the detection before it escalates to a full alarm.",
+          tip:"Carry 2–3 pieces of raw meat on any stealth mission near a guarded property. The window to toss meat after a dog notices you is about 3 seconds. Works on every dog in the game — it's an intended mechanic that most players never discover because the prompt is easy to miss.",
+        },
+        {
+          id:"hm7",
+          name:"Wet Clothes Increase Noise",
+          icon:"💧",
+          missable:false,
+          desc:"Walking through streams, rain, or puddles in heavy clothing noticeably increases Henry's noise level for several in-game minutes while the clothes dry. Leather and padded armour are most affected. This can turn a previously viable stealth approach into a near-impossible one if you crossed a river carelessly on the way to the target. The drying timer is affected by weather — a sunny day dries clothes faster than overcast conditions.",
+          tip:"Before any stealth mission, check the weather and plan your route to avoid water. If you get wet accidentally, wait for a dry weather window or change into dry reserve clothing before approaching. The noise penalty is roughly equivalent to equipping one tier heavier armour.",
+        },
+      ]
+    },
+  ];
+
+  // Build checked counts
+  const totalItems=categories.reduce((a,c)=>a+c.items.length,0);
+  const checkedCount=Object.values(checked).filter(Boolean).length;
+
+  let h=`
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;flex-wrap:wrap;gap:8px">
+    <div>
+      <h2 style="font-family:'Cinzel',serif;font-size:22px;color:var(--gold);margin:0">🥚 Secrets & Easter Eggs</h2>
+      <div style="font-size:11px;font-family:monospace;color:var(--text3);margin-top:3px">Hidden content, Easter eggs, secret perks &amp; mechanics the game never explains</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <div style="font-size:12px;font-family:monospace;color:var(--text3)">${checkedCount}/${totalItems} found</div>
+      <div style="width:120px;height:6px;background:var(--bg3);border-radius:3px;overflow:hidden">
+        <div style="height:100%;width:${Math.round(checkedCount/totalItems*100)}%;background:var(--gold);border-radius:3px;transition:width 0.3s"></div>
+      </div>
+      <button onclick="(function(){localStorage.removeItem('${SECRETS_KEY}');renderSecrets();})()" style="font-size:10px;font-family:monospace;color:var(--text3);background:var(--bg3);border:1px solid var(--border);padding:3px 8px;border-radius:4px;cursor:pointer">Reset</button>
+    </div>
+  </div>
+  <div style="font-size:11px;font-family:monospace;color:var(--text3);margin-bottom:20px;padding:8px 12px;background:var(--bg2);border-radius:var(--radius);border-left:3px solid var(--amber)">
+    ✅ Check off items as you find them &nbsp;·&nbsp; 🔴 Red badge = missable/time-sensitive &nbsp;·&nbsp; Progress saves in your browser
+  </div>`;
+
+  categories.forEach(cat=>{
+    const catChecked=cat.items.filter(i=>checked[i.id]).length;
+    const allDone=catChecked===cat.items.length;
+    h+=`
+    <div style="margin-bottom:28px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
+        <div style="font-size:18px">${cat.icon}</div>
+        <h3 style="font-family:'Cinzel',serif;font-size:16px;color:${cat.color};margin:0;flex:1">${cat.title}</h3>
+        <div style="font-size:11px;font-family:monospace;color:${allDone?"var(--green2)":"var(--text3)"}">
+          ${allDone?"✓ All found":catChecked+"/"+cat.items.length+" found"}
+        </div>
+      </div>
+      <div style="font-size:12px;font-family:monospace;color:var(--text3);margin-bottom:12px;padding:7px 10px;background:${cat.bg};border-radius:var(--radius);border-left:2px solid ${cat.border}">${cat.intro}</div>
+      <div style="display:grid;gap:10px">`;
+
+    cat.items.forEach(item=>{
+      const done=!!checked[item.id];
+      h+=`
+      <div onclick="(function(){${JSON.stringify({id:item.id})};const id='${item.id}';const checked=JSON.parse(localStorage.getItem('${SECRETS_KEY}')||'{}');checked[id]=!checked[id];localStorage.setItem('${SECRETS_KEY}',JSON.stringify(checked));renderSecrets();})()" 
+           style="background:var(--bg2);border:1px solid ${done?"rgba(58,138,88,0.4)":cat.border};border-radius:var(--radius2);padding:14px 16px;cursor:pointer;opacity:${done?0.65:1};transition:opacity 0.2s;position:relative;user-select:none"
+           onmouseenter="this.style.borderColor='${cat.color}'" onmouseleave="this.style.borderColor='${done?"rgba(58,138,88,0.4)":cat.border}'">
+        <div style="display:flex;align-items:flex-start;gap:10px">
+          <div style="width:22px;height:22px;border:2px solid ${done?"var(--green2)":cat.color};border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;background:${done?"rgba(58,138,88,0.2)":"transparent"}">
+            ${done?`<span style="color:var(--green2);font-size:13px">✓</span>`:`<span style="font-size:11px">${item.icon}</span>`}
+          </div>
+          <div style="flex:1;min-width:0">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap">
+              <div style="font-family:'Cinzel',serif;font-size:13px;color:${done?"var(--text3)":cat.color};${done?"text-decoration:line-through":""}">${item.name}</div>
+              ${item.missable?`<span style="font-size:10px;font-family:monospace;color:#e85555;background:rgba(232,85,85,0.12);border:1px solid rgba(232,85,85,0.3);padding:1px 6px;border-radius:3px">🔴 Missable</span>`:""}
+              ${item.category?`<span style="font-size:10px;font-family:monospace;color:${cat.color};background:${cat.bg};border:1px solid ${cat.border};padding:1px 6px;border-radius:3px">${item.category}</span>`:""}
+            </div>
+            ${item.loc?`<div style="font-size:11px;font-family:monospace;color:var(--text3);margin-bottom:6px">📍 ${item.loc}</div>`:""}
+            ${item.unlock?`<div style="font-size:11px;font-family:monospace;color:var(--text2);margin-bottom:6px;padding:4px 8px;background:var(--bg3);border-radius:var(--radius);border-left:2px solid ${cat.border}"><b style="color:${cat.color}">Unlock:</b> ${item.unlock}</div>`:""}
+            <div style="font-size:12px;font-family:monospace;color:var(--text2);line-height:1.65;margin-bottom:8px">${item.desc}</div>
+            <div style="display:flex;gap:7px;padding:7px 10px;background:${cat.bg};border-radius:var(--radius)">
+              <span style="color:${cat.color};flex-shrink:0">💡</span>
+              <span style="font-size:11px;font-family:monospace;color:var(--text2);line-height:1.5">${item.tip}</span>
+            </div>
+          </div>
+        </div>
+      </div>`;
+    });
+
+    h+=`</div></div>`;
+  });
+
+  document.getElementById("secrets-content").innerHTML=h;
+}
 </script>
 </body>
 </html>
